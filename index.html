@@ -306,6 +306,29 @@
     background: rgba(139,123,255,0.18);
   }
 
+  /* ES Count & Chips */
+  .es-chip {
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    color: var(--sub);
+    cursor: pointer;
+    user-select: none;
+    transition: .15s;
+  }
+  .es-chip:hover {
+    background: var(--glass-2);
+    color: var(--ink);
+  }
+  .es-chip.on {
+    background: rgba(217, 178, 95, 0.18);
+    border-color: rgba(217, 178, 95, 0.5);
+    color: var(--gold-2);
+    font-weight: 700;
+  }
+
   /* ===== Views ===== */
   .view { display: none; }
   .view.active { display: block; animation: fadeIn .2s ease-out; }
@@ -1766,7 +1789,10 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">直近の締切・面接予定日</label>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <label class="form-label" style="margin-bottom:0">直近の締切・面接予定日</label>
+              <button class="btn-sm-ghost" type="button" onclick="exportCompanyIcs()" title="この選考日程をカレンダー（.ics）に追加" style="font-size:11px;padding:2px 8px;border-color:rgba(79,216,232,0.4);color:var(--cyan)">📅 カレンダーに追加</button>
+            </div>
             <input type="date" class="form-input" id="mDue" />
           </div>
           <div class="form-group">
@@ -1808,18 +1834,33 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">志望動機・企業研究メモ</label>
-          <textarea class="form-textarea" id="mNoteMotiv" placeholder="求める人物像、社風、他社との差別化ポイント、なぜこの企業なのか…"></textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <label class="form-label" style="margin-bottom:0">志望動機・企業研究メモ</label>
+            <span id="mNoteMotivCount" style="font-size:11.5px;color:var(--sub)">0 文字</span>
+          </div>
+          <textarea class="form-textarea" id="mNoteMotiv" placeholder="求める人物像、社風、他社との差別化ポイント、なぜこの企業なのか…" oninput="updateCharCount('mNoteMotiv', 'mNoteMotivCount')"></textarea>
         </div>
 
         <div class="form-group">
-          <label class="form-label">ES設問・提出テキスト控え</label>
-          <textarea class="form-textarea" id="mNoteEs" placeholder="ES設問と提出した回答内容のバックアップ…"></textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px">
+            <label class="form-label" style="margin-bottom:0">ES設問・提出テキスト控え</label>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="es-chip" onclick="setEsTarget(200)">200字</span>
+              <span class="es-chip" onclick="setEsTarget(300)">300字</span>
+              <span class="es-chip on" onclick="setEsTarget(400)">400字</span>
+              <span class="es-chip" onclick="setEsTarget(null)">上限なし</span>
+              <span id="mNoteEsCount" style="font-size:11.5px;color:var(--sub);font-weight:700;margin-left:4px">0 / 400 字</span>
+            </div>
+          </div>
+          <textarea class="form-textarea" id="mNoteEs" placeholder="ES設問と提出した回答内容のバックアップ…" oninput="updateCharCount('mNoteEs', 'mNoteEsCount', currentEsTarget)" style="min-height:95px"></textarea>
         </div>
 
         <div class="form-group">
-          <label class="form-label">面接ログ・質問内容・逆質問・振り返り</label>
-          <textarea class="form-textarea" id="mNoteInterview" placeholder="面接官の雰囲気、聞かれた質問、手応え、次回への改善点…"></textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <label class="form-label" style="margin-bottom:0">面接ログ・質問内容・逆質問・振り返り</label>
+            <span id="mNoteInterviewCount" style="font-size:11.5px;color:var(--sub)">0 文字</span>
+          </div>
+          <textarea class="form-textarea" id="mNoteInterview" placeholder="面接官の雰囲気、聞かれた質問、手応え、次回への改善点…" oninput="updateCharCount('mNoteInterview', 'mNoteInterviewCount')"></textarea>
         </div>
       </div>
       <div class="modal-foot">
@@ -2840,11 +2881,32 @@
         </div>`;
     }
 
-    grid.innerHTML = html ||
-      `<div style="color:var(--sub);padding:40px;text-align:center;grid-column:1/-1">該当する企業が見つかりませんでした。「＋ 企業を追加」から新しく登録できます。</div>`;
+    if (!html) {
+      const q = keyword ? `「${keyword}」` : '';
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; padding: 46px 20px; text-align: center; background: rgba(255,255,255,0.02); border: 1px dashed var(--glass-brd); border-radius: 16px; margin: 10px 0;">
+          <div style="font-size: 36px; margin-bottom: 10px;">🔍</div>
+          <div style="font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px;">${q} に該当する企業が見つかりませんでした</div>
+          <p style="color: var(--sub); font-size: 12.5px; max-width: 440px; margin: 0 auto 16px;">データベース未収録の企業も、手動登録すればすぐにカンバン・選考管理に追加できます。</p>
+          <button class="top-btn primary" onclick="openNewCompanyWithKeyword('${keyword.replace(/'/g, "\\'")}')" style="display: inline-flex; margin: 0 auto; padding: 9px 20px;">
+            ＋ ${q ? q + ' を' : ''}手動登録して選考管理に追加
+          </button>
+        </div>`;
+    } else {
+      grid.innerHTML = html;
+    }
 
     document.getElementById('dbTotal').textContent = catalog.length;
     document.getElementById('dbShown').textContent = Math.min(dbPageSize, list.length);
+  }
+
+  function openNewCompanyWithKeyword(kw = '') {
+    if (!requireAuth('新規企業の手動登録')) return;
+    openNewCompanyModal();
+    if (kw) {
+      const input = document.getElementById('newCompName');
+      if (input) input.value = kw;
+    }
   }
 
   function loadMoreDb() {
@@ -3328,8 +3390,103 @@
       guestBanner.style.display = currentAuthUser ? 'none' : 'flex';
     }
 
+    updateCharCount('mNoteMotiv', 'mNoteMotivCount');
+    updateCharCount('mNoteEs', 'mNoteEsCount', currentEsTarget);
+    updateCharCount('mNoteInterview', 'mNoteInterviewCount');
+
     renderModalTags();
     openModal('companyModal');
+  }
+
+  // ES Character Counter & Limits
+  let currentEsTarget = 400;
+  function setEsTarget(target) {
+    currentEsTarget = target;
+    document.querySelectorAll('.es-chip').forEach(c => {
+      if (target === null) {
+        c.classList.toggle('on', c.textContent.includes('上限なし'));
+      } else {
+        c.classList.toggle('on', c.textContent.includes(target + '字'));
+      }
+    });
+    updateCharCount('mNoteEs', 'mNoteEsCount', currentEsTarget);
+  }
+
+  function updateCharCount(inputId, countId, limit = null) {
+    const el = document.getElementById(inputId);
+    const countEl = document.getElementById(countId);
+    if (!el || !countEl) return;
+    const len = el.value.length;
+    if (limit) {
+      if (len > limit) {
+        countEl.innerHTML = `<span style="color:var(--red);font-weight:800">${len}</span> / ${limit} 字 <span style="color:var(--red);font-size:10.5px">(+${len - limit}字超過)</span>`;
+      } else {
+        const left = limit - len;
+        countEl.innerHTML = `<span style="color:var(--ink);font-weight:700">${len}</span> / ${limit} 字 <small style="color:var(--sub)">(残り${left}字)</small>`;
+      }
+    } else {
+      countEl.textContent = `${len} 文字`;
+      countEl.style.color = 'var(--sub)';
+    }
+  }
+
+  // カレンダー連携 (.icsエクスポート)
+  function exportCompanyIcs(comp = null) {
+    const c = comp || currentModalComp;
+    if (!c) return;
+    const dueVal = (comp ? c.due : document.getElementById('mDue').value) || c.due;
+    const dueLabel = (comp ? c.dueLabel : document.getElementById('mDueLabel').value) || c.dueLabel || '選考締切';
+
+    if (!dueVal) {
+      showToast('⚠️ 締切日・予定日が設定されていません');
+      return;
+    }
+
+    const m = dueVal.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+    if (!m) {
+      showToast('⚠️ 有効な日付（YYYY-MM-DD）を入力してください');
+      return;
+    }
+
+    const y = m[1];
+    const mo = m[2].padStart(2, '0');
+    const d = m[3].padStart(2, '0');
+    const dtStr = `${y}${mo}${d}`;
+
+    const title = `【就勝】${c.name} - ${dueLabel}`;
+    const desc = `企業名: ${c.name}\\n予定: ${dueLabel}\\n選考ステージ: ${stageMap[c.stage]?.label || c.stage}\\nマイページ: ${c.myPageUrl || '未登録'}`;
+
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//就勝//syukatsu.win//JA',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      `UID:syukatsu-${c.id}-${Date.now()}@syukatsu.win`,
+      `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
+      `DTSTART;VALUE=DATE:${dtStr}`,
+      `DTEND;VALUE=DATE:${dtStr}`,
+      `SUMMARY:${title}`,
+      `DESCRIPTION:${desc}`,
+      'STATUS:CONFIRMED',
+      'BEGIN:VALARM',
+      'TRIGGER:-PT12H',
+      'ACTION:DISPLAY',
+      `DESCRIPTION:${title} 前日リマインド`,
+      'END:VALARM',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `就勝_${c.name}_${dueLabel}_${dtStr}.ics`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast(`📅 「${c.name}」の予定をカレンダーファイル(.ics)で保存しました`);
   }
 
   function renderModalTags() {
@@ -3647,6 +3804,25 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
   }
+
+  // グローバルショートカット (Esc でモーダルを閉じる, / で検索ボックスにフォーカス)
+  document.addEventListener('keydown', e => {
+    const isEditing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName);
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+      return;
+    }
+    if (isEditing) return;
+
+    if (e.key === '/') {
+      e.preventDefault();
+      const s = document.getElementById('search');
+      if (s) {
+        s.focus();
+        s.select();
+      }
+    }
+  });
 
   // 起動時初期化
   loadAll();
