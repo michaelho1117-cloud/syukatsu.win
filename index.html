@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
 <meta name="theme-color" content="#0a0e1a" />
 <title>就活ボード ― 28卒（Premium）</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --bg-0: #0a0e1a;
@@ -213,6 +214,95 @@
     font-size: 11px;
     font-weight: 900;
     box-shadow: var(--glow-gold);
+  }
+
+  /* ===== User & Auth Dropdown ===== */
+  .user-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-color: rgba(78, 227, 154, 0.4);
+    background: rgba(78, 227, 154, 0.08);
+  }
+  .user-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--violet), var(--cyan));
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    display: grid;
+    place-items: center;
+  }
+  .cloud-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4ee39a;
+    box-shadow: 0 0 6px #4ee39a;
+    display: inline-block;
+  }
+  .user-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 230px;
+    background: #141926;
+    border: 1px solid var(--glass-brd);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.55);
+    padding: 8px;
+    z-index: 1000;
+    backdrop-filter: blur(20px);
+  }
+  .user-dropdown.open { display: block; }
+  .ud-header { padding: 6px 10px; }
+  .ud-email { font-size: 12.5px; font-weight: 700; color: var(--ink); word-break: break-all; }
+  .ud-status { font-size: 11px; color: var(--green); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+  .ud-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 6px 0; }
+  .ud-item {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--ink);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+  }
+  .ud-item:hover { background: rgba(255,255,255,0.06); }
+  .ud-item.danger { color: #ff6b81; }
+  .ud-item.danger:hover { background: rgba(255,107,129,0.12); }
+
+  /* Auth Modal Tabs */
+  .auth-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 8px;
+  }
+  .auth-tab {
+    background: transparent;
+    border: none;
+    color: var(--sub);
+    font-size: 13.5px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .auth-tab.active {
+    color: var(--ink);
+    background: rgba(139,123,255,0.18);
   }
 
   /* ===== Views ===== */
@@ -1417,6 +1507,27 @@
     <button class="top-btn" onclick="openSettingsModal()" title="データ設定・バックアップ">
       ⚙️<span class="btn-text"> データ管理</span>
     </button>
+    <div id="authArea" style="display:inline-flex;align-items:center;">
+      <button class="top-btn" id="authLoginBtn" onclick="openAuthModal()" title="クラウド同期・ログイン" style="border-color:rgba(139,123,255,.45);background:rgba(139,123,255,.12);color:var(--ink);">
+        ☁️<span class="btn-text"> ログイン</span>
+      </button>
+      <div id="userProfileWrap" style="display:none;position:relative;">
+        <button class="top-btn user-btn" id="userBtn" onclick="toggleUserDropdown(event)" title="アカウント設定・同期状態">
+          <span class="user-avatar" id="userAvatar">U</span>
+          <span class="btn-text" id="userEmailText" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">user</span>
+          <span class="cloud-dot" title="クラウド同期有効"></span>
+        </button>
+        <div class="user-dropdown" id="userDropdown" onclick="event.stopPropagation()">
+          <div class="ud-header">
+            <div class="ud-email" id="udEmail">user@example.com</div>
+            <div class="ud-status"><span class="dot-green" style="color:var(--green)">●</span> クラウド同期有効 (Tokyo)</div>
+          </div>
+          <div class="ud-divider"></div>
+          <button class="ud-item" onclick="manualSyncCloud()"><span class="ico">🔄</span> 今すぐ手動同期</button>
+          <button class="ud-item danger" onclick="handleLogout()"><span class="ico">🚪</span> ログアウト</button>
+        </div>
+      </div>
+    </div>
   </header>
 
   <!-- ===================== VIEW 1: 企業DB ===================== -->
@@ -1879,6 +1990,47 @@
     </div>
   </div>
 
+  <!-- ===================== MODAL: ログイン・新規登録 ===================== -->
+  <div class="modal-overlay" id="authModal" onclick="onModalOverlayClick(event, 'authModal')">
+    <div class="modal" style="max-width:400px">
+      <div class="modal-head">
+        <h3 id="authModalTitle">☁️ クラウド同期ログイン</h3>
+        <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">ログイン</button>
+          <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">新規登録</button>
+        </div>
+
+        <div id="authNotice" style="font-size:12px;color:var(--sub);margin-bottom:14px;line-height:1.5;">
+          ログインすると、別のスマホやPCからでも同じ選考進捗・面接ノートがリアルタイムに自動同期されます。
+        </div>
+
+        <form id="authForm" onsubmit="handleAuthSubmit(event)">
+          <div class="form-group">
+            <label class="form-label">メールアドレス</label>
+            <input type="email" class="form-input" id="authEmail" placeholder="name@example.com" required autocomplete="email" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">パスワード (6文字以上)</label>
+            <input type="password" class="form-input" id="authPassword" placeholder="••••••••" required minlength="6" autocomplete="current-password" />
+          </div>
+
+          <div id="authErrorMsg" style="display:none;color:#ff6b81;font-size:12px;margin-bottom:12px;padding:8px 10px;background:rgba(255,107,129,0.1);border-radius:6px;border:1px solid rgba(255,107,129,0.3)"></div>
+
+          <button type="submit" class="top-btn primary" id="authSubmitBtn" style="width:100%;height:40px;font-size:13.5px;justify-content:center;">
+            ログイン
+          </button>
+        </form>
+      </div>
+      <div class="modal-foot" style="justify-content:center;">
+        <span style="font-size:11px;color:var(--muted)">🔒 Supabase PostgreSQL による行単位暗号化通信</span>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
   <footer class="note">就活ボード ― 端末のローカルストレージに自動保存されます（完全プライベート・オフライン対応）</footer>
 
@@ -2062,6 +2214,7 @@
     } catch (e) {
       console.error('Storage save error:', e);
     }
+    triggerCloudSave();
   }
 
   function updateStorageInfo() {
@@ -2070,6 +2223,243 @@
     const count = catalog.length;
     const addedCount = catalog.filter(c => c.added).length;
     el.textContent = `全${count}社中 ${addedCount}社を選考管理中（端末ローカル保存済）`;
+  }
+
+  // ===================== SUPABASE CLOUD SYNC & AUTH =====================
+  const SUPABASE_URL = 'https://pzifhwzupfyypszrvmxe.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6aWZod3p1cGZ5eXBzenZybXhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1NDQ1NjQsImV4cCI6MjEwNDEyMDU2NH0.Wc-j8SGelImf-z6rzvdX39JTKK9MC_wvw5nyJkh0CwA';
+
+  let supabaseClient = null;
+  let currentAuthUser = null;
+  let currentAuthMode = 'login';
+  let cloudSyncTimer = null;
+
+  try {
+    if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+  } catch (e) {
+    console.warn('Supabase init warning:', e);
+  }
+
+  function openAuthModal(mode = 'login') {
+    switchAuthTab(mode);
+    const err = document.getElementById('authErrorMsg');
+    if (err) err.style.display = 'none';
+    openModal('authModal');
+  }
+
+  function switchAuthTab(mode) {
+    currentAuthMode = mode;
+    const tabLogin = document.getElementById('tabLogin');
+    const tabReg = document.getElementById('tabRegister');
+    const title = document.getElementById('authModalTitle');
+    const btn = document.getElementById('authSubmitBtn');
+    const passInput = document.getElementById('authPassword');
+
+    if (mode === 'login') {
+      if (tabLogin) tabLogin.classList.add('active');
+      if (tabReg) tabReg.classList.remove('active');
+      if (title) title.textContent = '☁️ クラウド同期ログイン';
+      if (btn) btn.textContent = 'ログイン';
+      if (passInput) passInput.setAttribute('autocomplete', 'current-password');
+    } else {
+      if (tabReg) tabReg.classList.add('active');
+      if (tabLogin) tabLogin.classList.remove('active');
+      if (title) title.textContent = '☁️ 新規アカウント作成';
+      if (btn) btn.textContent = 'アカウントを作成して同期開始';
+      if (passInput) passInput.setAttribute('autocomplete', 'new-password');
+    }
+  }
+
+  function updateAuthUI() {
+    const loginBtn = document.getElementById('authLoginBtn');
+    const profileWrap = document.getElementById('userProfileWrap');
+    const emailText = document.getElementById('userEmailText');
+    const avatar = document.getElementById('userAvatar');
+    const udEmail = document.getElementById('udEmail');
+
+    if (currentAuthUser) {
+      if (loginBtn) loginBtn.style.display = 'none';
+      if (profileWrap) profileWrap.style.display = 'inline-block';
+      const email = currentAuthUser.email || 'user';
+      const initial = email.charAt(0).toUpperCase();
+      if (emailText) emailText.textContent = email.split('@')[0];
+      if (avatar) avatar.textContent = initial;
+      if (udEmail) udEmail.textContent = email;
+    } else {
+      if (loginBtn) loginBtn.style.display = 'inline-flex';
+      if (profileWrap) profileWrap.style.display = 'none';
+    }
+  }
+
+  function toggleUserDropdown(e) {
+    if (e) e.stopPropagation();
+    const dd = document.getElementById('userDropdown');
+    if (dd) dd.classList.toggle('open');
+  }
+
+  document.addEventListener('click', () => {
+    const dd = document.getElementById('userDropdown');
+    if (dd) dd.classList.remove('open');
+  });
+
+  async function handleAuthSubmit(e) {
+    e.preventDefault();
+    if (!supabaseClient) {
+      alert('クラウド同期機能が準備できていません。ネットワーク環境をご確認ください。');
+      return;
+    }
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    const btn = document.getElementById('authSubmitBtn');
+    const errorEl = document.getElementById('authErrorMsg');
+
+    btn.disabled = true;
+    btn.textContent = '通信中...';
+    errorEl.style.display = 'none';
+
+    try {
+      if (currentAuthMode === 'login') {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        currentAuthUser = data.user;
+        updateAuthUI();
+        closeModal('authModal');
+        showToast('ログインしました！クラウドと同期中…');
+        await syncAfterLogin();
+      } else {
+        const { data, error } = await supabaseClient.auth.signUp({ email, password });
+        if (error) throw error;
+        currentAuthUser = data.user;
+        updateAuthUI();
+        closeModal('authModal');
+        showToast('アカウントを作成しました！クラウド同期を開始します');
+        await syncAfterLogin();
+      }
+    } catch (err) {
+      errorEl.textContent = err.message || '認証エラーが発生しました。メールアドレスとパスワードをご確認ください。';
+      errorEl.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = currentAuthMode === 'login' ? 'ログイン' : 'アカウントを作成して同期開始';
+    }
+  }
+
+  async function handleLogout() {
+    if (!supabaseClient) return;
+    if (!confirm('ログアウトしますか？\n（クラウド上の選考データは保護されます。次回ログイン時にいつでも再同期できます）')) return;
+    await supabaseClient.auth.signOut();
+    currentAuthUser = null;
+    updateAuthUI();
+    const dd = document.getElementById('userDropdown');
+    if (dd) dd.classList.remove('open');
+    showToast('ログアウトしました');
+  }
+
+  async function syncAfterLogin() {
+    if (!supabaseClient || !currentAuthUser) return;
+    try {
+      const { data: cloudItems, error } = await supabaseClient
+        .from('user_selections')
+        .select('*')
+        .eq('user_id', currentAuthUser.id);
+
+      if (error) {
+        console.warn('クラウドデータ取得エラー:', error);
+        return;
+      }
+
+      const cloudMap = new Map();
+      if (cloudItems && cloudItems.length) {
+        cloudItems.forEach(item => cloudMap.set(item.company_id, item));
+      }
+
+      // 1. 本地已追加但云端没有的，自动迁移上云 (Migration)
+      const localAdded = catalog.filter(c => c.added);
+      const toUpsert = [];
+      localAdded.forEach(c => {
+        toUpsert.push({
+          user_id: currentAuthUser.id,
+          company_id: c.id,
+          stage: c.stage || 'watch',
+          due: c.due || null,
+          due_label: c.dueLabel || null,
+          due_lv: c.dueLv || null,
+          note_motiv: c.noteMotiv || null,
+          note_es: c.noteEs || null,
+          note_interview: c.noteInterview || null,
+          tags: c.tags || [],
+          updated_at: new Date().toISOString()
+        });
+      });
+
+      if (toUpsert.length > 0) {
+        await supabaseClient.from('user_selections').upsert(toUpsert, { onConflict: 'user_id,company_id' });
+      }
+
+      // 2. 云端已有数据合并入本地 catalog
+      if (cloudItems && cloudItems.length) {
+        catalog.forEach(c => {
+          if (cloudMap.has(c.id)) {
+            const item = cloudMap.get(c.id);
+            c.added = true;
+            c.stage = item.stage || 'watch';
+            c.due = item.due || '';
+            c.dueLabel = item.due_label || '';
+            c.dueLv = item.due_lv || '';
+            c.noteMotiv = item.note_motiv || '';
+            c.noteEs = item.note_es || '';
+            c.noteInterview = item.note_interview || '';
+            if (item.tags && item.tags.length) c.tags = item.tags;
+          }
+        });
+      }
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
+      } catch(e) {}
+      renderAll();
+      showToast('クラウド同期が完了しました');
+    } catch (err) {
+      console.warn('Sync error:', err);
+    }
+  }
+
+  function triggerCloudSave() {
+    if (!supabaseClient || !currentAuthUser) return;
+    clearTimeout(cloudSyncTimer);
+    cloudSyncTimer = setTimeout(async () => {
+      try {
+        const localAdded = catalog.filter(c => c.added);
+        const toUpsert = localAdded.map(c => ({
+          user_id: currentAuthUser.id,
+          company_id: c.id,
+          stage: c.stage || 'watch',
+          due: c.due || null,
+          due_label: c.dueLabel || null,
+          due_lv: c.dueLv || null,
+          note_motiv: c.noteMotiv || null,
+          note_es: c.noteEs || null,
+          note_interview: c.noteInterview || null,
+          tags: c.tags || [],
+          updated_at: new Date().toISOString()
+        }));
+
+        if (toUpsert.length > 0) {
+          await supabaseClient.from('user_selections').upsert(toUpsert, { onConflict: 'user_id,company_id' });
+        }
+      } catch (err) {
+        console.warn('Auto cloud sync failed:', err);
+      }
+    }, 600);
+  }
+
+  async function manualSyncCloud() {
+    const dd = document.getElementById('userDropdown');
+    if (dd) dd.classList.remove('open');
+    showToast('クラウド同期中…');
+    await syncAfterLogin();
   }
 
   // ---- 表示ヘルパ ----
@@ -2439,6 +2829,9 @@
       showToast(`「${c.name}」を選考リストに追加しました`);
     } else {
       showToast(`「${c.name}」を選考リストから外しました`);
+      if (supabaseClient && currentAuthUser) {
+        supabaseClient.from('user_selections').delete().eq('user_id', currentAuthUser.id).eq('company_id', c.id).then();
+      }
     }
     saveAll();
     renderAll();
@@ -3197,6 +3590,22 @@
   loadAll();
   applySettings();
   renderAll();
+
+  // Supabase 起動時セッション復元 & 認証状態監視
+  if (supabaseClient) {
+    supabaseClient.auth.getSession().then(({ data }) => {
+      if (data && data.session && data.session.user) {
+        currentAuthUser = data.session.user;
+        updateAuthUI();
+        syncAfterLogin();
+      }
+    }).catch(e => console.warn('Auth getSession error:', e));
+
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      currentAuthUser = session ? session.user : null;
+      updateAuthUI();
+    });
+  }
 </script>
 </body>
 </html>
