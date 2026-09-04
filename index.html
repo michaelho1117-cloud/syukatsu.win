@@ -138,6 +138,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    white-space: nowrap;
   }
   nav.tabs button.active {
     color: var(--ink);
@@ -1493,9 +1494,9 @@
     </div>
     <nav class="tabs" id="tabs">
       <button data-view="db" class="active">🏢 企業DB</button>
-      <button data-view="kanban">📋 カンバン</button>
-      <button data-view="list">📑 選考リスト</button>
-      <button data-view="dash">📊 ダッシュボード</button>
+      <button data-view="kanban">📋 カンバン <span class="tab-lock" style="font-size:11px;opacity:0.75" title="要ログイン">🔒</span></button>
+      <button data-view="list">📑 選考リスト <span class="tab-lock" style="font-size:11px;opacity:0.75" title="要ログイン">🔒</span></button>
+      <button data-view="dash">📊 ダッシュボード <span class="tab-lock" style="font-size:11px;opacity:0.75" title="要ログイン">🔒</span></button>
     </nav>
     <div class="spacer"></div>
     <div class="searchbox">
@@ -1508,8 +1509,8 @@
       ⚙️<span class="btn-text"> データ管理</span>
     </button>
     <div id="authArea" style="display:inline-flex;align-items:center;">
-      <button class="top-btn" id="authLoginBtn" onclick="openAuthModal()" title="クラウド同期・ログイン" style="border-color:rgba(139,123,255,.45);background:rgba(139,123,255,.12);color:var(--ink);">
-        ☁️<span class="btn-text"> ログイン</span>
+      <button class="top-btn" id="authLoginBtn" onclick="openAuthModal('login')" title="クラウド同期・ログイン" style="border-color:rgba(139,123,255,.45);background:rgba(139,123,255,.12);color:var(--ink);font-weight:700;">
+        ☁️<span class="btn-text"> ログイン / 登録</span>
       </button>
       <div id="userProfileWrap" style="display:none;position:relative;">
         <button class="top-btn user-btn" id="userBtn" onclick="toggleUserDropdown(event)" title="アカウント設定・同期状態">
@@ -1688,15 +1689,15 @@
     </button>
     <button class="mobile-nav-btn" data-view="kanban" onclick="switchView('kanban')">
       <span class="icon">📋</span>
-      <span>カンバン</span>
+      <span>カンバン <span class="tab-lock" style="font-size:9px">🔒</span></span>
     </button>
     <button class="mobile-nav-btn" data-view="list" onclick="switchView('list')">
       <span class="icon">📑</span>
-      <span>選考リスト</span>
+      <span>選考リスト <span class="tab-lock" style="font-size:9px">🔒</span></span>
     </button>
     <button class="mobile-nav-btn" data-view="dash" onclick="switchView('dash')">
       <span class="icon">📊</span>
-      <span>分析</span>
+      <span>分析 <span class="tab-lock" style="font-size:9px">🔒</span></span>
     </button>
     <button class="mobile-nav-btn" onclick="openSettingsModal()">
       <span class="icon">⚙️</span>
@@ -1746,6 +1747,10 @@
             <span class="modal-stat-label">上場区分 / 規模</span>
             <span class="modal-stat-val" id="mStatMarket" style="color:var(--purple-2)">—</span>
           </div>
+        </div>
+        <div id="mGuestBanner" style="display:none;padding:10px 14px;background:rgba(217,178,95,.1);border:1px solid rgba(217,178,95,.3);border-radius:10px;margin-bottom:14px;color:var(--gold-2);font-size:12.5px;align-items:center;justify-content:space-between;gap:10px;">
+          <span>🔒 選考状況の管理・面接メモの記録・保存にはログインが必要です</span>
+          <button class="top-btn primary" type="button" onclick="closeModal('companyModal');openAuthModal('register')" style="padding:4px 12px;font-size:12px;border-radius:8px">無料登録</button>
         </div>
         <div class="form-group">
           <label class="form-label">選考ステージ</label>
@@ -2272,6 +2277,13 @@
     }
   }
 
+  function requireAuth(actionName = 'この機能を利用') {
+    if (currentAuthUser) return true;
+    showToast(`🔒 ${actionName}にはアカウント登録またはログインが必要です`);
+    openAuthModal('register');
+    return false;
+  }
+
   function updateAuthUI() {
     const loginBtn = document.getElementById('authLoginBtn');
     const profileWrap = document.getElementById('userProfileWrap');
@@ -2291,6 +2303,10 @@
       if (loginBtn) loginBtn.style.display = 'inline-flex';
       if (profileWrap) profileWrap.style.display = 'none';
     }
+
+    document.querySelectorAll('.tab-lock').forEach(el => {
+      el.style.display = currentAuthUser ? 'none' : 'inline';
+    });
   }
 
   function toggleUserDropdown(e) {
@@ -2376,6 +2392,8 @@
     await supabaseClient.auth.signOut();
     currentAuthUser = null;
     updateAuthUI();
+    switchView('db');
+    renderDB(true);
     const dd = document.getElementById('userDropdown');
     if (dd) dd.classList.remove('open');
     showToast('ログアウトしました');
@@ -2582,6 +2600,10 @@
   // ===================== ビュー切替 =====================
   let currentView = 'db';
   function switchView(v) {
+    if (!currentAuthUser && v !== 'db') {
+      requireAuth('カンバンや選考リスト・分析ダッシュボードを利用');
+      return;
+    }
     currentView = v;
     document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('active', b.dataset.view === v));
     document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === v));
@@ -2806,13 +2828,14 @@
     if (hasMore) {
       const remain = list.length - dbPageSize;
       const nextBatch = Math.min(60, remain);
+      const lockTag = !currentAuthUser ? '🔒 ' : '';
       html += `
         <div style="grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; padding: 26px 0 10px; gap: 14px; flex-wrap: wrap;">
           <button class="top-btn primary" onclick="loadMoreDb()" style="padding: 10px 24px; font-size: 13.5px;">
-            さらに表示する（残り ${remain} 社 / 次の${nextBatch}社を表示）
+            ${lockTag}さらに表示する（残り ${remain} 社 / 次の${nextBatch}社を表示）
           </button>
           <button class="top-btn" onclick="loadAllDb()" style="padding: 10px 18px; font-size: 13.5px;">
-            全${list.length}社を一括表示
+            ${lockTag}全${list.length}社を一括表示
           </button>
         </div>`;
     }
@@ -2825,11 +2848,13 @@
   }
 
   function loadMoreDb() {
+    if (!requireAuth('全企業リスト（1,735社）を展開・閲覧')) return;
     dbPageSize += 60;
     renderDB(false);
   }
 
   function loadAllDb() {
+    if (!requireAuth('全企業リスト（1,735社）を一括表示')) return;
     dbPageSize = catalog.length;
     renderDB(false);
   }
@@ -2843,6 +2868,7 @@
 
   function toggleAdd(id, event) {
     if (event) event.stopPropagation();
+    if (!requireAuth('企業の選考管理・カンバン追加')) return;
     const c = catalog.find(x => x.id === id);
     if (!c) return;
     c.added = !c.added;
@@ -3297,11 +3323,14 @@
     const delBtn = document.getElementById('mDeleteBtn');
     delBtn.style.display = c.isCustom ? 'inline-block' : 'none';
 
+    const guestBanner = document.getElementById('mGuestBanner');
+    if (guestBanner) {
+      guestBanner.style.display = currentAuthUser ? 'none' : 'flex';
+    }
+
     renderModalTags();
     openModal('companyModal');
   }
-
-
 
   function renderModalTags() {
     const el = document.getElementById('mTagsList');
@@ -3333,10 +3362,11 @@
   }
 
   function saveModalCompany() {
+    if (!requireAuth('選考進捗やメモを編集・保存')) return;
     if (!currentModalComp) return;
     const c = currentModalComp;
     c.stage = document.getElementById('mStage').value;
-        c.due = document.getElementById('mDue').value;
+    c.due = document.getElementById('mDue').value;
     c.dueLabel = document.getElementById('mDueLabel').value.trim();
     c.myPageUrl = document.getElementById('mMyPageUrl').value.trim();
     c.myPageId = document.getElementById('mMyPageId').value.trim();
@@ -3359,6 +3389,7 @@
   }
 
   function deleteModalCompany() {
+    if (!requireAuth('企業の削除')) return;
     if (!currentModalComp) return;
     if (!confirm(`手動登録企業「${currentModalComp.name}」を完全に削除しますか？`)) return;
     catalog = catalog.filter(x => x.id !== currentModalComp.id);
@@ -3370,6 +3401,7 @@
 
   // ===================== MODAL: 新規企業追加 =====================
   function openNewCompanyModal() {
+    if (!requireAuth('新規企業の手動登録')) return;
     document.getElementById('newCompName').value = '';
     document.getElementById('newCompSub').value = '';
     document.getElementById('newCompCode').value = '';
@@ -3460,6 +3492,7 @@
 
   // JSON エクスポート / インポート
   function exportJSON() {
+    if (!requireAuth('JSONバックアップのエクスポート')) return;
     const data = {
       version: '2.0',
       exportDate: new Date().toISOString(),
@@ -3480,6 +3513,10 @@
   }
 
   function onImportJsonFile(input) {
+    if (!requireAuth('バックアップの復元・インポート')) {
+      input.value = '';
+      return;
+    }
     const file = input.files && input.files[0];
     if (!file) return;
     const reader = new FileReader();
@@ -3511,6 +3548,7 @@
 
   // CSV エクスポート
   function exportCSV() {
+    if (!requireAuth('選考リストCSVのダウンロード')) return;
     const added = catalog.filter(c => c.added);
     if (!added.length) {
       alert('選考リストに登録された企業がありません');
@@ -3613,6 +3651,7 @@
   // 起動時初期化
   loadAll();
   applySettings();
+  updateAuthUI();
   renderAll();
 
   // Supabase 起動時セッション復元 & 認証状態監視
