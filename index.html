@@ -1890,11 +1890,11 @@
      ========================================================================= */
   const DEFAULT_CATALOG = [
     // ── Tier A: 公式/有報で検証済みの主要大手 ─────────────────────────
-    { id:'c_toyota', name:'トヨタ自動車', code:'7203', domain:'toyota.jp', ind17:'自動車・輸送機', cat:'メーカー', sub:'自動車', emp:73133, empNote:'単体(連結39.1万)', payBachelor:275000, payMaster:299000, avgAnnual:895, color:'#c0392b', added:true, stage:'es', loc:'愛知/東京', tags:["技術職", "福利厚生◎"], due:'2026-09-05', dueLabel:'ES提出', dueLv:'urgent' },
-    { id:'c_mitsubishi_corp', name:'三菱商事', code:'8058', domain:'mitsubishicorp.com', ind17:'商社・卸売', cat:'商社', sub:'総合商社', emp:5448, empNote:'単体', payBachelor:340000, payMaster:380000, avgAnnual:2112, color:'#8e44ad', added:true, stage:'first', loc:'東京', tags:["総合職", "高年収"], due:'2026-09-12', dueLabel:'一次面接', dueLv:'soon' },
-    { id:'c_sony', name:'ソニーグループ', code:'6758', domain:'sony.com', ind17:'電機・精密', cat:'広告・マスコミ', sub:'電機/エンタメ', emp:113000, empNote:'連結', payBachelor:333000, payMaster:360000, avgAnnual:1100, color:'#2c3e50', added:true, stage:'final', loc:'東京', tags:["技術職"], due:'2026-09-03', dueLabel:'最終面接', dueLv:'urgent' },
-    { id:'c_smbc', name:'三井住友銀行', code:'8316', domain:'smbc.co.jp', ind17:'銀行', cat:'金融', sub:'銀行', emp:28000, empNote:'単体(連結9.4万)', payBachelor:280000, payMaster:305000, avgAnnual:1160, color:'#27ae60', added:true, stage:'es', loc:'東京/全国', tags:["SMBCグループ", "3大メガバンク", "総合職", "高年収"], due:'2026-09-08', dueLabel:'ES提出', dueLv:'soon' },
-    { id:'c_nri', name:'野村総合研究所', code:'4307', domain:'nri.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'日系最大手 シンクタンク・経営/ITコンサル', emp:6700, empNote:'単体(連結1.7万)', payBachelor:336500, payMaster:361000, avgAnnual:1332, color:'#2980b9', added:true, stage:'entry', loc:'東京', tags:["シンクタンク", "日系最高峰", "高年収", "技術職"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_toyota', name:'トヨタ自動車', code:'7203', domain:'toyota.jp', ind17:'自動車・輸送機', cat:'メーカー', sub:'自動車', emp:73133, empNote:'単体(連結39.1万)', payBachelor:275000, payMaster:299000, avgAnnual:895, color:'#c0392b', added:false, stage:'watch', loc:'愛知/東京', tags:["技術職", "福利厚生◎"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_mitsubishi_corp', name:'三菱商事', code:'8058', domain:'mitsubishicorp.com', ind17:'商社・卸売', cat:'商社', sub:'総合商社', emp:5448, empNote:'単体', payBachelor:340000, payMaster:380000, avgAnnual:2112, color:'#8e44ad', added:false, stage:'watch', loc:'東京', tags:["総合職", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_sony', name:'ソニーグループ', code:'6758', domain:'sony.com', ind17:'電機・精密', cat:'広告・マスコミ', sub:'電機/エンタメ', emp:113000, empNote:'連結', payBachelor:333000, payMaster:360000, avgAnnual:1100, color:'#2c3e50', added:false, stage:'watch', loc:'東京', tags:["技術職"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_smbc', name:'三井住友銀行', code:'8316', domain:'smbc.co.jp', ind17:'銀行', cat:'金融', sub:'銀行', emp:28000, empNote:'単体(連結9.4万)', payBachelor:280000, payMaster:305000, avgAnnual:1160, color:'#27ae60', added:false, stage:'watch', loc:'東京/全国', tags:["SMBCグループ", "3大メガバンク", "総合職", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_nri', name:'野村総合研究所', code:'4307', domain:'nri.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'日系最大手 シンクタンク・経営/ITコンサル', emp:6700, empNote:'単体(連結1.7万)', payBachelor:336500, payMaster:361000, avgAnnual:1332, color:'#2980b9', added:false, stage:'watch', loc:'東京', tags:["シンクタンク", "日系最高峰", "高年収", "技術職"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_itochu', name:'伊藤忠商事', code:'8001', domain:'itochu.co.jp', ind17:'商社・卸売', cat:'商社', sub:'総合商社', emp:4200, empNote:'単体(連結11万)', payBachelor:325000, payMaster:365000, avgAnnual:1804, color:'#004098', added:false, stage:'watch', loc:'東京/全国', tags:["総合商社", "5大商社首位級", "高年収", "総合職"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_mufg', name:'三菱UFJ銀行', code:'8306', domain:'mufg.jp', ind17:'銀行', cat:'金融', sub:'銀行', emp:30000, empNote:'単体(連結12万)', payBachelor:300000, payMaster:325000, avgAnnual:1150, color:'#e60012', added:false, stage:'watch', loc:'東京/全国', tags:["三菱グループ", "メガバンク首位", "海外展開", "高年収"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_honda', name:'本田技研工業', code:'7267', domain:'honda.co.jp', ind17:'自動車・輸送機', cat:'メーカー', sub:'自動車', emp:30530, empNote:'単体', payBachelor:270000, payMaster:296000, avgAnnual:820, color:'#e60012', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
@@ -1915,13 +1915,13 @@
     { id:'c_kyocera', name:'京セラ', code:'6971', domain:'kyocera.co.jp', ind17:'電機・精密', cat:'メーカー', sub:'電子部品', emp:15000, empNote:'単体(連結8.1万)', payBachelor:260000, payMaster:284000, avgAnnual:750, color:'#c00', added:false, stage:'watch', loc:'東京/全国', tags:["電子部品", "半導体素材", "アメーバ経営", "京都名門"], due:'', dueLabel:'', dueLv:'' },
 
     // ── 既存サンプル ──
-    { id:'c_keyence', name:'キーエンス', code:'6861', domain:'keyence.co.jp', ind17:'電機・精密', cat:'メーカー', sub:'FA機器', emp:3000, empNote:'単体(連結1.0万)', payBachelor:280000, payMaster:300000, avgAnnual:2178, color:'#e67e22', added:true, stage:'entry', loc:'大阪', tags:["高年収日本一", "FA機器", "高収益", "営業・開発"], due:'', dueLabel:'', dueLv:'' },
-    { id:'c_mercari', name:'メルカリ', code:'4385', domain:'mercari.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'Webサービス', emp:2200, empNote:'単体(連結3500)', payBachelor:350000, payMaster:380000, avgAnnual:980, color:'#e4405f', added:true, stage:'offer', loc:'東京/リモート', tags:["メガベンチャー", "フリマアプリ", "リモート可", "エンジニア"], due:'2026-09-20', dueLabel:'承諾期限', dueLv:'' },
-    { id:'c_cyberagent', name:'サイバーエージェント', code:'4751', domain:'cyberagent.co.jp', ind17:'情報通信・サービス', cat:'広告・マスコミ', sub:'広告/メディア', emp:3200, empNote:'単体(連結7200)', payBachelor:420000, payMaster:450000, avgAnnual:780, color:'#16a085', added:true, stage:'watch', loc:'東京', tags:["AbemaTV", "ゲーム開発", "ネット広告首位", "若手抜擢"], due:'', dueLabel:'', dueLv:'' },
-    { id:'c_recruit', name:'リクルート', code:'6098', domain:'recruit.co.jp', ind17:'情報通信・サービス', cat:'広告・マスコミ', sub:'HR/メディア', emp:16000, empNote:'主要グループ', payBachelor:335000, payMaster:360000, avgAnnual:1130, color:'#0aa0d1', added:true, stage:'first', loc:'東京', tags:["HR/メディア", "グローバル", "起業家輩出", "高年収"], due:'2026-09-15', dueLabel:'一次面接', dueLv:'' },
-    { id:'c_fastretailing', name:'ファーストリテイリング', code:'9983', domain:'fastretailing.com', ind17:'小売', cat:'小売・サービス', sub:'アパレル', emp:5600, empNote:'単体(連結5.7万)', payBachelor:300000, payMaster:319000, avgAnnual:1150, color:'#c0392b', added:true, stage:'watch', loc:'東京/山口', tags:["ユニクロ", "グローバルSPA", "アパレル世界首位級", "高年収"], due:'', dueLabel:'', dueLv:'' },
-    { id:'c_freee', name:'freee', code:'4478', domain:'freee.co.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SaaS', emp:1200, empNote:'単体', payBachelor:350000, payMaster:375000, avgAnnual:840, color:'#2f6fed', added:true, stage:'offer', loc:'東京/リモート', tags:["クラウド会計", "SaaS", "FinTech", "リモート可"], due:'', dueLabel:'内々定済', dueLv:'' },
-    { id:'c_nttdata', name:'NTTデータ', code:'9613', domain:'nttdata.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SIer', emp:14000, empNote:'単体(連結19万)', payBachelor:280000, payMaster:305000, avgAnnual:880, color:'#1f6feb', added:true, stage:'watch', loc:'東京/全国', tags:["SIer首位", "NTTグループ", "社会インフラ", "安定"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_keyence', name:'キーエンス', code:'6861', domain:'keyence.co.jp', ind17:'電機・精密', cat:'メーカー', sub:'FA機器', emp:3000, empNote:'単体(連結1.0万)', payBachelor:280000, payMaster:300000, avgAnnual:2178, color:'#e67e22', added:false, stage:'watch', loc:'大阪', tags:["高年収日本一", "FA機器", "高収益", "営業・開発"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_mercari', name:'メルカリ', code:'4385', domain:'mercari.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'Webサービス', emp:2200, empNote:'単体(連結3500)', payBachelor:350000, payMaster:380000, avgAnnual:980, color:'#e4405f', added:false, stage:'watch', loc:'東京/リモート', tags:["メガベンチャー", "フリマアプリ", "リモート可", "エンジニア"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_cyberagent', name:'サイバーエージェント', code:'4751', domain:'cyberagent.co.jp', ind17:'情報通信・サービス', cat:'広告・マスコミ', sub:'広告/メディア', emp:3200, empNote:'単体(連結7200)', payBachelor:420000, payMaster:450000, avgAnnual:780, color:'#16a085', added:false, stage:'watch', loc:'東京', tags:["AbemaTV", "ゲーム開発", "ネット広告首位", "若手抜擢"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_recruit', name:'リクルート', code:'6098', domain:'recruit.co.jp', ind17:'情報通信・サービス', cat:'広告・マスコミ', sub:'HR/メディア', emp:16000, empNote:'主要グループ', payBachelor:335000, payMaster:360000, avgAnnual:1130, color:'#0aa0d1', added:false, stage:'watch', loc:'東京', tags:["HR/メディア", "グローバル", "起業家輩出", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_fastretailing', name:'ファーストリテイリング', code:'9983', domain:'fastretailing.com', ind17:'小売', cat:'小売・サービス', sub:'アパレル', emp:5600, empNote:'単体(連結5.7万)', payBachelor:300000, payMaster:319000, avgAnnual:1150, color:'#c0392b', added:false, stage:'watch', loc:'東京/山口', tags:["ユニクロ", "グローバルSPA", "アパレル世界首位級", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_freee', name:'freee', code:'4478', domain:'freee.co.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SaaS', emp:1200, empNote:'単体', payBachelor:350000, payMaster:375000, avgAnnual:840, color:'#2f6fed', added:false, stage:'watch', loc:'東京/リモート', tags:["クラウド会計", "SaaS", "FinTech", "リモート可"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_nttdata', name:'NTTデータ', code:'9613', domain:'nttdata.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SIer', emp:14000, empNote:'単体(連結19万)', payBachelor:280000, payMaster:305000, avgAnnual:880, color:'#1f6feb', added:false, stage:'watch', loc:'東京/全国', tags:["SIer首位", "NTTグループ", "社会インフラ", "安定"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_ntt', name:'日本電信電話(NTT)', code:'9432', domain:'group.ntt', ind17:'情報通信・サービス', cat:'IT・通信', sub:'通信', emp:1000, empNote:'持株(連結33万)', payBachelor:280000, payMaster:305000, avgAnnual:950, color:'#0072bc', added:false, stage:'watch', loc:'東京/全国', tags:["通信最大手", "インフラ", "安定", "IOWN"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_panasonic', name:'パナソニック', code:'6752', domain:'panasonic.com', ind17:'電機・精密', cat:'メーカー', sub:'電機', emp:13000, empNote:'単体(連結23万)', payBachelor:265000, payMaster:289000, avgAnnual:900, color:'#0033a0', added:false, stage:'watch', loc:'東京/全国', tags:["総合電機", "車載電池", "空質空調", "グローバル"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_dentsu', name:'電通', code:'4324', domain:'dentsu.co.jp', ind17:'情報通信・サービス', cat:'広告・マスコミ', sub:'広告・エンタメ・出版', emp:7000, empNote:'単体(連結6.5万)', payBachelor:300000, payMaster:320000, avgAnnual:1520, color:'#000000', added:false, stage:'watch', loc:'東京/全国', tags:["広告最大手", "マーケティング", "コンテンツ", "高年収"], due:'', dueLabel:'', dueLv:'' },
@@ -1970,8 +1970,8 @@
 
   const DEFAULT_TASKS = [
     { id: 't_spi', text: 'SPI・玉手箱のWEBテスト問題集を1周解く', done: false, tag: 'テスト対策' },
-    { id: 't_es_pr', text: '自己PR・ガクチカ（学生時代に力を入れたこと）の骨子をまとめる', done: true, tag: 'ES作成' },
-    { id: 't_photo', text: '就活用の証明写真をデータ付きで撮影する', done: true, tag: '準備' },
+    { id: 't_es_pr', text: '自己PR・ガクチカ（学生時代に力を入れたこと）の骨子をまとめる', done: false, tag: 'ES作成' },
+    { id: 't_photo', text: '就活用の証明写真をデータ付きで撮影する', done: false, tag: '準備' },
     { id: 't_ob', text: '第一志望群の企業のOB/OG訪問を申し込む', done: false, tag: '企業研究' },
     { id: 't_suit', text: '面接用スーツ・WEB面接用の照明/マイク動作確認', done: false, tag: '準備' },
   ];
@@ -2602,6 +2602,11 @@
     document.querySelectorAll('thead th .arrow').forEach(a => a.textContent = '↕');
     const activeArr = document.getElementById('arr-' + sortCol);
     if (activeArr) activeArr.textContent = sortAsc ? '▲' : '▼';
+
+    if (added.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:48px 16px;color:var(--sub);font-size:13px">選考管理中の企業はありません。「企業DB」から企業を追加してください</td></tr>';
+      return;
+    }
 
     tbody.innerHTML = added.map(c => {
       const st = stageMap[c.stage] || stageMap.watch;
