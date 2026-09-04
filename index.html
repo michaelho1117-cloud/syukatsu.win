@@ -1,0 +1,3189 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+<meta name="theme-color" content="#0a0e1a" />
+<title>就活ボード ― 28卒（Premium）</title>
+<style>
+  :root {
+    --bg-0: #0a0e1a;
+    --bg-1: #0f1424;
+    --bg-2: #141b30;
+    --glass: rgba(255, 255, 255, 0.04);
+    --glass-2: rgba(255, 255, 255, 0.07);
+    --glass-3: rgba(255, 255, 255, 0.12);
+    --glass-brd: rgba(255, 255, 255, 0.09);
+    --glass-brd-hover: rgba(255, 255, 255, 0.22);
+    --ink: #eef2fb;
+    --sub: #8a93ab;
+    --muted: #5a647d;
+    --gold: #d9b25f;
+    --gold-2: #f4d489;
+    --violet: #8b7bff;
+    --cyan: #4fd8e8;
+    --pink: #ff7eb6;
+    --green: #4ee39a;
+    --red: #ff5c77;
+    --orange: #ff9f43;
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+    --glow-gold: 0 0 24px rgba(217, 178, 95, 0.35);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    min-height: 100%;
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.55;
+    background:
+      radial-gradient(1200px 600px at 12% -8%, rgba(139,123,255,.18), transparent 60%),
+      radial-gradient(1000px 620px at 108% 0%, rgba(79,216,232,.12), transparent 55%),
+      radial-gradient(900px 700px at 50% 120%, rgba(217,178,95,.10), transparent 60%),
+      linear-gradient(180deg, var(--bg-1), var(--bg-0));
+    background-attachment: fixed;
+    padding-bottom: calc(var(--safe-bottom) + 20px);
+  }
+
+  ::-webkit-scrollbar { height: 8px; width: 8px; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.16); border-radius: 20px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.28); }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  /* ===== Topbar ===== */
+  header.topbar {
+    height: calc(64px + var(--safe-top));
+    padding-top: var(--safe-top);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(12, 16, 30, 0.78);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--glass-brd);
+  }
+
+  .logo {
+    font-weight: 800;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  .logo .mark {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    font-size: 15px;
+    color: #1a1406;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold-2), var(--gold));
+    box-shadow: var(--glow-gold);
+  }
+  .logo .grad {
+    background: linear-gradient(90deg, #fff, #cfd6ea);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .badge-grad {
+    font-size: 11px;
+    color: var(--gold-2);
+    border: 1px solid rgba(217, 178, 95, 0.4);
+    border-radius: 999px;
+    padding: 2px 9px;
+    font-weight: 800;
+    background: rgba(217, 178, 95, 0.08);
+    cursor: pointer;
+    transition: .18s;
+  }
+  .badge-grad:hover {
+    background: rgba(217, 178, 95, 0.2);
+  }
+
+  nav.tabs {
+    display: flex;
+    gap: 4px;
+    margin-left: 6px;
+  }
+  nav.tabs button {
+    border: 0;
+    background: transparent;
+    color: var(--sub);
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    transition: .18s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  nav.tabs button.active {
+    color: var(--ink);
+    background: var(--glass-2);
+    box-shadow: inset 0 0 0 1px var(--glass-brd);
+  }
+  nav.tabs button:hover:not(.active) {
+    color: var(--ink);
+    background: var(--glass);
+  }
+
+  .spacer { flex: 1; }
+
+  .searchbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    border-radius: 12px;
+    padding: 7px 12px;
+    color: var(--sub);
+    min-width: 220px;
+    transition: .2s;
+  }
+  .searchbox:focus-within {
+    border-color: rgba(139, 123, 255, 0.5);
+    box-shadow: 0 0 0 3px rgba(139, 123, 255, 0.15);
+  }
+  .searchbox input {
+    border: 0;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .searchbox input::placeholder { color: var(--sub); }
+
+  .top-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid var(--glass-brd);
+    background: var(--glass);
+    border-radius: 12px;
+    padding: 8px 13px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    color: var(--ink);
+    transition: .18s;
+    white-space: nowrap;
+  }
+  .top-btn:hover {
+    background: var(--glass-2);
+    border-color: var(--glass-brd-hover);
+  }
+  .top-btn.primary {
+    background: linear-gradient(135deg, var(--gold-2), var(--gold));
+    color: #1a1406;
+    border-color: transparent;
+    box-shadow: var(--glow-gold);
+  }
+  .top-btn.primary:hover { filter: brightness(1.08); }
+  .top-btn .n {
+    color: #1a1406;
+    background: linear-gradient(135deg, var(--gold-2), var(--gold));
+    border-radius: 999px;
+    min-width: 20px;
+    height: 20px;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    font-weight: 900;
+    box-shadow: var(--glow-gold);
+  }
+
+  /* ===== Views ===== */
+  .view { display: none; }
+  .view.active { display: block; animation: fadeIn .2s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== Toolbar & Hero ===== */
+  .hero {
+    padding: 16px 26px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .hero-title h1 {
+    font-size: 20px;
+    margin: 0 0 4px;
+    font-weight: 800;
+  }
+  .hero-title h1 .g {
+    background: linear-gradient(90deg, var(--gold-2), var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-title p {
+    color: var(--sub);
+    margin: 0;
+    font-size: 13px;
+  }
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 14px 26px 8px;
+  }
+  .filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .chip {
+    border: 1px solid var(--glass-brd);
+    background: var(--glass);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--sub);
+    cursor: pointer;
+    font-weight: 700;
+    transition: .18s;
+    user-select: none;
+  }
+  .chip:hover { color: var(--ink); border-color: var(--glass-brd-hover); }
+  .chip.on {
+    color: #1a1406;
+    border-color: transparent;
+    background: linear-gradient(135deg, var(--gold-2), var(--gold));
+    box-shadow: var(--glow-gold);
+  }
+  .toolbar-select {
+    background: var(--bg-1);
+    color: var(--ink);
+    border: 1px solid var(--glass-brd);
+    border-radius: 10px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    outline: none;
+    cursor: pointer;
+  }
+  .result-count {
+    margin-left: auto;
+    color: var(--sub);
+    font-size: 12px;
+  }
+  .result-count b { color: var(--ink); }
+
+  /* ===== Company DB Grid ===== */
+  .grid-wrap { padding: 12px 26px 40px; }
+  .grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    position: relative;
+    border-radius: 16px;
+    padding: 16px;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+    border: 1px solid var(--glass-brd);
+    box-shadow: var(--shadow);
+    transition: transform .14s ease, box-shadow .16s ease, border-color .16s;
+    display: flex;
+    flex-direction: column;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent, var(--violet));
+    box-shadow: 0 0 16px var(--accent, var(--violet));
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,255,255,.2);
+    box-shadow: 0 16px 44px rgba(0,0,0,.5);
+  }
+  .card.added {
+    border-color: rgba(78,227,154,.45);
+  }
+  .card .top {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .ico {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    flex: 0 0 44px;
+    display: grid;
+    place-items: center;
+    font-size: 17px;
+    font-weight: 900;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(0,0,0,.4);
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .ico img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 3px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border-radius: inherit;
+  }
+  .card .name {
+    font-weight: 800;
+    font-size: 15px;
+    line-height: 1.25;
+    cursor: pointer;
+  }
+  .card .name:hover {
+    color: var(--gold-2);
+  }
+  .card .meta {
+    color: var(--sub);
+    font-size: 12px;
+    margin-top: 3px;
+  }
+  .card .code {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--sub);
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--glass-brd);
+    border-radius: 6px;
+    padding: 1px 6px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .card .tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    flex: 1;
+    align-content: flex-start;
+    align-items: flex-start;
+  }
+  .tag {
+    font-size: 10.5px;
+    padding: 0 9px;
+    height: 23px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    font-weight: 700;
+    border: 1px solid var(--glass-brd);
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+    white-space: nowrap;
+    align-self: flex-start;
+  }
+  .tag.ind  { color: var(--violet); border-color: rgba(139,123,255,.35); background: rgba(139,123,255,.1); }
+  .tag.size { color: var(--green); border-color: rgba(78,227,154,.35); background: rgba(78,227,154,.08); }
+  .tag.emp  { color: var(--cyan); border-color: rgba(79,216,232,.35); background: rgba(79,216,232,.08); }
+  .tag.free { color: var(--sub); background: var(--glass); }
+  .tag.custom { color: var(--gold-2); border-color: rgba(217,178,95,.4); background: rgba(217,178,95,.1); }
+  .tag.pop {
+    color: var(--gold-2);
+    border-color: rgba(217, 178, 95, 0.5);
+    background: linear-gradient(135deg, rgba(217, 178, 95, 0.22), rgba(244, 212, 137, 0.08));
+    box-shadow: 0 0 10px rgba(217, 178, 95, 0.12);
+  }
+  .tag.pop.top {
+    color: #ffeaa7;
+    border-color: rgba(255, 234, 167, 0.65);
+    background: linear-gradient(135deg, rgba(217, 178, 95, 0.32), rgba(255, 234, 167, 0.14));
+  }
+  .tag.pop.elite {
+    color: var(--cyan);
+    border-color: rgba(79, 216, 232, 0.45);
+    background: rgba(79, 216, 232, 0.12);
+  }
+
+  .card .foot {
+    display: flex;
+    align-items: center;
+    margin-top: 14px;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,.05);
+    flex-wrap: wrap;
+  }
+  .card .pay-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .card .pay {
+    font-size: 11.5px;
+    color: var(--sub);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .card .pay b { color: var(--ink); font-size: 13px; font-weight: 700; }
+  .card .annual-pay {
+    font-size: 11px;
+    color: var(--sub);
+    white-space: nowrap;
+  }
+  .card .annual-pay b { color: var(--gold-2); font-size: 12.5px; font-weight: 700; }
+  .modal-stats-bar {
+    display: flex;
+    gap: 12px;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--glass-brd);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .modal-stat-label {
+    font-size: 10px;
+    color: var(--sub);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
+  .modal-stat-val {
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+  .modal-stat-sep {
+    width: 1px;
+    height: 24px;
+    background: var(--glass-brd);
+  }
+
+  .card-btns {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .btn-sm-ghost {
+    border: 1px solid var(--glass-brd);
+    background: var(--glass);
+    color: var(--sub);
+    border-radius: 9px;
+    padding: 6px 10px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .15s;
+  }
+  .btn-sm-ghost:hover {
+    background: var(--glass-2);
+    color: var(--ink);
+  }
+  .add-btn {
+    border: 0;
+    cursor: pointer;
+    border-radius: 9px;
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 800;
+    transition: .16s;
+    color: #1a1406;
+    background: linear-gradient(135deg, var(--gold-2), var(--gold));
+    box-shadow: var(--glow-gold);
+    white-space: nowrap;
+  }
+  .add-btn:hover { filter: brightness(1.08); }
+  .add-btn.added {
+    color: var(--green);
+    background: rgba(78,227,154,.12);
+    box-shadow: none;
+    border: 1px solid rgba(78,227,154,.4);
+  }
+  .add-btn.added:hover {
+    background: rgba(78,227,154,.2);
+  }
+
+  /* ===== Kanban Board ===== */
+  .stat-strip {
+    display: flex;
+    gap: 20px;
+    margin-left: auto;
+    color: var(--sub);
+    font-size: 12.5px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .stat-strip b { color: var(--ink); font-size: 16px; font-weight: 800; margin-right: 3px; }
+  .stat-strip .hot b { color: var(--pink); }
+
+  .board-wrap {
+    padding: 10px 24px 36px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .board {
+    display: flex;
+    gap: 16px;
+    min-width: max-content;
+    align-items: flex-start;
+  }
+  .col {
+    width: 295px;
+    flex: 0 0 295px;
+    border-radius: 18px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 250px);
+    max-height: calc(100vh - 180px);
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    backdrop-filter: blur(10px);
+    transition: border-color .15s, background .15s;
+  }
+  .col.drag-over {
+    border-color: var(--cyan);
+    background: rgba(79, 216, 232, 0.08);
+  }
+  .col-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 6px 12px;
+    font-weight: 800;
+    font-size: 13.5px;
+    border-bottom: 1px solid var(--glass-brd);
+    margin-bottom: 8px;
+  }
+  .col-head .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px currentColor;
+  }
+  .col-head .desc {
+    font-size: 11px;
+    color: var(--sub);
+    font-weight: 500;
+    margin-left: 2px;
+  }
+  .col-head .count {
+    margin-left: auto;
+    color: var(--sub);
+    border: 1px solid var(--glass-brd);
+    border-radius: 999px;
+    padding: 1px 9px;
+    font-size: 11px;
+    font-weight: 800;
+    background: rgba(255,255,255,.03);
+  }
+  .col-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    padding: 4px 2px;
+    flex: 1;
+  }
+
+  .kcard {
+    position: relative;
+    border-radius: 12px;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+    border: 1px solid var(--glass-brd);
+    box-shadow: 0 4px 14px rgba(0,0,0,.25);
+    transition: transform .12s ease, box-shadow .16s ease, border-color .16s, opacity .16s;
+    cursor: grab;
+    user-select: none;
+  }
+  .kcard:active { cursor: grabbing; }
+  .kcard.dragging {
+    opacity: 0.45;
+    transform: scale(0.98);
+  }
+  .kcard::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3.5px;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    background: var(--accent, var(--violet));
+    box-shadow: 0 0 10px var(--accent, var(--violet));
+  }
+  .kcard:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,.25);
+    box-shadow: 0 8px 24px rgba(0,0,0,.45);
+  }
+  .kcard .kcard-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 34px;
+  }
+  .kcard .ico {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    flex: 0 0 34px;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .kcard .name {
+    font-weight: 700;
+    font-size: 13.5px;
+    line-height: 1.35;
+    color: var(--ink);
+    flex: 1;
+    min-width: 0;
+    word-break: break-word;
+  }
+  .kcard .k-due {
+    margin-left: auto;
+    font-size: 10.5px;
+    font-weight: 800;
+    color: var(--sub);
+    border: 1px solid var(--glass-brd);
+    border-radius: 6px;
+    padding: 2px 7px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1.3;
+  }
+  .k-due {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--sub);
+    border: 1px solid var(--glass-brd);
+    border-radius: 7px;
+    padding: 2px 7px;
+    white-space: nowrap;
+  }
+  .k-due.soon { color: #ffcf6b; border-color: rgba(255,207,107,.4); background: rgba(255,207,107,.08); }
+  .k-due.urgent { color: #fff; border: 0; background: linear-gradient(135deg, #ff6a5f, #e0345a); box-shadow: 0 0 14px rgba(224,52,90,.5); }
+  .empty-hint { color: var(--sub); font-size: 12px; text-align: center; padding: 36px 12px; }
+
+  /* ===== Selection List Table ===== */
+  .table-wrap { padding: 8px 26px 36px; }
+  .table-card {
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    text-align: left;
+    padding: 13px 14px;
+    color: var(--sub);
+    font-size: 12px;
+    font-weight: 800;
+    background: #131a2c;
+    border-bottom: 1px solid var(--glass-brd);
+    white-space: nowrap;
+    user-select: none;
+    letter-spacing: .3px;
+    cursor: pointer;
+    transition: color .15s;
+  }
+  thead th:hover { color: var(--ink); }
+  thead th .arrow { color: var(--gold-2); font-size: 11px; margin-left: 3px; }
+  tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    vertical-align: middle;
+  }
+  tbody tr { transition: background .15s; cursor: pointer; }
+  tbody tr:hover { background: rgba(255,255,255,.04); }
+  tbody tr:last-child td { border-bottom: 0; }
+  .company { display: flex; align-items: center; gap: 11px; }
+  .company .ico { width: 32px; height: 32px; border-radius: 9px; flex: 0 0 32px; font-size: 13px; }
+  .company .name { font-weight: 800; }
+  .company .url { color: var(--sub); font-size: 11px; }
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 800;
+    white-space: nowrap;
+    border: 1px solid var(--glass-brd);
+  }
+  .pill.ind  { color: var(--violet); border-color: rgba(139,123,255,.3); background: rgba(139,123,255,.1); }
+  .pill.size { color: var(--green); border-color: rgba(78,227,154,.3); background: rgba(78,227,154,.08); }
+
+
+
+  .stage-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 4px 11px;
+    border-radius: 999px;
+    white-space: nowrap;
+    border: 1px solid var(--glass-brd);
+  }
+  .stage-badge .dot { width: 7px; height: 7px; border-radius: 50%; box-shadow: 0 0 8px currentColor; }
+  .s-watch  { color: #a4adc0; } .s-watch .dot{ background:#8a94a6; color:#8a94a6; }
+  .s-entry  { color: #7fb0ff; } .s-entry .dot{ background:#4c8bf5; color:#4c8bf5; }
+  .s-es     { color: #b3a9ff; } .s-es .dot{ background:#8b7bff; color:#8b7bff; }
+  .s-first  { color: #7fe6f0; } .s-first .dot{ background:#4fd8e8; color:#4fd8e8; }
+  .s-final  { color: #ffa8cf; } .s-final .dot{ background:#ff7eb6; color:#ff7eb6; }
+  .s-offer  { color: #86eeb8; } .s-offer .dot{ background:#4ee39a; color:#4ee39a; }
+
+  .due { font-size: 12px; font-weight: 800; color: var(--sub); }
+  .due.soon { color: #ffcf6b; }
+  .due.urgent {
+    color: #fff;
+    background: linear-gradient(135deg, #ff6a5f, #e0345a);
+    border-radius: 8px;
+    padding: 3px 9px;
+    box-shadow: 0 0 14px rgba(224,52,90,.4);
+  }
+  .row-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+  .action-icon-btn {
+    border: 0;
+    background: transparent;
+    color: var(--sub);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+    border-radius: 6px;
+    transition: .15s;
+  }
+  .action-icon-btn:hover { color: var(--ink); background: var(--glass-2); }
+  .action-icon-btn.delete:hover { color: var(--red); }
+
+  /* ===== Dashboard ===== */
+  .page { padding: 18px 26px 44px; max-width: 1280px; margin: 0 auto; }
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .kpi {
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px;
+    padding: 16px 18px;
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+  }
+  .kpi::after {
+    content: "";
+    position: absolute;
+    right: -30px;
+    top: -30px;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: var(--kglow, rgba(139,123,255,.25));
+    filter: blur(24px);
+  }
+  .kpi .label { color: var(--sub); font-size: 12px; font-weight: 700; }
+  .kpi .val { font-size: 28px; font-weight: 900; margin-top: 4px; letter-spacing: .5px; }
+  .kpi .val small { font-size: 13px; color: var(--sub); font-weight: 700; }
+  .kpi .val .g { background: linear-gradient(90deg, var(--gold-2), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  .grid2 { display: grid; grid-template-columns: 1.25fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .panel {
+    border-radius: 18px;
+    padding: 20px;
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+  }
+  .panel h2 {
+    font-size: 14.5px;
+    margin: 0 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+  }
+  .panel h2 .sub { color: var(--sub); font-weight: 700; font-size: 12px; margin-left: auto; }
+
+  /* Funnel */
+  .funnel { display: flex; flex-direction: column; gap: 11px; }
+  .funnel .row { display: flex; align-items: center; gap: 12px; }
+  .funnel .fname { width: 96px; font-size: 12px; color: var(--sub); font-weight: 700; text-align: right; }
+  .funnel .bar-track { flex: 1; background: rgba(255,255,255,.05); border-radius: 8px; height: 28px; overflow: hidden; }
+  .funnel .bar {
+    height: 100%;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    color: #06121a;
+    font-size: 12px;
+    font-weight: 900;
+    box-shadow: 0 0 18px var(--bg-glow);
+    min-width: 24px;
+    transition: width .4s ease;
+  }
+  .funnel .rate { width: 54px; font-size: 12px; font-weight: 800; color: var(--sub); text-align: right; }
+
+  /* Donut */
+  .donut-wrap { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .donut { filter: drop-shadow(0 0 12px rgba(139,123,255,.35)); }
+  .legend { display: flex; flex-direction: column; gap: 9px; font-size: 12.5px; flex: 1; min-width: 140px; }
+  .legend .item { display: flex; align-items: center; gap: 9px; }
+  .legend .sw { width: 10px; height: 10px; border-radius: 3px; box-shadow: 0 0 8px currentColor; }
+  .legend .n { color: var(--ink); margin-left: auto; font-weight: 800; }
+
+  /* Bar chart */
+  .barchart { display: flex; align-items: flex-end; gap: 20px; height: 160px; padding: 0 8px; }
+  .barchart .bcol { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; justify-content: flex-end; height: 100%; }
+  .barchart .b {
+    width: 60%;
+    border-radius: 8px 8px 0 0;
+    background: linear-gradient(180deg, var(--cyan), var(--violet));
+    box-shadow: 0 0 20px rgba(139,123,255,.4);
+    min-height: 4px;
+    transition: height .4s ease;
+  }
+  .barchart .cap { font-size: 11px; color: var(--sub); font-weight: 700; text-align: center; }
+  .barchart .num { font-size: 13px; font-weight: 900; }
+
+  /* Deadlines in Dash */
+  .deadlines { display: flex; flex-direction: column; gap: 9px; }
+  .dl {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--glass-brd);
+    border-radius: 12px;
+    background: rgba(255,255,255,.02);
+    transition: .15s;
+    cursor: pointer;
+  }
+  .dl:hover { background: rgba(255,255,255,.06); border-color: var(--glass-brd-hover); }
+  .dl .date { text-align: center; width: 48px; flex: 0 0 48px; }
+  .dl .date .d { font-size: 19px; font-weight: 900; line-height: 1; }
+  .dl .date .m { font-size: 10px; color: var(--sub); }
+  .dl .dbody { flex: 1; min-width: 0; }
+  .dl .dbody .t { font-weight: 800; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dl .dbody .c { color: var(--sub); font-size: 11.5px; }
+  .dl .dtag {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+    border: 1px solid var(--glass-brd);
+  }
+  .dl.urgent { border-color: rgba(224,52,90,.4); background: rgba(224,52,90,.08); }
+  .dl.urgent .date .d { color: #ff7a6b; text-shadow: 0 0 12px rgba(224,52,90,.6); }
+
+  /* Checklist in Dash */
+  .task-list { display: flex; flex-direction: column; gap: 8px; }
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.02);
+    border: 1px solid var(--glass-brd);
+    transition: .15s;
+  }
+  .task-item:hover { background: rgba(255,255,255,.05); }
+  .task-item.done { opacity: 0.55; }
+  .task-item.done .task-text { text-decoration: line-through; }
+  .task-cb {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--gold);
+  }
+  .task-text { flex: 1; font-size: 12.5px; font-weight: 600; }
+  .task-tag { font-size: 10px; padding: 2px 7px; border-radius: 6px; background: var(--glass-2); color: var(--sub); }
+  .task-del { border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 12px; padding: 2px 5px; }
+  .task-del:hover { color: var(--red); }
+  .task-add-bar { display: flex; gap: 8px; margin-top: 10px; }
+  .task-add-bar input {
+    flex: 1;
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--glass-brd);
+    border-radius: 9px;
+    padding: 7px 12px;
+    font-size: 12px;
+    color: var(--ink);
+    outline: none;
+  }
+  .task-add-bar input:focus { border-color: var(--violet); }
+  .task-add-btn {
+    border: 0;
+    border-radius: 9px;
+    background: var(--glass-3);
+    color: var(--ink);
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* ===== Modal System ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(8, 11, 22, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    display: none;
+    place-items: center;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  .modal-overlay.open { display: grid; animation: modalFadeIn .18s ease-out; }
+  @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: linear-gradient(180deg, #161e33, #101628);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 680px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 60px rgba(0,0,0,.7);
+    overflow: hidden;
+  }
+  .modal-head {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--glass-brd);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255,255,255,.02);
+  }
+  .modal-head h3 { margin: 0; font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .modal-close {
+    margin-left: auto;
+    border: 0;
+    background: transparent;
+    color: var(--sub);
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    transition: .15s;
+  }
+  .modal-close:hover { color: var(--ink); background: var(--glass-2); }
+  .modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .modal-foot {
+    padding: 14px 20px;
+    border-top: 1px solid var(--glass-brd);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,.02);
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-label { font-size: 12px; font-weight: 800; color: var(--sub); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-input, .form-select, .form-textarea {
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--glass-brd);
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 13px;
+    color: var(--ink);
+    outline: none;
+    transition: .15s;
+    font-family: inherit;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--violet);
+    box-shadow: 0 0 0 3px rgba(139,123,255,.15);
+  }
+  .form-textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
+
+  .tag-manager { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .modal-tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 6px;
+    background: var(--glass-2);
+    border: 1px solid var(--glass-brd);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .modal-tag .x { cursor: pointer; color: var(--sub); font-weight: 900; }
+  .modal-tag .x:hover { color: var(--red); }
+  .tag-presets { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px; }
+  .tag-preset-chip {
+    font-size: 10.5px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--glass-brd);
+    color: var(--sub);
+    cursor: pointer;
+  }
+  .tag-preset-chip:hover { color: var(--ink); border-color: var(--violet); }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: calc(var(--safe-bottom) + 30px);
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(16, 22, 40, 0.96);
+    border: 1px solid rgba(255,255,255,.18);
+    color: var(--ink);
+    padding: 11px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 13px;
+    box-shadow: 0 16px 40px rgba(0,0,0,.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .25s ease, opacity .25s ease;
+    backdrop-filter: blur(12px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Mobile Bottom Navigation Bar */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(56px + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom);
+    background: rgba(12, 16, 30, 0.94);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--glass-brd);
+    z-index: 60;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .mobile-nav-btn {
+    border: 0;
+    background: transparent;
+    color: var(--sub);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: .15s;
+  }
+  .mobile-nav-btn .icon { font-size: 18px; line-height: 1; }
+  .mobile-nav-btn.active { color: var(--gold-2); }
+
+  footer.note {
+    text-align: center;
+    color: var(--muted);
+    font-size: 11px;
+    padding: 20px 0 30px;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 960px) {
+    .kpis { grid-template-columns: repeat(3, 1fr); }
+    .grid2 { grid-template-columns: 1fr; }
+    .page { padding: 16px; }
+  }
+
+  @media (max-width: 768px) {
+    body { padding-bottom: calc(var(--safe-bottom) + 72px); }
+    header.topbar nav.tabs { display: none; }
+    .mobile-nav {
+      display: flex;
+      padding-bottom: max(var(--safe-bottom), 6px);
+      height: calc(56px + max(var(--safe-bottom), 6px));
+    }
+    header.topbar {
+      padding: 0 10px;
+      gap: 8px;
+      height: 54px;
+    }
+    header.topbar .spacer { display: none; }
+    header.topbar .logo .grad { display: none; }
+    header.topbar .logo .badge-grad { font-size: 10.5px; padding: 2px 6px; }
+    .searchbox {
+      min-width: 0;
+      flex: 1;
+      margin: 0;
+    }
+    .searchbox input {
+      font-size: 13px;
+      padding: 6px 8px 6px 4px;
+    }
+    header.topbar .top-btn {
+      padding: 7px 10px;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    header.topbar .top-btn .btn-text {
+      display: none;
+    }
+    .hero {
+      padding: 12px 14px 4px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .hero-title h1 { font-size: 22px; }
+    .hero-actions {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+    .hero-actions .top-btn {
+      flex: 1;
+      justify-content: center;
+    }
+    .toolbar {
+      padding: 8px 14px 6px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      max-width: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    .toolbar-select {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      max-width: 100%;
+      box-sizing: border-box;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 4px 0;
+      gap: 6px;
+      width: 100%;
+    }
+    .filters::-webkit-scrollbar { display: none; }
+    .chip {
+      flex-shrink: 0;
+      white-space: nowrap;
+      padding: 5px 12px;
+      font-size: 12px;
+    }
+    .result-count {
+      margin-left: 0;
+      font-size: 11.5px;
+    }
+    .grid-wrap { padding: 10px 14px 32px; }
+    .grid-cards { grid-template-columns: 1fr; gap: 12px; }
+    .card { padding: 14px; border-radius: 14px; }
+    .card .foot {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      margin-top: 12px;
+      padding-top: 10px;
+    }
+    .card .pay-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      flex-wrap: nowrap;
+      gap: 6px;
+    }
+    .card .pay {
+      font-size: 11px;
+    }
+    .card .annual-pay {
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    .card-btns {
+      margin-left: 0;
+      width: 100%;
+      display: flex;
+      gap: 8px;
+    }
+    .card-btns .btn-sm-ghost {
+      flex: 1;
+      text-align: center;
+      justify-content: center;
+      padding: 8px 10px;
+      font-size: 12.5px;
+    }
+    .card-btns .add-btn {
+      flex: 2;
+      text-align: center;
+      justify-content: center;
+      padding: 8px 12px;
+      font-size: 12.5px;
+    }
+    /* Kanban Mobile touch snap */
+    .board-wrap {
+      padding: 10px 14px 32px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .col {
+      width: 82vw;
+      flex-basis: 82vw;
+      max-width: 320px;
+      min-height: 55vh;
+      scroll-snap-align: center;
+    }
+    /* Table List */
+    .table-wrap { padding: 8px 14px 32px; }
+    .table-card { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; }
+    table { min-width: 720px; }
+    /* Dashboard */
+    .kpis {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .kpi:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+    .form-row { grid-template-columns: 1fr; }
+    .donut-wrap { justify-content: center; }
+
+    /* Modal System: Native Mobile Bottom Sheet */
+    .modal-overlay {
+      padding: 0;
+    }
+    .modal-overlay.open {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal {
+      width: 100%;
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: 20px 20px 0 0;
+      border-bottom: 0;
+      animation: modalSheetUp .24s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalSheetUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .modal-head {
+      padding: 14px 16px;
+    }
+    .modal-body {
+      padding: 16px;
+      gap: 14px;
+    }
+    .modal-stats-bar {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .modal-stat-sep {
+      display: none;
+    }
+    .modal-foot {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 12px 16px max(14px, env(safe-area-inset-bottom, 14px));
+    }
+    .modal-foot > div[style*="flex:1"] {
+      display: none;
+    }
+    .modal-foot .top-btn.primary {
+      grid-column: 1 / -1;
+      order: -1;
+      padding: 11px;
+      font-size: 14px;
+      justify-content: center;
+    }
+    .modal-foot button {
+      justify-content: center;
+      text-align: center;
+      padding: 9px 8px;
+      font-size: 12.5px;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===================== TOPBAR ===================== -->
+  <header class="topbar">
+    <div class="logo" onclick="switchView('db')">
+      <span class="mark">就</span>
+      <span class="grad">就活ボード</span>
+      <span class="badge-grad" id="gradBadge" onclick="openGradYearModal(event)" title="卒業年・区分を変更">28卒</span>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button data-view="db" class="active">🏢 企業DB</button>
+      <button data-view="kanban">📋 カンバン</button>
+      <button data-view="list">📑 選考リスト</button>
+      <button data-view="dash">📊 ダッシュボード</button>
+    </nav>
+    <div class="spacer"></div>
+    <div class="searchbox">
+      🔍<input id="search" placeholder="企業名・キーワードで検索…" autocomplete="off" />
+    </div>
+    <button class="top-btn primary" onclick="openNewCompanyModal()" title="データベースにない企業を手動登録">
+      ＋<span class="btn-text"> 企業を追加</span>
+    </button>
+    <button class="top-btn" onclick="openSettingsModal()" title="データ設定・バックアップ">
+      ⚙️<span class="btn-text"> データ管理</span>
+    </button>
+  </header>
+
+  <!-- ===================== VIEW 1: 企業DB ===================== -->
+  <section class="view active" id="view-db">
+    <div class="hero">
+      <div class="hero-title">
+        <h1>企業<span class="g">データベース</span></h1>
+        <p>厳選企業カタログから志望先を「＋管理に追加」すると、カンバンや選考リスト・分析に即座に同期されます。</p>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <select class="toolbar-select" id="dbSortSelect" onchange="onDbSortChange(this.value)">
+          <option value="pop_asc" selected>就職人気・総合力順（おすすめ）</option>
+          <option value="emp_desc">従業員数（多い順）</option>
+          <option value="annual_desc">平均年収（高い順）</option>
+          <option value="pay_desc">初任給（高い順）</option>
+          <option value="name_asc">企業名（五十音順）</option>
+        </select>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="filters" id="dbFilters">
+        <span class="chip on">すべて</span>
+        <span class="chip" style="color:var(--gold-2);border-color:rgba(217,178,95,.4)">人気TOP300</span>
+        <span class="chip">コンサル・シンクタンク</span>
+        <span class="chip">IT・通信</span>
+        <span class="chip">商社</span>
+        <span class="chip">金融</span>
+        <span class="chip">メーカー</span>
+        <span class="chip">不動産・建設</span>
+        <span class="chip">広告・マスコミ</span>
+        <span class="chip">インフラ・運輸</span>
+        <span class="chip">小売・サービス</span>
+        <span class="chip">大企業</span>
+        <span class="chip">非上場名門</span>
+        <span class="chip">未追加のみ</span>
+        <span class="chip">選考中のみ</span>
+      </div>
+      <div class="result-count"><b id="dbTotal">0</b> 社中 <b id="dbShown">0</b> 件を表示</div>
+    </div>
+    <div class="grid-wrap">
+      <div class="grid-cards" id="grid"></div>
+    </div>
+  </section>
+
+  <!-- ===================== VIEW 2: カンバン ===================== -->
+  <section class="view" id="view-kanban">
+    <div class="hero">
+      <div class="hero-title">
+        <h1>選考<span class="g">カンバンボード</span></h1>
+        <p>カードをドラッグ＆ドロップして選考ステージを進められます。クリックで選考詳細・面接記録を編集できます。</p>
+      </div>
+      <div class="stat-strip">
+        <span>選考中 <b id="kActive" style="color:var(--cyan)">0</b> 社</span>
+        <span>内々定 <b id="kOffer" style="color:var(--green)">0</b> 社</span>
+        <span class="hot">直近締切 <b id="kDue">0</b> 件</span>
+      </div>
+    </div>
+    <div class="board-wrap">
+      <div class="board" id="board"></div>
+    </div>
+  </section>
+
+  <!-- ===================== VIEW 3: 選考リスト ===================== -->
+  <section class="view" id="view-list">
+    <div class="hero">
+      <div class="hero-title">
+        <h1>選考<span class="g">管理リスト</span></h1>
+        <p>選考対象企業のステージ、締切日、初任給・年収一覧。表頭をクリックして並び替えが可能です。</p>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="top-btn" onclick="exportCSV()">📥 CSV出力</button>
+        <button class="top-btn primary" onclick="openNewCompanyModal()">＋ 企業追加</button>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="filters" id="listFilters">
+        <span class="chip on">すべて</span>
+        <span class="chip">コンサル・シンクタンク</span>
+        <span class="chip">IT・通信</span>
+        <span class="chip">商社</span>
+        <span class="chip">金融</span>
+        <span class="chip">メーカー</span>
+        <span class="chip">不動産・建設</span>
+        <span class="chip">広告・マスコミ</span>
+        <span class="chip">選考中のみ</span>
+                <span class="chip">締切あり</span>
+      </div>
+      <div class="result-count">選考中・管理中 <b id="listShown">0</b> 社</div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th onclick="sortTable('name')" data-sort="name">企業名 <span class="arrow" id="arr-name">↕</span></th>
+              <th onclick="sortTable('cat')" data-sort="cat">業界 / 業種 <span class="arrow" id="arr-cat">↕</span></th>
+              <th onclick="sortTable('emp')" data-sort="emp">規模・従業員数 <span class="arrow" id="arr-emp">↕</span></th>
+              <th onclick="sortTable('annual')" data-sort="annual">平均年収 <span class="arrow" id="arr-annual">↕</span></th>
+              <th onclick="sortTable('pay')" data-sort="pay">初任給(大卒) <span class="arrow" id="arr-pay">↕</span></th>
+              <th onclick="sortTable('stage')" data-sort="stage">選考ステージ <span class="arrow" id="arr-stage">↕</span></th>
+              <th onclick="sortTable('due')" data-sort="due">直近の締切・予定 <span class="arrow" id="arr-due">↕</span></th>
+              <th style="width: 80px; text-align: center;">操作</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== VIEW 4: ダッシュボード ===================== -->
+  <section class="view" id="view-dash">
+    <div class="page">
+      <div class="hero" style="padding: 0 0 16px;">
+        <div class="hero-title">
+          <h1>就活状況 <span class="g">ダッシュボード</span></h1>
+          <p>選考通過ファネル、業界・企業規模の分布、直近スケジュールを一元把握。</p>
+        </div>
+      </div>
+      <div class="kpis" id="kpis"></div>
+      <div class="grid2">
+        <div class="panel">
+          <h2>選考ファネル <span class="sub">通過・到達状況</span></h2>
+          <div class="funnel" id="funnel"></div>
+        </div>
+        <div class="panel">
+          <h2>業界別 分布 <span class="sub" id="donutSub">0社</span></h2>
+          <div class="donut-wrap">
+            <svg class="donut" width="160" height="160" viewBox="0 0 42 42" id="donut"></svg>
+            <div class="legend" id="legend"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>直近の選考日程・締切 <span class="sub">締切のある企業</span></h2>
+          <div class="deadlines" id="deadlines"></div>
+        </div>
+        <div class="panel">
+          <h2>就活TODO・準備タスク <span class="sub" id="taskCountSub">0/0 完了</span></h2>
+          <div class="task-list" id="taskList"></div>
+          <div class="task-add-bar">
+            <input id="newTaskInput" placeholder="新しい就活タスクを入力… (例: SPI問題集3章解く)" />
+            <button class="task-add-btn" onclick="addNewTask()">追加</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top: 16px;">
+        <h2>企業規模の分布 <span class="sub">大企業・中堅・ベンチャー内訳</span></h2>
+        <div class="barchart" id="barchart"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MOBILE BOTTOM NAV ===================== -->
+  <nav class="mobile-nav">
+    <button class="mobile-nav-btn active" data-view="db" onclick="switchView('db')">
+      <span class="icon">🏢</span>
+      <span>企業DB</span>
+    </button>
+    <button class="mobile-nav-btn" data-view="kanban" onclick="switchView('kanban')">
+      <span class="icon">📋</span>
+      <span>カンバン</span>
+    </button>
+    <button class="mobile-nav-btn" data-view="list" onclick="switchView('list')">
+      <span class="icon">📑</span>
+      <span>選考リスト</span>
+    </button>
+    <button class="mobile-nav-btn" data-view="dash" onclick="switchView('dash')">
+      <span class="icon">📊</span>
+      <span>分析</span>
+    </button>
+    <button class="mobile-nav-btn" onclick="openSettingsModal()">
+      <span class="icon">⚙️</span>
+      <span>設定</span>
+    </button>
+  </nav>
+
+  <!-- ===================== MODAL: 企業詳細・選考編集 ===================== -->
+  <div class="modal-overlay" id="companyModal" onclick="onModalOverlayClick(event, 'companyModal')">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="ico" id="mIco" style="background:#8b7bff;width:38px;height:38px;font-size:15px">企</div>
+        <div>
+          <h3 id="mTitle">企業名</h3>
+          <span style="color:var(--sub);font-size:11.5px" id="mSubTitle">業界・業種</span>
+        </div>
+        <button class="modal-close" onclick="closeModal('companyModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="mId" />
+        <div class="modal-stats-bar" id="mStatsBar">
+          <div class="modal-stat-item">
+            <span class="modal-stat-label">初任給(大卒)</span>
+            <span class="modal-stat-val" id="mStatPay" style="color:var(--ink)">—</span>
+          </div>
+          <div class="modal-stat-sep"></div>
+          <div class="modal-stat-item">
+            <span class="modal-stat-label">初任給(修士/院卒)</span>
+            <span class="modal-stat-val" id="mStatPayMaster" style="color:var(--blue, #54a0ff)">—</span>
+          </div>
+          <div class="modal-stat-sep"></div>
+          <div class="modal-stat-item">
+            <span class="modal-stat-label">平均年収(有報/推定)</span>
+            <span class="modal-stat-val" id="mStatAnnual" style="color:var(--gold-2)">—</span>
+          </div>
+          <div class="modal-stat-sep"></div>
+          <div class="modal-stat-item">
+            <span class="modal-stat-label">従業員数</span>
+            <span class="modal-stat-val" id="mStatEmp" style="color:var(--cyan)">—</span>
+          </div>
+          <div class="modal-stat-item">
+            <span class="modal-stat-label">就職人気・格付</span>
+            <span class="modal-stat-val" id="mStatPopRank" style="color:var(--gold-2)">—</span>
+          </div>
+          <div class="modal-stat-sep"></div>
+          <div class="modal-stat-item">
+            <span class="modal-stat-label">上場区分 / 規模</span>
+            <span class="modal-stat-val" id="mStatMarket" style="color:var(--purple-2)">—</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">選考ステージ</label>
+          <select class="form-select" id="mStage">
+            <option value="watch">気になる（志望検討）</option>
+            <option value="entry">エントリー（マイページ作成）</option>
+            <option value="es">ES・Webテスト</option>
+            <option value="first">一次面接</option>
+            <option value="final">二次・最終面接</option>
+            <option value="offer">内々定・内定</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">直近の締切・面接予定日</label>
+            <input type="date" class="form-input" id="mDue" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">予定種別（ラベル）</label>
+            <input class="form-input" id="mDueLabel" placeholder="ES提出 / SPI受検 / 一次面接など" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">マイページ URL</label>
+            <div style="display:flex;gap:6px">
+              <input type="url" class="form-input" id="mMyPageUrl" placeholder="https://..." style="flex:1" />
+              <button class="btn-sm-ghost" type="button" onclick="openExternalUrl(document.getElementById('mMyPageUrl').value)" title="マイページを開く">↗ 開く</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">マイページ ログインID / 受験番号</label>
+            <input class="form-input" id="mMyPageId" placeholder="IDや管理番号の備忘録" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">管理タグ</label>
+          <div class="tag-manager" id="mTagsList"></div>
+          <div style="display:flex;gap:6px;margin-top:6px">
+            <input class="form-input" id="mNewTagInput" placeholder="新しいタグを追加 (Enterで追加)" style="flex:1;font-size:12px;padding:6px 10px" onkeydown="if(event.key==='Enter'){event.preventDefault();addModalTag();}" />
+            <button class="btn-sm-ghost" type="button" onclick="addModalTag()">＋ 追加</button>
+          </div>
+          <div class="tag-presets">
+            <span class="tag-preset-chip" onclick="addModalTagText('早期選考')">+ 早期選考</span>
+            <span class="tag-preset-chip" onclick="addModalTagText('インターン経由')">+ インターン経由</span>
+            <span class="tag-preset-chip" onclick="addModalTagText('リクルーター面談')">+ リクルーター</span>
+            <span class="tag-preset-chip" onclick="addModalTagText('OB訪問済')">+ OB訪問済</span>
+            <span class="tag-preset-chip" onclick="addModalTagText('推薦')">+ 推薦</span>
+            <span class="tag-preset-chip" onclick="addModalTagText('高年収')">+ 高年収</span>
+            <span class="tag-preset-chip" onclick="addModalTagText('リモート可')">+ リモート可</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">志望動機・企業研究メモ</label>
+          <textarea class="form-textarea" id="mNoteMotiv" placeholder="求める人物像、社風、他社との差別化ポイント、なぜこの企業なのか…"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">ES設問・提出テキスト控え</label>
+          <textarea class="form-textarea" id="mNoteEs" placeholder="ES設問と提出した回答内容のバックアップ…"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">面接ログ・質問内容・逆質問・振り返り</label>
+          <textarea class="form-textarea" id="mNoteInterview" placeholder="面接官の雰囲気、聞かれた質問、手応え、次回への改善点…"></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-sm-ghost" id="mDeleteBtn" onclick="deleteModalCompany()" style="color:var(--red)">企業を削除</button>
+        <button class="btn-sm-ghost" id="mToggleTrackBtn" onclick="toggleModalTrack()">選考リストから外す</button>
+        <div style="flex:1"></div>
+        <button class="btn-sm-ghost" onclick="closeModal('companyModal')">キャンセル</button>
+        <button class="top-btn primary" onclick="saveModalCompany()">保存する</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: 新規企業追加 ===================== -->
+  <div class="modal-overlay" id="newCompanyModal" onclick="onModalOverlayClick(event, 'newCompanyModal')">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>＋ 新規企業を手動登録</h3>
+        <button class="modal-close" onclick="closeModal('newCompanyModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">企業名 <span style="color:var(--red)">*</span></label>
+            <input class="form-input" id="newCompName" placeholder="例: 日本マイクロソフト" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">業界大分類</label>
+            <select class="form-select" id="newCompCat">
+              <option value="IT・通信">IT・通信</option>
+              <option value="コンサル・シンクタンク">コンサル・シンクタンク</option>
+              <option value="商社">商社</option>
+              <option value="金融">金融</option>
+              <option value="メーカー">メーカー</option>
+              <option value="不動産・建設">不動産・建設</option>
+              <option value="広告・マスコミ">広告・マスコミ</option>
+              <option value="インフラ・運輸">インフラ・運輸</option>
+              <option value="小売・サービス">小売・サービス</option>
+              <option value="その他">その他</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">細分分野 / 業種</label>
+            <input class="form-input" id="newCompSub" placeholder="例: クラウド / 外資IT" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">証券コード（任意）</label>
+            <input class="form-input" id="newCompCode" placeholder="例: 4385" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">大卒初任給（円）</label>
+            <input type="number" class="form-input" id="newCompPay" placeholder="例: 300000" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">大学院卒初任給（円）</label>
+            <input type="number" class="form-input" id="newCompPayMaster" placeholder="例: 325000" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">平均年収（万円）</label>
+            <input type="number" class="form-input" id="newCompAnnual" placeholder="例: 950" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">従業員数（人）</label>
+            <input type="number" class="form-input" id="newCompEmp" placeholder="例: 3500" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">選考ステージ</label>
+          <select class="form-select" id="newCompStage">
+            <option value="watch">気になる（志望検討）</option>
+            <option value="entry" selected>エントリー（応募準備）</option>
+            <option value="es">ES・Webテスト</option>
+            <option value="first">一次面接</option>
+            <option value="final">二次・最終面接</option>
+            <option value="offer">内々定・内定</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">直近締切日</label>
+            <input type="date" class="form-input" id="newCompDue" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">予定種別</label>
+            <input class="form-input" id="newCompDueLabel" placeholder="ES締切 / SPI受検など" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">企業公式サイト / 採用サイトURL</label>
+          <input type="url" class="form-input" id="newCompDomain" placeholder="https://..." />
+        </div>
+      </div>
+      <div class="modal-foot">
+        <div style="flex:1"></div>
+        <button class="btn-sm-ghost" onclick="closeModal('newCompanyModal')">キャンセル</button>
+        <button class="top-btn primary" onclick="submitNewCompany()">登録して選考リストに追加</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: 設定・データ管理 ===================== -->
+  <div class="modal-overlay" id="settingsModal" onclick="onModalOverlayClick(event, 'settingsModal')">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>⚙️ データ管理・設定</h3>
+        <button class="modal-close" onclick="closeModal('settingsModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">卒業年・ステータス設定</label>
+          <select class="form-select" id="settingGradYear" onchange="updateGradYearSetting(this.value)">
+            <option value="28卒">28卒（現大学1年生・2年生など）</option>
+            <option value="27卒">27卒（現大学3年生・修士1年生 本選考）</option>
+            <option value="26卒">26卒（現大学4年生・秋採用）</option>
+            <option value="29卒">29卒（早期インターン探索）</option>
+            <option value="既卒・転職">既卒・第二新卒・転職</option>
+          </select>
+          <span style="font-size:11px;color:var(--sub)">ヘッダーの卒年バッジとタイトルに反映されます。</span>
+        </div>
+
+        <div style="height:1px;background:var(--glass-brd);margin:6px 0"></div>
+
+        <div class="form-group">
+          <label class="form-label">データバックアップ（JSON）</label>
+          <p style="margin:0 0 8px;font-size:12px;color:var(--sub)">
+            選考状況、登録企業、面接メモをすべて含んだ完全バックアップファイルを保存します。スマホとPC間のデータ移行にも使えます。
+          </p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="top-btn" onclick="exportJSON()">💾 JSONバックアップを保存</button>
+            <label class="top-btn" style="cursor:pointer">
+              📥 バックアップから復元
+              <input type="file" accept=".json" style="display:none" onchange="onImportJsonFile(this)" />
+            </label>
+          </div>
+        </div>
+
+        <div style="height:1px;background:var(--glass-brd);margin:6px 0"></div>
+
+        <div class="form-group">
+          <label class="form-label">CSV出力（Excel・スプレッドシート対応）</label>
+          <p style="margin:0 0 8px;font-size:12px;color:var(--sub)">
+            選考リストをUTF-8 BOM付きCSV形式でダウンロードします。Excelで文字化けせずに直接開けます。
+          </p>
+          <button class="top-btn" onclick="exportCSV()">📊 選考リストCSVを出力</button>
+        </div>
+
+        <div style="height:1px;background:var(--glass-brd);margin:6px 0"></div>
+
+        <div class="form-group">
+          <label class="form-label" style="color:var(--red)">データ初期化</label>
+          <p style="margin:0 0 8px;font-size:12px;color:var(--sub)">
+            すべての編集内容をリセットし、初期の厳選企業48社のカタログ状態に戻します。
+          </p>
+          <button class="btn-sm-ghost" style="color:var(--red);border-color:rgba(255,92,119,.4)" onclick="resetToDefaultCatalog()">⚠️ 初期カタログに戻す</button>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <span style="font-size:11px;color:var(--muted)" id="storageInfo">ローカルストレージ安全保存中</span>
+        <div style="flex:1"></div>
+        <button class="top-btn primary" onclick="closeModal('settingsModal')">完了</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <footer class="note">就活ボード ― 端末のローカルストレージに自動保存されます（完全プライベート・オフライン対応）</footer>
+
+<script src="data/companies_catalog.js"></script>
+<script>
+  /* =========================================================================
+     単一マスターデータ定義 & 初期カタログ（48社）
+     Tier A / Tier B / 既存サンプル / コンサル / IT・SIer
+     ========================================================================= */
+  const DEFAULT_CATALOG = [
+    // ── Tier A: 公式/有報で検証済みの主要大手 ─────────────────────────
+    { id:'c_toyota', name:'トヨタ自動車', code:'7203', domain:'toyota.jp', ind17:'自動車・輸送機', cat:'メーカー', sub:'自動車', emp:73133, empNote:'単体(連結39.1万)', payBachelor:275000, payMaster:299000, avgAnnual:895, color:'#c0392b', added:true, stage:'es', loc:'愛知/東京', tags:["技術職", "福利厚生◎"], due:'2026-09-05', dueLabel:'ES提出', dueLv:'urgent' },
+    { id:'c_mitsubishi_corp', name:'三菱商事', code:'8058', domain:'mitsubishicorp.com', ind17:'商社・卸売', cat:'商社', sub:'総合商社', emp:5448, empNote:'単体', payBachelor:340000, payMaster:380000, avgAnnual:2112, color:'#8e44ad', added:true, stage:'first', loc:'東京', tags:["総合職", "高年収"], due:'2026-09-12', dueLabel:'一次面接', dueLv:'soon' },
+    { id:'c_sony', name:'ソニーグループ', code:'6758', domain:'sony.com', ind17:'電機・精密', cat:'広告・マスコミ', sub:'電機/エンタメ', emp:113000, empNote:'連結', payBachelor:333000, payMaster:360000, avgAnnual:1100, color:'#2c3e50', added:true, stage:'final', loc:'東京', tags:["技術職"], due:'2026-09-03', dueLabel:'最終面接', dueLv:'urgent' },
+    { id:'c_smbc', name:'三井住友銀行', code:'8316', domain:'smbc.co.jp', ind17:'銀行', cat:'金融', sub:'銀行', emp:28000, empNote:'単体(連結9.4万)', payBachelor:280000, payMaster:305000, avgAnnual:1160, color:'#27ae60', added:true, stage:'es', loc:'東京/全国', tags:["SMBCグループ", "3大メガバンク", "総合職", "高年収"], due:'2026-09-08', dueLabel:'ES提出', dueLv:'soon' },
+    { id:'c_nri', name:'野村総合研究所', code:'4307', domain:'nri.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'日系最大手 シンクタンク・経営/ITコンサル', emp:6700, empNote:'単体(連結1.7万)', payBachelor:336500, payMaster:361000, avgAnnual:1332, color:'#2980b9', added:true, stage:'entry', loc:'東京', tags:["シンクタンク", "日系最高峰", "高年収", "技術職"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_itochu', name:'伊藤忠商事', code:'8001', domain:'itochu.co.jp', ind17:'商社・卸売', cat:'商社', sub:'総合商社', emp:4200, empNote:'単体(連結11万)', payBachelor:325000, payMaster:365000, avgAnnual:1804, color:'#004098', added:false, stage:'watch', loc:'東京/全国', tags:["総合商社", "5大商社首位級", "高年収", "総合職"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_mufg', name:'三菱UFJ銀行', code:'8306', domain:'mufg.jp', ind17:'銀行', cat:'金融', sub:'銀行', emp:30000, empNote:'単体(連結12万)', payBachelor:300000, payMaster:325000, avgAnnual:1150, color:'#e60012', added:false, stage:'watch', loc:'東京/全国', tags:["三菱グループ", "メガバンク首位", "海外展開", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_honda', name:'本田技研工業', code:'7267', domain:'honda.co.jp', ind17:'自動車・輸送機', cat:'メーカー', sub:'自動車', emp:30530, empNote:'単体', payBachelor:270000, payMaster:296000, avgAnnual:820, color:'#e60012', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+
+    // ── Tier B: 公開一覧(Baseconnect/JPX)由来 ──
+    { id:'c_denso', name:'デンソー', code:'6902', domain:'denso.com', ind17:'自動車・輸送機', cat:'メーカー', sub:'自動車部品', emp:51687, empNote:'(Baseconnect)', payBachelor:265000, payMaster:291000, avgAnnual:830, color:'#dc0000', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_jreast', name:'東日本旅客鉄道(JR東日本)', code:'9020', domain:'jreast.co.jp', ind17:'運輸・物流', cat:'インフラ・運輸', sub:'鉄道', emp:48891, empNote:'(Baseconnect)', payBachelor:250000, payMaster:272000, avgAnnual:720, color:'#008803', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_mitsubishi_elec', name:'三菱電機', code:'6503', domain:'mitsubishielectric.co.jp', ind17:'電機・精密', cat:'メーカー', sub:'総合電機/FA', emp:47353, empNote:'(Baseconnect)', payBachelor:265000, payMaster:289000, avgAnnual:850, color:'#e60012', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_aisin', name:'アイシン', code:'7259', domain:'aisin.com', ind17:'自動車・輸送機', cat:'メーカー', sub:'自動車部品', emp:40139, empNote:'(Baseconnect)', payBachelor:260000, payMaster:284000, avgAnnual:760, color:'#005bac', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_mhi', name:'三菱重工業', code:'7011', domain:'mhi.com', ind17:'機械', cat:'メーカー', sub:'重工/防衛', emp:34665, empNote:'(Baseconnect)', payBachelor:265000, payMaster:291000, avgAnnual:910, color:'#003288', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_nippon_steel', name:'日本製鉄', code:'5401', domain:'nipponsteel.com', ind17:'鉄鋼・非鉄', cat:'メーカー', sub:'鉄鋼', emp:33355, empNote:'(Baseconnect)', payBachelor:265000, payMaster:289000, avgAnnual:880, color:'#e60012', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_hitachi', name:'日立製作所', code:'6501', domain:'hitachi.co.jp', ind17:'電機・精密', cat:'IT・通信', sub:'総合電機/IT', emp:33046, empNote:'単体(Baseconnect)', payBachelor:270000, payMaster:294000, avgAnnual:920, color:'#e60027', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_yamazaki', name:'山崎製パン', code:'2212', domain:'yamazakipan.co.jp', ind17:'食品', cat:'メーカー', sub:'食品', emp:32589, empNote:'(Baseconnect)', payBachelor:240000, payMaster:261000, avgAnnual:610, color:'#e50012', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_jrwest', name:'西日本旅客鉄道(JR西日本)', code:'9021', domain:'westjr.co.jp', ind17:'運輸・物流', cat:'インフラ・運輸', sub:'鉄道', emp:29271, empNote:'(Baseconnect)', payBachelor:245000, payMaster:267000, avgAnnual:670, color:'#0072bc', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_nissan', name:'日産自動車', code:'7201', domain:'nissan-global.com', ind17:'自動車・輸送機', cat:'メーカー', sub:'自動車', emp:27522, empNote:'(Baseconnect)', payBachelor:265000, payMaster:289000, avgAnnual:815, color:'#c3002f', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_softbank', name:'ソフトバンク', code:'9434', domain:'softbank.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'通信', emp:26053, empNote:'(Baseconnect)', payBachelor:265000, payMaster:288000, avgAnnual:830, color:'#a3a3a3', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_canon', name:'キヤノン', code:'7751', domain:'canon.jp', ind17:'電機・精密', cat:'メーカー', sub:'精密機器', emp:25970, empNote:'(Baseconnect)', payBachelor:265000, payMaster:289000, avgAnnual:820, color:'#cc0000', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_kyocera', name:'京セラ', code:'6971', domain:'kyocera.co.jp', ind17:'電機・精密', cat:'メーカー', sub:'電子部品', emp:15000, empNote:'単体(連結8.1万)', payBachelor:260000, payMaster:284000, avgAnnual:750, color:'#c00', added:false, stage:'watch', loc:'東京/全国', tags:["電子部品", "半導体素材", "アメーバ経営", "京都名門"], due:'', dueLabel:'', dueLv:'' },
+
+    // ── 既存サンプル ──
+    { id:'c_keyence', name:'キーエンス', code:'6861', domain:'keyence.co.jp', ind17:'電機・精密', cat:'メーカー', sub:'FA機器', emp:3000, empNote:'単体(連結1.0万)', payBachelor:280000, payMaster:300000, avgAnnual:2178, color:'#e67e22', added:true, stage:'entry', loc:'大阪', tags:["高年収日本一", "FA機器", "高収益", "営業・開発"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_mercari', name:'メルカリ', code:'4385', domain:'mercari.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'Webサービス', emp:2200, empNote:'単体(連結3500)', payBachelor:350000, payMaster:380000, avgAnnual:980, color:'#e4405f', added:true, stage:'offer', loc:'東京/リモート', tags:["メガベンチャー", "フリマアプリ", "リモート可", "エンジニア"], due:'2026-09-20', dueLabel:'承諾期限', dueLv:'' },
+    { id:'c_cyberagent', name:'サイバーエージェント', code:'4751', domain:'cyberagent.co.jp', ind17:'情報通信・サービス', cat:'広告・マスコミ', sub:'広告/メディア', emp:3200, empNote:'単体(連結7200)', payBachelor:420000, payMaster:450000, avgAnnual:780, color:'#16a085', added:true, stage:'watch', loc:'東京', tags:["AbemaTV", "ゲーム開発", "ネット広告首位", "若手抜擢"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_recruit', name:'リクルート', code:'6098', domain:'recruit.co.jp', ind17:'情報通信・サービス', cat:'広告・マスコミ', sub:'HR/メディア', emp:16000, empNote:'主要グループ', payBachelor:335000, payMaster:360000, avgAnnual:1130, color:'#0aa0d1', added:true, stage:'first', loc:'東京', tags:["HR/メディア", "グローバル", "起業家輩出", "高年収"], due:'2026-09-15', dueLabel:'一次面接', dueLv:'' },
+    { id:'c_fastretailing', name:'ファーストリテイリング', code:'9983', domain:'fastretailing.com', ind17:'小売', cat:'小売・サービス', sub:'アパレル', emp:5600, empNote:'単体(連結5.7万)', payBachelor:300000, payMaster:319000, avgAnnual:1150, color:'#c0392b', added:true, stage:'watch', loc:'東京/山口', tags:["ユニクロ", "グローバルSPA", "アパレル世界首位級", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_freee', name:'freee', code:'4478', domain:'freee.co.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SaaS', emp:1200, empNote:'単体', payBachelor:350000, payMaster:375000, avgAnnual:840, color:'#2f6fed', added:true, stage:'offer', loc:'東京/リモート', tags:["クラウド会計", "SaaS", "FinTech", "リモート可"], due:'', dueLabel:'内々定済', dueLv:'' },
+    { id:'c_nttdata', name:'NTTデータ', code:'9613', domain:'nttdata.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SIer', emp:14000, empNote:'単体(連結19万)', payBachelor:280000, payMaster:305000, avgAnnual:880, color:'#1f6feb', added:true, stage:'watch', loc:'東京/全国', tags:["SIer首位", "NTTグループ", "社会インフラ", "安定"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_ntt', name:'日本電信電話(NTT)', code:'9432', domain:'group.ntt', ind17:'情報通信・サービス', cat:'IT・通信', sub:'通信', emp:1000, empNote:'持株(連結33万)', payBachelor:280000, payMaster:305000, avgAnnual:950, color:'#0072bc', added:false, stage:'watch', loc:'東京/全国', tags:["通信最大手", "インフラ", "安定", "IOWN"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_panasonic', name:'パナソニック', code:'6752', domain:'panasonic.com', ind17:'電機・精密', cat:'メーカー', sub:'電機', emp:13000, empNote:'単体(連結23万)', payBachelor:265000, payMaster:289000, avgAnnual:900, color:'#0033a0', added:false, stage:'watch', loc:'東京/全国', tags:["総合電機", "車載電池", "空質空調", "グローバル"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_dentsu', name:'電通', code:'4324', domain:'dentsu.co.jp', ind17:'情報通信・サービス', cat:'広告・マスコミ', sub:'広告・エンタメ・出版', emp:7000, empNote:'単体(連結6.5万)', payBachelor:300000, payMaster:320000, avgAnnual:1520, color:'#000000', added:false, stage:'watch', loc:'東京/全国', tags:["広告最大手", "マーケティング", "コンテンツ", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_dena', name:'DeNA', code:'2432', domain:'dena.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'Webサービス', emp:2500, empNote:'単体(連結3100)', payBachelor:380000, payMaster:400000, avgAnnual:810, color:'#008ac9', added:false, stage:'watch', loc:'東京/全国', tags:["Webサービス", "ゲーム", "ヘルスケア", "スポーツ"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_suntory', name:'サントリー', code:null, domain:'suntory.co.jp', ind17:'食品', cat:'メーカー', sub:'食品・飲料', emp:1500, empNote:'持株(連結4.1万)', payBachelor:280000, payMaster:304000, avgAnnual:1140, color:'#003b6f', added:false, stage:'watch', loc:'東京/全国', tags:["食品飲料首位級", "ビール洋酒", "やってみなはれ", "グローバル"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_rakuten', name:'楽天グループ', code:'4755', domain:'rakuten.co.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'ECサービス', emp:32000, empNote:'連結', payBachelor:300000, payMaster:320000, avgAnnual:790, color:'#bf0000', added:false, stage:'watch', loc:'東京/全国', tags:["楽天市場", "FinTech", "楽天エコシステム", "グローバル"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_ajinomoto', name:'味の素', code:'2802', domain:'ajinomoto.co.jp', ind17:'食品', cat:'メーカー', sub:'食品', emp:3500, empNote:'単体(連結3.4万)', payBachelor:280000, payMaster:304000, avgAnnual:1040, color:'#e60012', added:false, stage:'watch', loc:'東京/全国', tags:["食品首位級", "アミノ酸技術", "半導体絶縁材(ABF)", "高年収"], due:'', dueLabel:'', dueLv:'' },
+
+    // ── コンサルティング業界 ──
+    { id:'c_accenture', name:'アクセンチュア', code:null, domain:'accenture.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'世界最大手 総合コンサルティングファーム', emp:23000, empNote:'日本(概数)', payBachelor:360000, payMaster:390000, avgAnnual:1050, color:'#a100ff', added:false, stage:'watch', loc:'東京/全国', tags:["外資名門", "総合コンサル", "ITコンサル", "急成長"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_abeam', name:'アビームコンサルティング', code:null, domain:'abeam.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'日系発祥 総合コンサルティングファーム最大手', emp:9632, empNote:'連結', payBachelor:340000, payMaster:365000, avgAnnual:980, color:'#7a1f2b', added:false, stage:'watch', loc:'東京/全国', tags:["総合コンサル", "日系最大手", "グローバル展開"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_baycurrent', name:'ベイカレント', code:'6532', domain:'baycurrent.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'日系独立系 総合コンサルティングファーム(高収益)', emp:4200, empNote:'単体', payBachelor:416000, payMaster:430000, avgAnnual:1150, color:'#0b2e6e', added:false, stage:'watch', loc:'東京/全国', tags:["総合コンサル", "日系独立系", "高年収", "急成長"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_mri', name:'三菱総合研究所', code:'3636', domain:'mri.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'三菱グループ総合シンクタンク・政策提言/経営コンサル', emp:1100, empNote:'単体(連結4500)', payBachelor:290000, payMaster:315000, avgAnnual:1180, color:'#e60012', added:false, stage:'watch', loc:'東京/全国', tags:["三菱グループ", "シンクタンク", "政策提言", "経営コンサル"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_jri', name:'日本総合研究所(JRI)', code:null, domain:'jri.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'SMBCグループの中核総合シンクタンク・ITソリューション', emp:3000, empNote:'単体', payBachelor:280000, payMaster:304000, avgAnnual:1050, color:'#00913a', added:false, stage:'watch', loc:'東京/全国', tags:["シンクタンク", "メガバンク系列", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_dir', name:'大和総研(DIR)', code:null, domain:'dir.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'大和証券グループの総合シンクタンク・先端システム', emp:2500, empNote:'単体', payBachelor:285000, payMaster:308000, avgAnnual:1020, color:'#093', added:false, stage:'watch', loc:'東京/全国', tags:["シンクタンク", "大和証券グループ", "リサーチ"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_murc', name:'三菱UFJリサーチ&コンサルティング(MURC)', code:null, domain:'murc.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'MUFGグループ総合シンクタンク・経営コンサル', emp:1000, empNote:'単体', payBachelor:290000, payMaster:316000, avgAnnual:980, color:'#e60012', added:false, stage:'watch', loc:'東京/全国', tags:["シンクタンク", "メガバンク系列", "経営コンサル"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_deloitte', name:'デロイト トーマツ コンサルティング', code:null, domain:'deloitte.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'BIG4最大手 総合経営戦略・DXコンサルティング', emp:4500, empNote:'日本', payBachelor:450000, payMaster:475000, avgAnnual:1150, color:'#86bc25', added:false, stage:'watch', loc:'東京/全国', tags:["BIG4", "総合コンサル", "経営戦略", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_pwc', name:'PwCコンサルティング', code:null, domain:'pwc.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'BIG4 総合コンサルティングファーム', emp:4000, empNote:'日本', payBachelor:450000, payMaster:475000, avgAnnual:1120, color:'#d04a02', added:false, stage:'watch', loc:'東京/全国', tags:["BIG4", "総合コンサル", "戦略コンサル", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_kpmg', name:'KPMGコンサルティング', code:null, domain:'kpmg.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'BIG4 総合コンサルティングファーム', emp:2000, empNote:'日本', payBachelor:450000, payMaster:475000, avgAnnual:1080, color:'#00338d', added:false, stage:'watch', loc:'東京/全国', tags:["BIG4", "総合コンサル", "リスク管理", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_ey', name:'EYストラテジー・アンド・コンサルティング', code:null, domain:'ey.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'BIG4 総合・戦略コンサルティングファーム', emp:3200, empNote:'日本', payBachelor:450000, payMaster:475000, avgAnnual:1100, color:'#2e2e38', added:false, stage:'watch', loc:'東京/全国', tags:["BIG4", "総合コンサル", "戦略コンサル", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_mckinsey', name:'マッキンゼー・アンド・カンパニー', code:null, domain:'mckinsey.com/jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'世界最高峰 経営戦略コンサルティングファーム(MBB)', emp:600, empNote:'日本', payBachelor:550000, payMaster:550000, avgAnnual:2100, color:'#051c2c', added:false, stage:'watch', loc:'東京/全国', tags:["外資名門", "戦略コンサル", "MBB", "最高峰年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_bcg', name:'ボストン コンサルティング グループ(BCG)', code:null, domain:'bcg.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'世界最高峰 戦略コンサル(MBB)', emp:800, empNote:'日本(概数)', payBachelor:550000, payMaster:550000, avgAnnual:2050, color:'#177b57', added:false, stage:'watch', loc:'東京/全国', tags:["外資名門", "戦略コンサル", "最高峰年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_bain', name:'ベイン・アンド・カンパニー', code:null, domain:'bain.com/ja', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'世界最高峰 経営戦略コンサルティングファーム(MBB)', emp:400, empNote:'日本', payBachelor:550000, payMaster:550000, avgAnnual:2000, color:'#c8102e', added:false, stage:'watch', loc:'東京/全国', tags:["外資名門", "戦略コンサル", "MBB", "最高峰年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_kearney', name:'A.T.カーニー(Kearney)', code:null, domain:'kearney.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'世界大手 戦略コンサル(オペレーション/事業変革)', emp:350, empNote:'日本', payBachelor:500000, payMaster:520000, avgAnnual:1700, color:'#6b1f7c', added:false, stage:'watch', loc:'東京/全国', tags:["外資名門", "戦略コンサル", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_rolandberger', name:'ローランド・ベルガー(Roland Berger)', code:null, domain:'rolandberger.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'欧州最大手 経営戦略コンサルファーム', emp:300, empNote:'日本', payBachelor:500000, payMaster:520000, avgAnnual:1650, color:'#009b3a', added:false, stage:'watch', loc:'東京/全国', tags:["外資名門", "戦略コンサル", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_funaisoken', name:'船井総研ホールディングス', code:'9757', domain:'funaisoken.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'中堅・中小企業向け 総合経営コンサルティング最大手', emp:1400, empNote:'連結', payBachelor:250000, payMaster:274000, avgAnnual:740, color:'#e50012', added:false, stage:'watch', loc:'東京/全国', tags:["中小企業支援", "経営コンサル", "業種特化"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_tcs', name:'日本タタ・コンサルタンシー・サービシズ', code:null, domain:'tcs.com/jp-ja', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'外資系ITコンサル・SIer (三菱商事合弁)', emp:4000, empNote:'国内(グローバル60万)', payBachelor:305000, payMaster:330000, avgAnnual:860, color:'#000000', added:false, stage:'watch', loc:'東京/全国', tags:["外資系", "ITコンサル", "三菱商事系", "グローバル", "日本TCS", "TCS", "Tata", "タタ"], due:'', dueLabel:'', dueLv:'', popRank:140, popBadge:'TOP 300' },
+
+    // ── IT/SIer業界 ──
+    { id:'c_fujitsu', name:'富士通', code:'6702', domain:'fujitsu.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SIer/ITサービス', emp:99000, empNote:'連結', payBachelor:270000, payMaster:295000, avgAnnual:890, color:'#ff0000', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_nec', name:'日本電気(NEC)', code:'6701', domain:'nec.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SIer/ITサービス', emp:21000, empNote:'単体(連結11万)', payBachelor:265000, payMaster:289000, avgAnnual:850, color:'#1414a0', added:false, stage:'watch', loc:'東京/全国', tags:["SIer/ITサービス", "生体認証", "宇宙・防衛", "社会インフラ"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_scsk', name:'SCSK', code:'9719', domain:'scsk.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SIer/ITサービス', emp:21015, empNote:'連結', payBachelor:265000, payMaster:289000, avgAnnual:800, color:'#009fe3', added:false, stage:'watch', loc:'東京/全国', tags:[], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_tis', name:'TIS', code:'3626', domain:'tis.co.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SIer/ITサービス', emp:6000, empNote:'単体(連結2.1万)', payBachelor:265000, payMaster:289000, avgAnnual:760, color:'#e60012', added:false, stage:'watch', loc:'東京/全国', tags:["金融決済IT", "SIer", "基幹システム", "プライム上場"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_otsuka', name:'大塚商会', code:'4768', domain:'otsuka-shokai.co.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SIer/ITサービス', emp:9300, empNote:'単体', payBachelor:265000, payMaster:285000, avgAnnual:870, color:'#e50012', added:false, stage:'watch', loc:'東京/全国', tags:["ITソリューション", "OA機器", "システムインテグレータ", "高収益"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_ctc', name:'伊藤忠テクノソリューションズ(CTC)', code:'4739', domain:'ctc-g.co.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SIer/ITサービス', emp:4600, empNote:'単体(連結9000)', payBachelor:285000, payMaster:310000, avgAnnual:950, color:'#004098', added:false, stage:'watch', loc:'東京/全国', tags:["SIer", "マルチクラウド", "ネットワーク", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_hitachi_sol', name:'日立ソリューションズ', code:null, domain:'hitachi-solutions.co.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SIer(メーカー系)', emp:5000, empNote:'単体', payBachelor:230000, payMaster:249000, avgAnnual:800, color:'#e60027', added:false, stage:'watch', loc:'東京/全国', tags:["SIer", "セキュリティ", "モビリティDX"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_hitachi_sys', name:'日立システムズ', code:null, domain:'hitachi-systems.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SIer(メーカー系)', emp:10000, empNote:'単体', payBachelor:210000, payMaster:232000, avgAnnual:700, color:'#e60027', added:false, stage:'watch', loc:'東京/全国', tags:["SIer", "ITインフラ運用", "クラウドソリューション"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_oracle', name:'日本オラクル', code:'4716', domain:'oracle.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'ソフトウェア(外資)', emp:2600, empNote:'単体', payBachelor:350000, payMaster:374000, avgAnnual:1120, color:'#c74634', added:false, stage:'watch', loc:'東京/全国', tags:["データベース", "クラウドERP", "外資系", "高年収"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_gmo', name:'GMOインターネットグループ', code:'9449', domain:'gmo.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'Webサービス/インフラ', emp:7500, empNote:'連結', payBachelor:260000, payMaster:279000, avgAnnual:830, color:'#009fce', added:false, stage:'watch', loc:'東京/全国', tags:["ネットインフラ", "ドメイン・ホスティング", "FinTech"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_shift', name:'SHIFT', code:'3697', domain:'shiftinc.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'ソフトウェアテスト', emp:12000, empNote:'連結', payBachelor:280000, payMaster:300000, avgAnnual:620, color:'#0b8a3e', added:false, stage:'watch', loc:'東京/全国', tags:["ソフトウェアテスト", "品質保証DX", "超急成長"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_rakus', name:'ラクス', code:'3923', domain:'rakus.co.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SaaS', emp:2600, empNote:'連結', payBachelor:280000, payMaster:301000, avgAnnual:650, color:'#e8380d', added:false, stage:'watch', loc:'東京/全国', tags:["楽楽精算", "SaaS", "バックオフィスDX", "高収益"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_sansan', name:'Sansan', code:'4443', domain:'sansan.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SaaS', emp:1600, empNote:'単体', payBachelor:330000, payMaster:350000, avgAnnual:750, color:'#e60012', added:false, stage:'watch', loc:'東京/全国', tags:["名刺管理", "Bill One", "営業DX", "SaaS"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_moneyforward', name:'マネーフォワード', code:'3994', domain:'moneyforward.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SaaS/FinTech', emp:2400, empNote:'単体', payBachelor:320000, payMaster:340000, avgAnnual:720, color:'#2f80ed', added:false, stage:'watch', loc:'東京/全国', tags:["マネーフォワードME", "クラウド会計", "FinTech", "SaaS"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_lycorp', name:'LINEヤフー', code:'4689', domain:'lycorp.co.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'Webサービス', emp:11500, empNote:'単体(連結2.8万)', payBachelor:300000, payMaster:325000, avgAnnual:820, color:'#06c755', added:false, stage:'watch', loc:'東京/全国', tags:["LINE", "Yahoo! JAPAN", "PayPay", "国内最大トラフィック"], due:'', dueLabel:'', dueLv:'' },
+  ];
+
+  const DEFAULT_TASKS = [
+    { id: 't_spi', text: 'SPI・玉手箱のWEBテスト問題集を1周解く', done: false, tag: 'テスト対策' },
+    { id: 't_es_pr', text: '自己PR・ガクチカ（学生時代に力を入れたこと）の骨子をまとめる', done: true, tag: 'ES作成' },
+    { id: 't_photo', text: '就活用の証明写真をデータ付きで撮影する', done: true, tag: '準備' },
+    { id: 't_ob', text: '第一志望群の企業のOB/OG訪問を申し込む', done: false, tag: '企業研究' },
+    { id: 't_suit', text: '面接用スーツ・WEB面接用の照明/マイク動作確認', done: false, tag: '準備' },
+  ];
+
+  // ---- 選考ステージ定義 ----
+  const stages = [
+    { key:'watch',  label:'気になる',     color:'#8a94a6', cls:'s-watch',  desc:'志望検討・業界研究' },
+    { key:'entry',  label:'エントリー',   color:'#4c8bf5', cls:'s-entry',  desc:'マイページ登録・応募準備' },
+    { key:'es',     label:'ES/Webテスト', color:'#8b7bff', cls:'s-es',     desc:'書類選考・SPI/適性受検' },
+    { key:'first',  label:'一次面接',     color:'#4fd8e8', cls:'s-first',  desc:'人事/若手面接・GD' },
+    { key:'final',  label:'二次・最終面接',color:'#ff7eb6',cls:'s-final',  desc:'役員・社長面接' },
+    { key:'offer',  label:'内々定/内定',  color:'#4ee39a', cls:'s-offer',  desc:'承諾検討・内定者フォロー' },
+  ];
+  const stageMap = Object.fromEntries(stages.map(s => [s.key, s]));
+
+  // ---- LocalStorage 管理 ----
+  const STORAGE_KEY = 'shukatsu_board_storage_v2';
+  const SETTINGS_KEY = 'shukatsu_board_settings_v2';
+  const TASKS_KEY = 'shukatsu_board_tasks_v2';
+
+  let catalog = [];
+  let currentSettings = { gradYear: '28卒' };
+  let currentTasks = [];
+
+  function loadAll() {
+    try {
+      const fullCatalog = (window.OFFICIAL_CATALOG_1500 && window.OFFICIAL_CATALOG_1500.length)
+        ? window.OFFICIAL_CATALOG_1500
+        : DEFAULT_CATALOG;
+
+      const savedCatalogStr = localStorage.getItem(STORAGE_KEY);
+      if (savedCatalogStr) {
+        let savedCatalog = JSON.parse(savedCatalogStr);
+        // マスターカタログの最新属性（年収・初任給・業種分類等）とユーザー保存進捗をスマート同期
+        const userStateMap = new Map();
+        savedCatalog.forEach(c => {
+          if (c.added || (c.stage && c.stage !== 'watch') || c.due || c.dueLabel || c.myPageUrl || c.myPageId || c.noteMotiv || c.noteEs || c.noteInterview || c.isCustom) {
+            userStateMap.set(c.id, c);
+          }
+        });
+        catalog = fullCatalog.map(c => {
+          if (userStateMap.has(c.id)) {
+            const u = userStateMap.get(c.id);
+            return Object.assign({}, c, {
+              added: u.added,
+              stage: u.stage || c.stage,
+                            due: u.due !== undefined ? u.due : c.due,
+              dueLabel: u.dueLabel !== undefined ? u.dueLabel : c.dueLabel,
+              dueLv: u.dueLv !== undefined ? u.dueLv : c.dueLv,
+              myPageUrl: u.myPageUrl || '',
+              myPageId: u.myPageId || '',
+              noteMotiv: u.noteMotiv || '',
+              noteEs: u.noteEs || '',
+              noteInterview: u.noteInterview || '',
+              tags: (u.tags && u.tags.length) ? u.tags : c.tags,
+            });
+          }
+          return c;
+        });
+        savedCatalog.forEach(c => {
+          if (c.isCustom && !catalog.find(x => x.id === c.id)) {
+            catalog.unshift(c);
+          }
+        });
+        saveAll();
+      } else {
+        catalog = JSON.parse(JSON.stringify(fullCatalog));
+      }
+
+      const savedSettings = localStorage.getItem(SETTINGS_KEY);
+      if (savedSettings) currentSettings = Object.assign(currentSettings, JSON.parse(savedSettings));
+      const savedTasks = localStorage.getItem(TASKS_KEY);
+      if (savedTasks) currentTasks = JSON.parse(savedTasks);
+      else currentTasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
+    } catch (e) {
+      console.error('Storage load error:', e);
+      catalog = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
+      currentTasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
+    }
+  }
+
+  function saveAll() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(currentSettings));
+      localStorage.setItem(TASKS_KEY, JSON.stringify(currentTasks));
+      updateStorageInfo();
+    } catch (e) {
+      console.error('Storage save error:', e);
+    }
+  }
+
+  function updateStorageInfo() {
+    const el = document.getElementById('storageInfo');
+    if (!el) return;
+    const count = catalog.length;
+    const addedCount = catalog.filter(c => c.added).length;
+    el.textContent = `全${count}社中 ${addedCount}社を選考管理中（端末ローカル保存済）`;
+  }
+
+  // ---- 表示ヘルパ ----
+  function fmtEmp(c) {
+    if (c.emp == null) return '—';
+    const n = c.emp;
+    let s = n >= 10000 ? '約' + (n/10000).toFixed(n>=100000?0:1).replace(/\.0$/,'') + '万人'
+                       : n.toLocaleString() + '人';
+    return s + (c.empNote ? ` ${c.empNote}` : '');
+  }
+
+  function sizeLabel(c) {
+    if (c.emp == null) return null;
+    if (c.emp >= 10000) return '大企業';
+    if (c.emp >= 1000)  return '中堅';
+    if (c.emp >= 300)   return '中小';
+    return 'ベンチャー規模';
+  }
+
+  function fmtPay(c) {
+    return c.payBachelor == null ? '—' : (c.payBachelor/10000).toFixed(1) + '万円';
+  }
+
+  function fmtPayMaster(c) {
+    return c.payMaster == null ? '—' : (c.payMaster/10000).toFixed(1) + '万円';
+  }
+
+  function fmtAnnual(c) {
+    return c.avgAnnual == null ? '—' : c.avgAnnual.toLocaleString() + '万円';
+  }
+
+  function catOf(c) {
+    if (c.cat) return c.cat;
+    const s = (c.sub || '') + ' ' + (c.ind17 || '');
+    if (/不動産|ディベロッパー|建設|ゼネコン|住宅|ハウスメーカー/.test(s)) return '不動産・建設';
+    if (/コンサル|シンクタンク|研究所/.test(s)) return 'コンサル・シンクタンク';
+    if (/広告|メディア|マスコミ|テレビ|放送|出版|新聞|映画|アニメ|エンタメ|音楽/.test(s)) return '広告・マスコミ';
+    if (/SIer|IT|ソフト|SaaS|Web|通信|ECサービス|ネット|システム|ゲーム|クラウド/.test(s)) return 'IT・通信';
+    if (/商社|卸売/.test(s)) return '商社';
+    if (/銀行|証券|保険|金融|FinTech|信託|リース|カード/.test(s)) return '金融';
+    if (/鉄道|物流|運輸|電力|ガス|航空|海運|インフラ|エネルギー|鉱業/.test(s)) return 'インフラ・運輸';
+    if (/小売|アパレル|流通|外食|サービス|ホテル|旅行|警備|テーマパーク|人材/.test(s)) return '小売・サービス';
+    if (/自動車|電機|機械|鉄鋼|非鉄|食品|化学|医薬|部品|重工|精密|電子|飲料|総合電機|FA|水産|農林/.test(s)) return 'メーカー';
+    return 'その他';
+  }
+
+
+
+  function logoHtml(c) {
+    const initial = (c.name || '企').slice(0, 1);
+    const bg = c.color || '#8b7bff';
+    return `<div class="ico" style="background:${bg};color:#fff"><img src="assets/logos/${c.id}.png" alt="${c.name}" loading="lazy" onerror="this.remove()"><span>${initial}</span></div>`;
+  }
+
+  // 締切カウントダウン計算
+  function getDueStatus(c) {
+    if (!c.due) {
+      return { text: c.dueLabel || '', cls: '', badge: '', days: null };
+    }
+    const ymd = (c.due || '').match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    const md = (c.due || '').match(/^(\d{1,2})\/(\d{1,2})/);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    let targetDate = null;
+    if (ymd) {
+      targetDate = new Date(parseInt(ymd[1]), parseInt(ymd[2]) - 1, parseInt(ymd[3]));
+    } else if (md) {
+      targetDate = new Date(now.getFullYear(), parseInt(md[1]) - 1, parseInt(md[2]));
+    }
+
+    if (targetDate && !isNaN(targetDate.getTime())) {
+      const diffMs = targetDate.getTime() - today.getTime();
+      const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+      const label = c.dueLabel ? `${c.dueLabel} ` : '';
+      const dateStr = `${targetDate.getMonth()+1}/${targetDate.getDate()}`;
+
+      if (diffDays < 0) {
+        return { text: `${label}${dateStr}`, cls: 'urgent', badge: '期限超過', days: diffDays };
+      } else if (diffDays === 0) {
+        return { text: `${label}${dateStr}`, cls: 'urgent', badge: '本日締切', days: 0 };
+      } else if (diffDays === 1) {
+        return { text: `${label}${dateStr}`, cls: 'urgent', badge: '明日締切', days: 1 };
+      } else if (diffDays <= 3) {
+        return { text: `${label}${dateStr}`, cls: 'urgent', badge: `あと${diffDays}日`, days: diffDays };
+      } else if (diffDays <= 7) {
+        return { text: `${label}${dateStr}`, cls: 'soon', badge: `あと${diffDays}日`, days: diffDays };
+      } else {
+        return { text: `${label}${dateStr}`, cls: '', badge: `残り${diffDays}日`, days: diffDays };
+      }
+    }
+
+    return { text: (c.dueLabel ? c.dueLabel + ' ' : '') + c.due, cls: c.dueLv || '', badge: c.dueLv==='urgent'?'至急':(c.dueLv==='soon'?'近日期限':''), days: null };
+  }
+
+  // ===================== ビュー切替 =====================
+  let currentView = 'db';
+  function switchView(v) {
+    currentView = v;
+    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('active', b.dataset.view === v));
+    document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === v));
+    document.querySelectorAll('.view').forEach(s => s.classList.toggle('active', s.id === 'view-' + v));
+    renderAll();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.getElementById('tabs').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (b && b.dataset.view) switchView(b.dataset.view);
+  });
+
+  // ===================== VIEW 1: 企業DB =====================
+  const grid = document.getElementById('grid');
+  let dbFilter = 'すべて', keyword = '', dbSort = 'pop_asc';
+  const dbChips = [...document.querySelectorAll('#dbFilters .chip')];
+
+  function dbCardHtml(c) {
+    const size = sizeLabel(c);
+    const dueInfo = getDueStatus(c);
+    const isCustomBadge = c.isCustom ? `<span class="tag custom">手動登録</span>` : '';
+    const empStr = fmtEmp(c);
+    const empBadge = empStr !== '—' ? `<span class="tag emp">従業員 ${empStr}</span>` : '';
+    const isTop = c.popBadge && c.popBadge.includes('TOP');
+    const popBadgeHtml = c.popBadge ? `<span class="tag pop ${isTop ? 'top' : 'elite'}">${isTop ? '★ ' + c.popBadge : c.popBadge}</span>` : '';
+    return `
+      <div class="card ${c.added ? 'added' : ''}" style="--accent:${c.color || '#8b7bff'}">
+        <div class="top">
+          ${logoHtml(c)}
+          <div style="min-width:0;flex:1">
+            <div class="name" onclick="openDetailModal('${c.id}')">${c.name} ${c.code ? `<span class="code">${c.code}</span>` : ''}</div>
+            <div class="meta">${catOf(c)} ・ ${c.sub || '未分類'}</div>
+          </div>
+        </div>
+        <div class="tags">
+          ${popBadgeHtml}
+          <span class="tag ind">${catOf(c)}</span>
+          ${c.market === '非上場' || c.scale === '非上場名門' ? `<span class="tag" style="color:var(--gold-2);border-color:rgba(217,178,95,.4);background:rgba(217,178,95,.1)">非上場名門</span>` : ''}
+          ${c.market === '外資系' ? `<span class="tag" style="color:var(--cyan);border-color:rgba(79,216,232,.4);background:rgba(79,216,232,.1)">外資系</span>` : ''}
+          ${size ? `<span class="tag size">${size}</span>` : ''}
+          ${empBadge}
+          ${isCustomBadge}
+          ${(c.tags || []).filter(t => !['非上場名門','プライム上場','グロース上場'].includes(t)).slice(0, 3).map(t => `<span class="tag free">${t}</span>`).join('')}
+        </div>
+        <div class="foot">
+          <div class="pay-wrap">
+            <span class="pay">大卒 <b>${fmtPay(c)}</b>${c.payMaster ? `<span style="font-size:10.5px;color:var(--sub);font-weight:normal;margin-left:3px">(院 <b>${fmtPayMaster(c)}</b>)</span>` : ''}</span>
+            <span class="annual-pay">年収 <b>${fmtAnnual(c)}</b></span>
+          </div>
+          <div class="card-btns">
+            <button class="btn-sm-ghost" onclick="openDetailModal('${c.id}')" title="詳細・面接メモを編集">詳細</button>
+            <button class="add-btn ${c.added ? 'added' : ''}" onclick="toggleAdd('${c.id}', event)">
+              ${c.added ? '追加済み ✓' : '＋ 管理に追加'}
+            </button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // ===================== スマートあいまい検索エンジン =====================
+  function toKatakana(str) {
+    if (!str) return '';
+    return str.replace(/[\u3041-\u3096]/g, ch => String.fromCharCode(ch.charCodeAt(0) + 0x60));
+  }
+
+  function normalizeSearchText(str) {
+    if (!str) return '';
+    return toKatakana(String(str).normalize('NFKC').toLowerCase());
+  }
+
+  function stripNoise(str) {
+    if (!str) return '';
+    const norm = normalizeSearchText(str);
+    return norm
+      .replace(/株式会社|（株）|\(株\)|有限会社|合同会社|ホールディングス|グループ/g, '')
+      .replace(/[・\-\s_、。/／\(\)（）「」【】]/g, '');
+  }
+
+  const KNOWN_ALIASES = {
+    c_tcs: ['日本tcs', 'tcs', 'tata', 'タタ', 'タタコンサルタンシー', '三菱商事合弁', 'tata consultancy services'],
+    c_itochu: ['itochu', '伊藤忠', 'いとうちゅう'],
+    c_sony: ['sony', 'ソニー'],
+    c_nri: ['nri', '野村総研', 'のむらそうごう'],
+    c_fastretailing: ['uniqlo', 'ユニクロ', 'gu', 'ジーユー', 'ファストリ'],
+    c_jreast: ['jr東日本', 'jr東', 'jreast'],
+    c_jrwest: ['jr西日本', 'jr西', 'jrwest'],
+    c_nec: ['nec', 'エヌイーシー', '日本電気'],
+    c_ntt: ['ntt', 'エヌティティ'],
+    c_nttdata: ['nttデータ', 'エヌティティデータ'],
+    c_mufg: ['mufg', '三菱ufj'],
+    c_smbc: ['smbc', '三井住友'],
+    c_bcg: ['bcg', 'ボストンコンサルティング'],
+    c_mckinsey: ['mckinsey', 'マッキンゼー'],
+    c_bain: ['bain', 'ベイン'],
+    c_accenture: ['accenture', 'アクセンチュア', 'ac'],
+    c_deloitte: ['deloitte', 'デロイト', 'dtc', 'トーマツ'],
+    c_pwc: ['pwc'],
+    c_kpmg: ['kpmg'],
+    c_ey: ['ey'],
+    c_cyberagent: ['ca', 'サイバー', 'cyberagent', 'アベマ', 'abema'],
+    c_mercari: ['mercari', 'メルカリ'],
+    c_lycorp: ['yahoo', 'ヤフー', 'line', 'ライン', 'lycorp'],
+    c_keyence: ['keyence', 'キーエンス'],
+    c_toyota: ['toyota', 'トヨタ', 'とよた'],
+    c_honda: ['honda', 'ホンダ', 'ほんだ'],
+    c_nissan: ['nissan', '日産', 'にっさん'],
+    c_hitachi: ['hitachi', '日立', 'ひたち'],
+    c_panasonic: ['panasonic', 'パナソニック'],
+    c_rakuten: ['rakuten', '楽天', 'らくてん'],
+    c_softbank: ['softbank', 'ソフトバンク'],
+    c_dentsu: ['dentsu', '電通'],
+    c_ajinomoto: ['ajinomoto', '味の素', 'あじのもと'],
+    c_suntory: ['suntory', 'サントリー'],
+  };
+
+  function getSearchHaystack(c) {
+    if (c._searchHay) return c._searchHay;
+
+    const aliasList = KNOWN_ALIASES[c.id] || [];
+    const domain = c.domain || '';
+    const domainClean = domain.replace(/^https?:\/\//, '').replace(/\/.*$/, '').replace(/\.(co\.jp|jp|com|org|net)$/i, '');
+    const idClean = (c.id || '').replace(/^c_/, '');
+
+    const parts = [
+      c.name || '',
+      c.code || '',
+      domain,
+      domainClean,
+      idClean,
+      catOf(c),
+      c.ind17 || '',
+      c.sub || '',
+      c.noteMotiv || '',
+      c.noteEs || '',
+      ...(c.tags || []),
+      ...aliasList
+    ];
+
+    const raw = parts.join(' ');
+    const norm = normalizeSearchText(raw);
+    const clean = stripNoise(norm);
+    const nameClean = stripNoise(c.name || '');
+
+    c._searchHay = { norm, clean, nameClean };
+    return c._searchHay;
+  }
+
+  function smartSearchMatches(c, rawQuery) {
+    if (!rawQuery) return true;
+    const normQuery = normalizeSearchText(rawQuery).trim();
+    if (!normQuery) return true;
+
+    const hay = getSearchHaystack(c);
+    const cleanQuery = stripNoise(normQuery);
+
+    if (hay.norm.includes(normQuery) || (cleanQuery && hay.clean.includes(cleanQuery))) {
+      return true;
+    }
+
+    if (cleanQuery && hay.nameClean && (cleanQuery.includes(hay.nameClean) || hay.nameClean.includes(cleanQuery))) {
+      return true;
+    }
+
+    const tokens = normQuery.split(/\s+/).filter(Boolean);
+    if (tokens.length > 1) {
+      const allTokensMatch = tokens.every(tok => {
+        const tokClean = stripNoise(tok);
+        if (hay.norm.includes(tok) || (tokClean && hay.clean.includes(tokClean))) {
+          return true;
+        }
+        if (tokClean && hay.nameClean && (tokClean.includes(hay.nameClean) || hay.nameClean.includes(tokClean))) {
+          return true;
+        }
+        return false;
+      });
+      if (allTokensMatch) return true;
+    }
+
+    return false;
+  }
+
+  function dbMatches(c) {
+    if (keyword && !smartSearchMatches(c, keyword)) return false;
+    switch (dbFilter) {
+      case 'すべて': return true;
+      case '人気TOP300': return (c.popRank || 9999) <= 300;
+      case '大企業': return sizeLabel(c) === '大企業';
+      case '非上場名門': return c.market === '非上場' || c.market === '外資系' || c.scale === '非上場名門' || (c.tags || []).includes('非上場名門');
+      case '未追加のみ': return !c.added;
+      case '選考中のみ': return c.added && ['entry', 'es', 'first', 'final'].includes(c.stage);
+      default: return catOf(c) === dbFilter;
+    }
+  }
+
+  function onDbSortChange(val) {
+    dbSort = val;
+    renderDB();
+  }
+
+  let dbPageSize = 60;
+  function renderDB(resetPage = true) {
+    if (resetPage) dbPageSize = 60;
+    let list = catalog.filter(c => dbMatches(c));
+
+    if (dbSort === 'pop_asc' || dbSort === 'default') {
+      list.sort((a, b) => (a.popRank || 9999) - (b.popRank || 9999));
+    } else if (dbSort === 'annual_desc') {
+      list.sort((a, b) => (b.avgAnnual || 0) - (a.avgAnnual || 0));
+    } else if (dbSort === 'pay_desc') {
+      list.sort((a, b) => (b.payBachelor || 0) - (a.payBachelor || 0));
+    } else if (dbSort === 'emp_desc') {
+      list.sort((a, b) => (b.emp || 0) - (a.emp || 0));
+    } else if (dbSort === 'name_asc') {
+      list.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'ja'));
+    }
+
+    const shownList = list.slice(0, dbPageSize);
+    const hasMore = list.length > dbPageSize;
+
+    let html = shownList.map(c => dbCardHtml(c)).join('');
+    if (hasMore) {
+      const remain = list.length - dbPageSize;
+      const nextBatch = Math.min(60, remain);
+      html += `
+        <div style="grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; padding: 26px 0 10px; gap: 14px; flex-wrap: wrap;">
+          <button class="top-btn primary" onclick="loadMoreDb()" style="padding: 10px 24px; font-size: 13.5px;">
+            さらに表示する（残り ${remain} 社 / 次の${nextBatch}社を表示）
+          </button>
+          <button class="top-btn" onclick="loadAllDb()" style="padding: 10px 18px; font-size: 13.5px;">
+            全${list.length}社を一括表示
+          </button>
+        </div>`;
+    }
+
+    grid.innerHTML = html ||
+      `<div style="color:var(--sub);padding:40px;text-align:center;grid-column:1/-1">該当する企業が見つかりませんでした。「＋ 企業を追加」から新しく登録できます。</div>`;
+
+    document.getElementById('dbTotal').textContent = catalog.length;
+    document.getElementById('dbShown').textContent = Math.min(dbPageSize, list.length);
+  }
+
+  function loadMoreDb() {
+    dbPageSize += 60;
+    renderDB(false);
+  }
+
+  function loadAllDb() {
+    dbPageSize = catalog.length;
+    renderDB(false);
+  }
+
+  dbChips.forEach(chip => chip.addEventListener('click', () => {
+    dbChips.forEach(x => x.classList.remove('on'));
+    chip.classList.add('on');
+    dbFilter = chip.textContent.trim();
+    renderDB();
+  }));
+
+  function toggleAdd(id, event) {
+    if (event) event.stopPropagation();
+    const c = catalog.find(x => x.id === id);
+    if (!c) return;
+    c.added = !c.added;
+    if (c.added) {
+      if (!c.stage) c.stage = 'watch';
+            if (!c.loc) c.loc = '—';
+      if (!c.tags) c.tags = [];
+      showToast(`「${c.name}」を選考リストに追加しました`);
+    } else {
+      showToast(`「${c.name}」を選考リストから外しました`);
+    }
+    saveAll();
+    renderAll();
+  }
+
+  // ===================== VIEW 2: カンバン =====================
+  const board = document.getElementById('board');
+
+  function kCardHtml(c) {
+    const dueInfo = getDueStatus(c);
+    const dueBadge = dueInfo.badge ? `<span class="k-due ${dueInfo.cls}">${dueInfo.badge}</span>` : (dueInfo.text ? `<span class="k-due">${dueInfo.text}</span>` : '');
+
+    return `
+      <div class="kcard"
+           id="kcard_${c.id}"
+           draggable="true"
+           ondragstart="onCardDragStart(event, '${c.id}')"
+           ondragend="onCardDragEnd(event)"
+           onclick="openDetailModal('${c.id}')"
+           style="--accent:${c.color || '#8b7bff'}">
+        <div class="kcard-inner">
+          ${logoHtml(c)}
+          <div class="name" title="${c.name}">${c.name}</div>
+          ${dueBadge}
+        </div>
+      </div>`;
+  }
+
+  function renderKanban() {
+    const added = catalog.filter(c => c.added);
+    board.innerHTML = stages.map(st => {
+      const items = added.filter(c => (c.stage || 'watch') === st.key);
+      const body = items.length
+        ? items.map(c => kCardHtml(c)).join('')
+        : `<div class="empty-hint">企業カードをここにドラッグ</div>`;
+
+      return `
+        <div class="col"
+             data-stage="${st.key}"
+             ondragover="onColDragOver(event)"
+             ondragleave="onColDragLeave(event)"
+             ondrop="onColDrop(event, '${st.key}')">
+          <div class="col-head">
+            <span class="dot" style="background:${st.color};color:${st.color}"></span>
+            ${st.label}
+            <span class="desc">${st.desc}</span>
+            <span class="count">${items.length}</span>
+          </div>
+          <div class="col-body">${body}</div>
+        </div>`;
+    }).join('');
+
+    const activeKeys = ['entry', 'es', 'first', 'final'];
+    document.getElementById('kActive').textContent = added.filter(c => activeKeys.includes(c.stage)).length;
+    document.getElementById('kOffer').textContent = added.filter(c => c.stage === 'offer').length;
+    document.getElementById('kDue').textContent = added.filter(c => {
+      const d = getDueStatus(c);
+      return d.days !== null && d.days >= 0 && d.days <= 7;
+    }).length;
+  }
+
+  // ドラッグ＆ドロップ
+  let draggedCardId = null;
+  function onCardDragStart(e, id) {
+    draggedCardId = id;
+    e.dataTransfer.setData('text/plain', id);
+    e.dataTransfer.effectAllowed = 'move';
+    const cardEl = document.getElementById('kcard_' + id);
+    if (cardEl) setTimeout(() => cardEl.classList.add('dragging'), 0);
+  }
+  function onCardDragEnd(e) {
+    const cardEl = document.getElementById('kcard_' + draggedCardId);
+    if (cardEl) cardEl.classList.remove('dragging');
+    document.querySelectorAll('.col').forEach(c => c.classList.remove('drag-over'));
+  }
+  function onColDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const col = e.currentTarget;
+    if (!col.classList.contains('drag-over')) col.classList.add('drag-over');
+  }
+  function onColDragLeave(e) {
+    e.currentTarget.classList.remove('drag-over');
+  }
+  function onColDrop(e, stageKey) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+    const cid = e.dataTransfer.getData('text/plain') || draggedCardId;
+    if (!cid) return;
+    const c = catalog.find(x => x.id === cid);
+    if (c && c.stage !== stageKey) {
+      c.stage = stageKey;
+      c.added = true;
+      saveAll();
+      renderAll();
+      showToast(`「${c.name}」を「${stageMap[stageKey].label}」に移動しました`);
+    }
+  }
+
+
+
+  // ===================== VIEW 3: 選考リスト =====================
+  const tbody = document.getElementById('tbody');
+  let listFilter = 'すべて';
+  const listChips = [...document.querySelectorAll('#listFilters .chip')];
+
+  function listMatches(c) {
+    if (keyword && !smartSearchMatches(c, keyword)) return false;
+    switch (listFilter) {
+      case 'すべて': return true;
+      case '選考中のみ': return ['entry', 'es', 'first', 'final'].includes(c.stage);
+            case '締切あり': return !!c.due;
+      default: return catOf(c) === listFilter;
+    }
+  }
+
+  let sortCol = 'pop', sortAsc = true;
+
+  function sortTable(col) {
+    if (sortCol === col) {
+      sortAsc = !sortAsc;
+    } else {
+      sortCol = col;
+      sortAsc = true;
+    }
+    renderList();
+  }
+
+  function renderList() {
+    let added = catalog.filter(c => c.added && listMatches(c));
+
+    // ソート
+    added.sort((a, b) => {
+      let va = a[sortCol], vb = b[sortCol];
+      if (sortCol === 'pop') {
+        va = a.popRank || 9999; vb = b.popRank || 9999;
+      } else if (sortCol === 'name') {
+        va = a.name || ''; vb = b.name || '';
+        return sortAsc ? va.localeCompare(vb, 'ja') : vb.localeCompare(va, 'ja');
+      } else if (sortCol === 'cat') {
+        va = catOf(a); vb = catOf(b);
+        return sortAsc ? va.localeCompare(vb, 'ja') : vb.localeCompare(va, 'ja');
+      } else if (sortCol === 'emp') {
+        va = a.emp || 0; vb = b.emp || 0;
+      } else if (sortCol === 'annual') {
+        va = a.avgAnnual || 0; vb = b.avgAnnual || 0;
+      } else if (sortCol === 'pay') {
+        va = a.payBachelor || 0; vb = b.payBachelor || 0;
+
+      } else if (sortCol === 'stage') {
+        const order = ['watch', 'entry', 'es', 'first', 'final', 'offer'];
+        va = order.indexOf(a.stage); vb = order.indexOf(b.stage);
+      } else if (sortCol === 'due') {
+        va = a.due || '9999-99-99'; vb = b.due || '9999-99-99';
+        return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+      }
+      return sortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+    });
+
+    // ソート矢印更新
+    document.querySelectorAll('thead th .arrow').forEach(a => a.textContent = '↕');
+    const activeArr = document.getElementById('arr-' + sortCol);
+    if (activeArr) activeArr.textContent = sortAsc ? '▲' : '▼';
+
+    tbody.innerHTML = added.map(c => {
+      const st = stageMap[c.stage] || stageMap.watch;
+      const dueInfo = getDueStatus(c);
+      const size = sizeLabel(c);
+      const popBadgeHtml = c.popBadge ? `<span style="font-size:10px;padding:2px 6px;margin-left:6px;border-radius:6px;background:rgba(217,178,95,.18);color:var(--gold-2);border:1px solid rgba(217,178,95,.4);font-weight:700">${c.popBadge}</span>` : '';
+      return `
+        <tr onclick="openDetailModal('${c.id}')">
+          <td>
+            <div class="company">
+              ${logoHtml(c)}
+              <div>
+                <div class="name">${c.name} ${popBadgeHtml} ${c.isCustom ? `<span style="font-size:10px;color:var(--gold-2)">[手動]</span>` : ''}</div>
+                <div class="url">${c.domain || ''}</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="pill ind">${catOf(c)}</span><div style="color:var(--sub);font-size:11px;margin-top:3px">${c.sub || '—'}</div></td>
+          <td>${size ? `<span class="pill size">${size}</span>` : ''} <span style="font-size:11.5px;color:var(--sub)">${fmtEmp(c)}</span></td>
+          <td style="color:var(--gold-2);font-weight:700">${fmtAnnual(c)}</td>
+          <td>
+            <div style="font-size:12px"><span style="color:var(--sub);font-size:10px">大卒:</span> <b>${fmtPay(c)}</b></div>
+            <div style="font-size:11px;color:var(--sub);margin-top:2px"><span style="font-size:10px">院卒:</span> <b style="color:var(--ink)">${fmtPayMaster(c)}</b></div>
+          </td>
+          <td onclick="event.stopPropagation()">
+            <select class="toolbar-select" style="font-size:11.5px;padding:4px 8px" onchange="onTableStageChange('${c.id}', this.value)">
+              ${stages.map(s => `<option value="${s.key}" ${s.key === c.stage ? 'selected' : ''}>${s.label}</option>`).join('')}
+            </select>
+          </td>
+          <td>
+            <span class="${dueInfo.cls ? `due ${dueInfo.cls}` : 'due'}">${dueInfo.text || '—'}</span>
+            ${dueInfo.badge ? `<span style="font-size:10.5px;margin-left:4px" class="${dueInfo.cls}">${dueInfo.badge}</span>` : ''}
+          </td>
+          <td class="row-actions" onclick="event.stopPropagation()">
+            <button class="action-icon-btn" onclick="openDetailModal('${c.id}')" title="詳細・面接ノート編集">✏️</button>
+            <button class="action-icon-btn delete" onclick="toggleAdd('${c.id}', event)" title="選考リストから外す">✕</button>
+          </td>
+        </tr>`;
+    }).join('') || `<tr><td colspan="8" style="color:var(--sub);padding:40px;text-align:center">選考管理中の企業はありません。「企業DB」から気になる会社を追加してください。</td></tr>`;
+
+    document.getElementById('listShown').textContent = catalog.filter(c => c.added).length;
+  }
+
+  listChips.forEach(chip => chip.addEventListener('click', () => {
+    listChips.forEach(x => x.classList.remove('on'));
+    chip.classList.add('on');
+    listFilter = chip.textContent.trim();
+    renderList();
+  }));
+
+  function onTableStageChange(id, stage) {
+    const c = catalog.find(x => x.id === id);
+    if (c) {
+      c.stage = stage;
+      saveAll();
+      renderAll();
+      showToast(`「${c.name}」を「${stageMap[stage].label}」に更新しました`);
+    }
+  }
+
+
+
+  // ===================== VIEW 4: ダッシュボード =====================
+  const DONUT_COLORS = ['#8b7bff','#4ee39a','#f4d489','#ff7eb6','#4fd8e8','#a100ff','#7fb0ff','#ff9f6b'];
+
+  function renderDash() {
+    const added = catalog.filter(c => c.added);
+    const total = added.length;
+    const activeKeys = ['entry','es','first','final'];
+    const active = added.filter(c => activeKeys.includes(c.stage)).length;
+    const offer = added.filter(c => c.stage === 'offer').length;
+    const esReached = added.filter(c => ['es','first','final','offer'].includes(c.stage)).length;
+    const esRate = total ? Math.round(esReached / total * 100) : 0;
+    const dueSoon = added.filter(c => {
+      const d = getDueStatus(c);
+      return d.days !== null && d.days >= 0 && d.days <= 7;
+    }).length;
+
+    document.getElementById('kpis').innerHTML = `
+      <div class="kpi" style="--kglow:rgba(139,123,255,.28)"><div class="label">選考管理数</div><div class="val">${total} <small>社</small></div></div>
+      <div class="kpi" style="--kglow:rgba(79,216,232,.28)"><div class="label">選考中</div><div class="val" style="color:var(--cyan)">${active} <small>社</small></div></div>
+      <div class="kpi" style="--kglow:rgba(78,227,154,.28)"><div class="label">内々定・内定</div><div class="val" style="color:var(--green)">${offer} <small>社</small></div></div>
+      <div class="kpi" style="--kglow:rgba(217,178,95,.28)"><div class="label">書類/ES到達率</div><div class="val"><span class="g">${esRate}</span><small>%</small></div></div>
+      <div class="kpi" style="--kglow:rgba(224,52,90,.3)"><div class="label">7日以内の締切</div><div class="val" style="color:#ff7a6b">${dueSoon} <small>件</small></div></div>`;
+
+    // 選考ファネル
+    const order = ['entry','es','first','final','offer'];
+    const reached = k => {
+      const idx = order.indexOf(k);
+      const keysFrom = order.slice(idx);
+      return added.filter(c => keysFrom.includes(c.stage)).length;
+    };
+    const funnelRows = [
+      { name:'エントリー', n: added.filter(c => c.stage !== 'watch').length, grad:'#7fb0ff,#4c8bf5', glow:'rgba(76,139,245,.4)' },
+      { name:'ES提出',     n: reached('es'),    grad:'#b3a9ff,#8b7bff', glow:'rgba(139,123,255,.4)' },
+      { name:'一次面接',   n: reached('first'), grad:'#7fe6f0,#4fd8e8', glow:'rgba(79,216,232,.4)' },
+      { name:'最終面接',   n: reached('final'), grad:'#ffa8cf,#ff7eb6', glow:'rgba(255,126,182,.4)' },
+      { name:'内々定/内定', n: reached('offer'), grad:'#86eeb8,#4ee39a', glow:'rgba(78,227,154,.4)' },
+    ];
+    const maxN = Math.max(1, funnelRows[0].n);
+    document.getElementById('funnel').innerHTML = funnelRows.map((r, idx) => {
+      const w = Math.round(r.n / maxN * 100);
+      const rate = idx === 0 ? '100%' : (funnelRows[idx-1].n ? Math.round(r.n / funnelRows[idx-1].n * 100) + '%' : '—');
+      return `<div class="row"><div class="fname">${r.name}</div><div class="bar-track"><div class="bar" style="width:${Math.max(w, r.n ? 8 : 0)}%;background:linear-gradient(90deg,${r.grad});--bg-glow:${r.glow}">${r.n}</div></div><div class="rate">${rate}</div></div>`;
+    }).join('');
+
+    // 業界別ドーナツ
+    const byCat = {};
+    added.forEach(c => { const k = catOf(c); byCat[k] = (byCat[k] || 0) + 1; });
+    const entries = Object.entries(byCat).sort((a,b) => b[1] - a[1]);
+    document.getElementById('donutSub').textContent = total + '社';
+    let offset = 0;
+    const circles = entries.map(([cat, n], idx) => {
+      const pct = total ? (n / total * 100) : 0;
+      const dash = `${pct.toFixed(1)} ${(100 - pct).toFixed(1)}`;
+      const col = DONUT_COLORS[idx % DONUT_COLORS.length];
+      const c = `<circle cx="21" cy="21" r="15.9" fill="none" stroke="${col}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${dash}" stroke-dashoffset="${(-offset).toFixed(1)}" transform="rotate(-90 21 21)"></circle>`;
+      offset += pct;
+      return c;
+    }).join('');
+    document.getElementById('donut').innerHTML = `
+      <circle cx="21" cy="21" r="15.9" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="5"></circle>
+      ${circles}
+      <text x="21" y="20" text-anchor="middle" font-size="7" font-weight="900" fill="#eef2fb">${total}</text>
+      <text x="21" y="26" text-anchor="middle" font-size="3.5" fill="#8a93ab">社</text>`;
+    document.getElementById('legend').innerHTML = entries.map(([cat, n], idx) => {
+      const col = DONUT_COLORS[idx % DONUT_COLORS.length];
+      return `<div class="item"><span class="sw" style="background:${col};color:${col}"></span>${cat}<span class="n">${n}</span></div>`;
+    }).join('') || `<div style="color:var(--sub)">データがありません</div>`;
+
+    // 企業規模分布
+    const sizeBuckets = { '大企業': 0, '中堅': 0, '中小': 0, 'ベンチャー規模': 0, '不明': 0 };
+    added.forEach(c => { const s = sizeLabel(c); sizeBuckets[s || '不明']++; });
+    const barCols = [['大企業','大企業'],['中堅','中堅'],['中小','中小'],['ベンチャー規模','ベンチャー'],['不明','規模不明']];
+    const maxBar = Math.max(1, ...barCols.map(([k]) => sizeBuckets[k]));
+    document.getElementById('barchart').innerHTML = barCols.map(([k, cap]) => {
+      const v = sizeBuckets[k];
+      const h = Math.round(v / maxBar * 100);
+      return `<div class="bcol"><div class="num">${v}</div><div class="b" style="height:${v ? Math.max(h, 4) : 0}%"></div><div class="cap">${cap}</div></div>`;
+    }).join('');
+
+    // 直近締切
+    const withDue = added.filter(c => c.due).slice();
+    withDue.sort((a, b) => {
+      const da = getDueStatus(a).days ?? 9999;
+      const db = getDueStatus(b).days ?? 9999;
+      return da - db;
+    });
+    document.getElementById('deadlines').innerHTML = withDue.slice(0, 6).map(c => {
+      const d = getDueStatus(c);
+      const st = stageMap[c.stage] || stageMap.watch;
+      const urgent = d.cls === 'urgent' ? ' urgent' : '';
+      const mMatch = (c.due || '').match(/(\d{1,2})[\/-](\d{1,2})/);
+      const day = mMatch ? mMatch[2] : '–';
+      const mon = mMatch ? mMatch[1] + '月' : '';
+      return `
+        <div class="dl${urgent}" onclick="openDetailModal('${c.id}')">
+          <div class="date">
+            <div class="d">${day}</div>
+            <div class="m">${mon}</div>
+          </div>
+          <div class="dbody">
+            <div class="t">${c.name}</div>
+            <div class="c">${c.dueLabel ? c.dueLabel + ' : ' : ''}${d.badge || c.due}</div>
+          </div>
+          <span class="dtag" style="color:${st.color}">${st.label}</span>
+        </div>`;
+    }).join('') || `<div style="color:var(--sub);padding:14px;text-align:center">締切が設定された企業はありません。</div>`;
+
+    renderTasks();
+  }
+
+  // 就活TODOタスク
+  function renderTasks() {
+    const listEl = document.getElementById('taskList');
+    if (!listEl) return;
+    const doneCount = currentTasks.filter(t => t.done).length;
+    document.getElementById('taskCountSub').textContent = `${doneCount}/${currentTasks.length} 完了`;
+
+    listEl.innerHTML = currentTasks.map(t => `
+      <div class="task-item ${t.done ? 'done' : ''}">
+        <input type="checkbox" class="task-cb" ${t.done ? 'checked' : ''} onchange="toggleTaskDone('${t.id}')" />
+        <span class="task-text">${t.text}</span>
+        ${t.tag ? `<span class="task-tag">${t.tag}</span>` : ''}
+        <button class="task-del" onclick="deleteTask('${t.id}')" title="削除">✕</button>
+      </div>
+    `).join('') || `<div style="color:var(--sub);font-size:12px">タスクはありません</div>`;
+  }
+
+  function toggleTaskDone(id) {
+    const t = currentTasks.find(x => x.id === id);
+    if (t) {
+      t.done = !t.done;
+      saveAll();
+      renderTasks();
+    }
+  }
+
+  function deleteTask(id) {
+    currentTasks = currentTasks.filter(x => x.id !== id);
+    saveAll();
+    renderTasks();
+  }
+
+  function addNewTask() {
+    const input = document.getElementById('newTaskInput');
+    const text = (input.value || '').trim();
+    if (!text) return;
+    currentTasks.push({
+      id: 't_' + Date.now(),
+      text,
+      done: false,
+      tag: 'メモ'
+    });
+    input.value = '';
+    saveAll();
+    renderTasks();
+    showToast('タスクを追加しました');
+  }
+
+  // ===================== MODAL: 企業詳細・編集 =====================
+  let currentModalComp = null;
+  let modalTags = [];
+
+  function openDetailModal(id) {
+    const c = catalog.find(x => x.id === id);
+    if (!c) return;
+    currentModalComp = c;
+    modalTags = [...(c.tags || [])];
+
+    document.getElementById('mId').value = c.id;
+    document.getElementById('mTitle').textContent = c.name;
+    document.getElementById('mSubTitle').textContent = `${catOf(c)} ・ ${c.sub || ''} ${c.code ? ' (' + c.code + ')' : ''}`;
+    const mIco = document.getElementById('mIco');
+    const initial = (c.name || '企').slice(0, 1);
+    mIco.style.background = c.color || '#8b7bff';
+    mIco.innerHTML = `<img src="assets/logos/${c.id}.png" alt="${c.name}" onerror="this.remove()"><span>${initial}</span>`;
+
+    // 企業統計バー反映
+    document.getElementById('mStatPay').textContent = fmtPay(c);
+    document.getElementById('mStatPayMaster').textContent = fmtPayMaster(c);
+    document.getElementById('mStatAnnual').textContent = fmtAnnual(c);
+    document.getElementById('mStatEmp').textContent = fmtEmp(c);
+    const mStatPop = document.getElementById('mStatPopRank');
+    if (mStatPop) {
+      if (c.popRank && c.popRank <= 300) {
+        mStatPop.textContent = `#${c.popRank} (${c.popBadge || 'TOP300'})`;
+      } else if (c.popBadge) {
+        mStatPop.textContent = `${c.popBadge} (#${c.popRank || '—'})`;
+      } else {
+        mStatPop.textContent = c.popRank ? `#${c.popRank}` : '—';
+      }
+    }
+    document.getElementById('mStatMarket').textContent = c.market || c.scale || (c.code ? '上場企業' : '非上場');
+
+    document.getElementById('mStage').value = c.stage || 'watch';
+
+
+    document.getElementById('mDue').value = c.due || '';
+    document.getElementById('mDueLabel').value = c.dueLabel || '';
+    document.getElementById('mMyPageUrl').value = c.myPageUrl || '';
+    document.getElementById('mMyPageId').value = c.myPageId || '';
+    document.getElementById('mNoteMotiv').value = c.noteMotiv || '';
+    document.getElementById('mNoteEs').value = c.noteEs || '';
+    document.getElementById('mNoteInterview').value = c.noteInterview || '';
+
+    // ボタン表示切り替え
+    const trackBtn = document.getElementById('mToggleTrackBtn');
+    trackBtn.textContent = c.added ? '選考リストから外す' : '選考リストに追加';
+
+    const delBtn = document.getElementById('mDeleteBtn');
+    delBtn.style.display = c.isCustom ? 'inline-block' : 'none';
+
+    renderModalTags();
+    openModal('companyModal');
+  }
+
+
+
+  function renderModalTags() {
+    const el = document.getElementById('mTagsList');
+    el.innerHTML = modalTags.map((t, idx) => `
+      <span class="modal-tag">${t} <span class="x" onclick="removeModalTag(${idx})">✕</span></span>
+    `).join('') || `<span style="color:var(--muted);font-size:11.5px">タグ未設定</span>`;
+  }
+
+  function addModalTag() {
+    const input = document.getElementById('mNewTagInput');
+    const val = (input.value || '').trim();
+    if (val && !modalTags.includes(val)) {
+      modalTags.push(val);
+      renderModalTags();
+    }
+    input.value = '';
+  }
+
+  function addModalTagText(val) {
+    if (val && !modalTags.includes(val)) {
+      modalTags.push(val);
+      renderModalTags();
+    }
+  }
+
+  function removeModalTag(idx) {
+    modalTags.splice(idx, 1);
+    renderModalTags();
+  }
+
+  function saveModalCompany() {
+    if (!currentModalComp) return;
+    const c = currentModalComp;
+    c.stage = document.getElementById('mStage').value;
+        c.due = document.getElementById('mDue').value;
+    c.dueLabel = document.getElementById('mDueLabel').value.trim();
+    c.myPageUrl = document.getElementById('mMyPageUrl').value.trim();
+    c.myPageId = document.getElementById('mMyPageId').value.trim();
+    c.noteMotiv = document.getElementById('mNoteMotiv').value;
+    c.noteEs = document.getElementById('mNoteEs').value;
+    c.noteInterview = document.getElementById('mNoteInterview').value;
+    c.tags = [...modalTags];
+    delete c._searchHay;
+
+    saveAll();
+    renderAll();
+    closeModal('companyModal');
+    showToast(`「${c.name}」の選考情報を保存しました`);
+  }
+
+  function toggleModalTrack() {
+    if (!currentModalComp) return;
+    toggleAdd(currentModalComp.id);
+    closeModal('companyModal');
+  }
+
+  function deleteModalCompany() {
+    if (!currentModalComp) return;
+    if (!confirm(`手動登録企業「${currentModalComp.name}」を完全に削除しますか？`)) return;
+    catalog = catalog.filter(x => x.id !== currentModalComp.id);
+    saveAll();
+    renderAll();
+    closeModal('companyModal');
+    showToast(`「${currentModalComp.name}」を削除しました`);
+  }
+
+  // ===================== MODAL: 新規企業追加 =====================
+  function openNewCompanyModal() {
+    document.getElementById('newCompName').value = '';
+    document.getElementById('newCompSub').value = '';
+    document.getElementById('newCompCode').value = '';
+    document.getElementById('newCompPay').value = '';
+    document.getElementById('newCompPayMaster').value = '';
+    document.getElementById('newCompAnnual').value = '';
+    document.getElementById('newCompEmp').value = '';
+    document.getElementById('newCompDue').value = '';
+    document.getElementById('newCompDueLabel').value = '';
+    document.getElementById('newCompDomain').value = '';
+    openModal('newCompanyModal');
+  }
+
+  function submitNewCompany() {
+    const name = document.getElementById('newCompName').value.trim();
+    if (!name) {
+      alert('企業名を入力してください');
+      return;
+    }
+
+    const cat = document.getElementById('newCompCat').value;
+    const sub = document.getElementById('newCompSub').value.trim();
+    const code = document.getElementById('newCompCode').value.trim();
+    const pay = parseInt(document.getElementById('newCompPay').value) || null;
+    const payMaster = parseInt(document.getElementById('newCompPayMaster').value) || (pay ? pay + 24000 : null);
+    const annual = parseInt(document.getElementById('newCompAnnual').value) || null;
+    const emp = parseInt(document.getElementById('newCompEmp').value) || null;
+    const stage = document.getElementById('newCompStage').value;
+        const due = document.getElementById('newCompDue').value;
+    const dueLabel = document.getElementById('newCompDueLabel').value.trim();
+    const domain = document.getElementById('newCompDomain').value.trim();
+
+    const colors = ['#8b7bff', '#4fd8e8', '#ff7eb6', '#4ee39a', '#d9b25f', '#ff9f43'];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+
+    const newComp = {
+      id: 'c_custom_' + Date.now(),
+      name,
+      code: code || null,
+      domain: domain ? domain.replace(/^https?:\/\//, '') : '',
+      cat,
+      ind17: cat,
+      sub: sub || cat,
+      emp,
+      payBachelor: pay,
+      payMaster,
+      avgAnnual: annual,
+      color,
+      added: true,
+      stage,
+            due,
+      dueLabel,
+      isCustom: true,
+      tags: ['手動登録']
+    };
+
+    catalog.unshift(newComp);
+    saveAll();
+    renderAll();
+    closeModal('newCompanyModal');
+    showToast(`「${name}」を登録し、選考リストに追加しました`);
+  }
+
+  // ===================== MODAL: 設定 & データ管理 =====================
+  function openSettingsModal() {
+    document.getElementById('settingGradYear').value = currentSettings.gradYear || '28卒';
+    updateStorageInfo();
+    openModal('settingsModal');
+  }
+
+  function openGradYearModal(e) {
+    if (e) e.stopPropagation();
+    openSettingsModal();
+  }
+
+  function updateGradYearSetting(val) {
+    currentSettings.gradYear = val;
+    applySettings();
+    saveAll();
+    showToast(`区分を「${val}」に変更しました`);
+  }
+
+  function applySettings() {
+    const b = document.getElementById('gradBadge');
+    if (b) b.textContent = currentSettings.gradYear || '28卒';
+    document.title = `就活ボード ― ${currentSettings.gradYear || '28卒'}（Premium）`;
+  }
+
+  // JSON エクスポート / インポート
+  function exportJSON() {
+    const data = {
+      version: '2.0',
+      exportDate: new Date().toISOString(),
+      settings: currentSettings,
+      tasks: currentTasks,
+      catalog
+    };
+    const jsonStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    a.href = url;
+    a.download = `就活ボード_backup_${dateStr}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('JSONバックアップをダウンロードしました');
+  }
+
+  function onImportJsonFile(input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!data || !Array.isArray(data.catalog)) {
+          throw new Error('バックアップの形式が正しくありません');
+        }
+        if (!confirm(`バックアップファイルを復元しますか？（現在のデータは上書きされます / 全${data.catalog.length}社）`)) {
+          input.value = '';
+          return;
+        }
+        catalog = data.catalog;
+        if (data.settings) currentSettings = Object.assign(currentSettings, data.settings);
+        if (Array.isArray(data.tasks)) currentTasks = data.tasks;
+        saveAll();
+        applySettings();
+        renderAll();
+        closeModal('settingsModal');
+        showToast('データを復元しました');
+      } catch (err) {
+        alert('ファイルの読み込みに失敗しました: ' + err.message);
+      }
+      input.value = '';
+    };
+    reader.readAsText(file);
+  }
+
+  // CSV エクスポート
+  function exportCSV() {
+    const added = catalog.filter(c => c.added);
+    if (!added.length) {
+      alert('選考リストに登録された企業がありません');
+      return;
+    }
+    const headers = ['企業名','就職人気順位','人気格付','証券コード','業界大分類','細分業種','選考ステージ','直近締切日','締切種別','初任給(大卒・円)','初任給(院卒・円)','平均年収(万円)','従業員数','マイページURL','マイページID','タグ','志望動機','ES内容','面接ログ'];
+    const rows = added.map(c => [
+      `"${(c.name || '').replace(/"/g, '""')}"`,
+      c.popRank || '',
+      `"${(c.popBadge || '').replace(/"/g, '""')}"`,
+      `"${(c.code || '').replace(/"/g, '""')}"`,
+      `"${(catOf(c) || '').replace(/"/g, '""')}"`,
+      `"${(c.sub || '').replace(/"/g, '""')}"`,
+      `"${stageMap[c.stage]?.label || c.stage}"`,
+      `"${c.due || ''}"`,
+      `"${(c.dueLabel || '').replace(/"/g, '""')}"`,
+      c.payBachelor || '',
+      c.payMaster || '',
+      c.avgAnnual || '',
+      c.emp || '',
+      `"${(c.myPageUrl || '').replace(/"/g, '""')}"`,
+      `"${(c.myPageId || '').replace(/"/g, '""')}"`,
+      `"${(c.tags || []).join(';')}"`,
+      `"${(c.noteMotiv || '').replace(/"/g, '""')}"`,
+      `"${(c.noteEs || '').replace(/"/g, '""')}"`,
+      `"${(c.noteInterview || '').replace(/"/g, '""')}"`
+    ]);
+
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    a.href = url;
+    a.download = `就活選考リスト_${dateStr}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('選考リストCSVをダウンロードしました');
+  }
+
+  function resetToDefaultCatalog() {
+    if (!confirm('初期カタログに戻しますか？\n追加・編集したメモやカスタム企業はすべてリセットされます。')) return;
+    const fullCatalog = (window.OFFICIAL_CATALOG_1500 && window.OFFICIAL_CATALOG_1500.length)
+      ? window.OFFICIAL_CATALOG_1500
+      : DEFAULT_CATALOG;
+    catalog = JSON.parse(JSON.stringify(fullCatalog));
+    currentTasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
+    saveAll();
+    renderAll();
+    closeModal('settingsModal');
+    showToast(`カタログ（全${catalog.length}社）にリセットしました`);
+  }
+
+  // 汎用モーダル
+  function openModal(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('open');
+  }
+  function closeModal(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('open');
+  }
+  function onModalOverlayClick(e, id) {
+    if (e.target.id === id) closeModal(id);
+  }
+
+  function openExternalUrl(url) {
+    if (!url) return;
+    if (url.startsWith('quote/')) {
+      url = 'https://finance.yahoo.co.jp/' + url;
+    } else if (!/^https?:\/\//i.test(url)) {
+      url = 'https://' + url;
+    }
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  // ===================== 共通 & 初期化 =====================
+  function renderAll() {
+    if (currentView === 'db') renderDB();
+    else if (currentView === 'kanban') renderKanban();
+    else if (currentView === 'list') renderList();
+    else if (currentView === 'dash') renderDash();
+  }
+
+  document.getElementById('search').addEventListener('input', e => {
+    keyword = e.target.value.trim();
+    renderAll();
+  });
+
+  let toastTimer = null;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    if (!t) return;
+    t.innerHTML = `<span>✓</span> <span>${msg}</span>`;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // 起動時初期化
+  loadAll();
+  applySettings();
+  renderAll();
+</script>
+</body>
+</html>
