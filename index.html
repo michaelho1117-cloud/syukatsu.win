@@ -2331,6 +2331,14 @@
       } else {
         const { data, error } = await supabaseClient.auth.signUp({ email, password });
         if (error) throw error;
+        if (!data.session && data.user && data.user.identities && data.user.identities.length === 0) {
+          throw new Error('User already registered');
+        }
+        if (!data.session) {
+          errorEl.textContent = '確認メールが送信されました。メールをご確認いただくか、Supabase管理画面で「Confirm email」を無効化して即時ログインを有効にしてください。';
+          errorEl.style.display = 'block';
+          return;
+        }
         currentAuthUser = data.user;
         updateAuthUI();
         closeModal('authModal');
@@ -2338,7 +2346,23 @@
         await syncAfterLogin();
       }
     } catch (err) {
-      errorEl.textContent = err.message || '認証エラーが発生しました。メールアドレスとパスワードをご確認ください。';
+      console.error('Auth error:', err);
+      let rawMsg = (err && err.message) ? err.message : String(err);
+      let friendlyMsg = '認証エラーが発生しました。';
+      if (rawMsg.includes('Failed to fetch') || rawMsg.includes('fetch')) {
+        friendlyMsg = '通信に失敗しました。Ctrl+F5（Mac: Cmd+Shift+R）でブラウザキャッシュを更新して再読み込みしてください。';
+      } else if (rawMsg.includes('Email not confirmed')) {
+        friendlyMsg = 'メール認証が未完了です。Supabase管理画面で「Confirm email」をオフ（推奨）にしてください。';
+      } else if (rawMsg.includes('rate limit')) {
+        friendlyMsg = 'メール送信制限に達しました。Supabase管理画面の Authentication > Providers > Email で「Confirm email」をオフにしてください。';
+      } else if (rawMsg.includes('Invalid login credentials')) {
+        friendlyMsg = 'メールアドレスまたはパスワードが正しくありません。';
+      } else if (rawMsg.includes('already registered')) {
+        friendlyMsg = 'このメールアドレスは既に登録されています。「ログイン」タブからログインしてください。';
+      } else {
+        friendlyMsg = rawMsg;
+      }
+      errorEl.textContent = friendlyMsg;
       errorEl.style.display = 'block';
     } finally {
       btn.disabled = false;
