@@ -1359,6 +1359,52 @@
     padding: 20px 0 30px;
   }
 
+    /* ===== Demo Showcase Banner ===== */
+  .demo-seed-banner {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    background: linear-gradient(90deg, rgba(217,178,95,.13), rgba(139,123,255,.11));
+    border: 1px solid rgba(217,178,95,.32);
+    border-radius: 12px;
+    padding: 10px 18px;
+    margin-bottom: 18px;
+    font-size: 12.5px;
+    color: var(--ink);
+    box-shadow: 0 4px 20px rgba(0,0,0,.25);
+    backdrop-filter: blur(8px);
+  }
+  .demo-seed-banner .demo-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.5;
+  }
+  .demo-seed-banner .demo-btn {
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+    color: #0b0f19;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .demo-seed-banner .demo-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(217,178,95,.4);
+  }
+  @media (max-width: 768px) {
+    .demo-seed-banner {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px 14px;
+    }
+  }
+
   /* ===== Responsive ===== */
   @media (max-width: 960px) {
     .kpis { grid-template-columns: repeat(3, 1fr); }
@@ -2466,6 +2512,7 @@
     <nav class="tabs" id="tabs">
       <button data-view="db" class="active">🏢 企業DB</button>
       <button data-view="list">📑 選考管理</button>
+      <button data-view="kanban">📌 カンバン</button>
       <button data-view="es">📝 ES</button>
       <button data-view="story">💡 Story Bank</button>
       <button data-view="dash">📊 ダッシュボード</button>
@@ -2547,6 +2594,10 @@
 
   <!-- ===================== VIEW 2: 選考リスト ===================== -->
   <section class="view" id="view-list">
+    <div class="demo-seed-banner">
+      <span class="demo-text">💡 <span><strong>展示用デモモード:</strong> これは展示用の非リアルなサンプルデータです。ログインすると自動的に消去され、あなた専用のプライベートデータに切り替わります。</span></span>
+      <button class="demo-btn" onclick="openAuthModal('login')">ログイン / 新規登録</button>
+    </div>
     <div class="hero">
       <div class="hero-title">
         <h1>選考<span class="g">管理リスト</span></h1>
@@ -2589,8 +2640,34 @@
 
   <!-- ===================== VIEW 3: カンバン ===================== -->
   <!-- ===================== VIEW 3: ES Database ===================== -->
-    <!-- ===================== VIEW 3: ES データベース ===================== -->
+    <!-- ===================== VIEW 2: カンバン ===================== -->
+  <section class="view" id="view-kanban">
+    <div class="demo-seed-banner">
+      <span class="demo-text">💡 <span><strong>展示用デモモード:</strong> これは展示用の非リアルなサンプルデータです。ログインすると自動的に消去され、あなた専用のプライベートデータに切り替わります。</span></span>
+      <button class="demo-btn" onclick="openAuthModal('login')">ログイン / 新規登録</button>
+    </div>
+    <div class="view-header">
+      <div>
+        <h1>選考カンバンボード</h1>
+        <p>カードをドラッグ＆ドロップして選考ステージを進められます。クリックで選考詳細・面接記録を編集できます。</p>
+      </div>
+      <div class="stat-strip">
+        <span>選考中 <b id="kActive" style="color:var(--cyan)">0</b> 社</span>
+        <span>内々定 <b id="kOffer" style="color:var(--green)">0</b> 社</span>
+        <span class="hot">直近締切 <b id="kDue">0</b> 件</span>
+      </div>
+    </div>
+    <div class="board-wrap">
+      <div class="board" id="board"></div>
+    </div>
+  </section>
+
+  <!-- ===================== VIEW 3: ES データベース ===================== -->
   <section class="view" id="view-es">
+    <div class="demo-seed-banner">
+      <span class="demo-text">💡 <span><strong>展示用デモモード:</strong> これは展示用の非リアルなサンプルデータです。ログインすると自動的に消去され、あなた専用のプライベートデータに切り替わります。</span></span>
+      <button class="demo-btn" onclick="openAuthModal('login')">ログイン / 新規登録</button>
+    </div>
     <div class="hero">
       <div class="hero-title">
         <h1>ES <span class="g">データベース</span></h1>
@@ -2705,6 +2782,10 @@
   </section>
 
   <section class="view" id="view-story">
+    <div class="demo-seed-banner">
+      <span class="demo-text">💡 <span><strong>展示用デモモード:</strong> これは展示用の非リアルなサンプルデータです。ログインすると自動的に消去され、あなた専用のプライベートデータに切り替わります。</span></span>
+      <button class="demo-btn" onclick="openAuthModal('login')">ログイン / 新規登録</button>
+    </div>
     <div class="hero">
       <div class="hero-title">
         <h1>Story <span class="g">Bank</span></h1>
@@ -2733,6 +2814,10 @@
   <!-- ===================== VIEW 4: ダッシュボード ===================== -->
   <section class="view" id="view-dash">
     <div class="page">
+    <div class="demo-seed-banner">
+      <span class="demo-text">💡 <span><strong>展示用デモモード:</strong> これは展示用の非リアルなサンプルデータです。ログインすると自動的に消去され、あなた専用のプライベートデータに切り替わります。</span></span>
+      <button class="demo-btn" onclick="openAuthModal('login')">ログイン / 新規登録</button>
+    </div>
       <div class="hero" style="padding: 0 0 16px;">
         <div class="hero-title">
           <h1>就活状況 <span class="g">ダッシュボード</span></h1>
@@ -2826,6 +2911,10 @@
     <button class="mobile-nav-btn" data-view="list" onclick="switchView('list')">
       <span class="icon">📑</span>
       <span>選考管理</span>
+    </button>
+    <button class="mobile-nav-btn" data-view="kanban" onclick="switchView('kanban')">
+      <span class="icon">📌</span>
+      <span>カンバン</span>
     </button>
     <button class="mobile-nav-btn" data-view="es" onclick="switchView('es')">
       <span class="icon">📝</span>
@@ -3662,6 +3751,884 @@
   const stageMap = Object.fromEntries(stages.map(s => [s.key, s]));
 
   // ---- LocalStorage 管理 ----
+    const SHOWCASE_DATA = {
+  "companies": [
+    {
+      "id": "c_toyota",
+      "name": "トヨタ自動車",
+      "code": "7203",
+      "domain": "toyota.jp",
+      "ind17": "自動車・輸送機",
+      "cat": "メーカー",
+      "sub": "自動車",
+      "emp": 73133,
+      "payBachelor": 275000,
+      "payMaster": 299000,
+      "avgAnnual": 895,
+      "color": "#c0392b",
+      "added": true,
+      "stage": "offer",
+      "loc": "愛知/東京",
+      "tags": [
+        "内々定",
+        "グローバル",
+        "本命"
+      ],
+      "due": "2026-06-30",
+      "dueLabel": "内々定面談・承諾回答",
+      "dueLv": "soon"
+    },
+    {
+      "id": "c_mitsubishi_corp",
+      "name": "三菱商事",
+      "code": "8058",
+      "domain": "mitsubishicorp.com",
+      "ind17": "商社・卸売",
+      "cat": "商社",
+      "sub": "総合商社",
+      "emp": 5448,
+      "payBachelor": 340000,
+      "payMaster": 380000,
+      "avgAnnual": 2112,
+      "color": "#8e44ad",
+      "added": true,
+      "stage": "final",
+      "loc": "東京(丸の内)",
+      "tags": [
+        "総合商社",
+        "最終面接",
+        "海外展開"
+      ],
+      "due": "2026-06-18",
+      "dueLabel": "役員最終面接(対面)",
+      "dueLv": "soon"
+    },
+    {
+      "id": "c_deloitte",
+      "name": "デロイト トーマツ コンサルティング",
+      "code": null,
+      "domain": "deloitte.com",
+      "ind17": "情報通信・サービスその他",
+      "cat": "コンサル・シンクタンク",
+      "sub": "総合経営戦略・DXコンサルティング",
+      "emp": 5000,
+      "payBachelor": 450000,
+      "payMaster": 470000,
+      "avgAnnual": 1050,
+      "color": "#27ae60",
+      "added": true,
+      "stage": "second",
+      "loc": "東京(丸の内)",
+      "tags": [
+        "BIG4",
+        "戦略コンサル",
+        "二次面接"
+      ],
+      "due": "2026-06-12",
+      "dueLabel": "ケース二次面接",
+      "dueLv": "soon"
+    },
+    {
+      "id": "c_sony",
+      "name": "ソニーグループ",
+      "code": "6758",
+      "domain": "sony.com",
+      "ind17": "電機・精密",
+      "cat": "広告・マスコミ",
+      "sub": "総合電機・エンタメ・半導体",
+      "emp": 5448,
+      "payBachelor": 333000,
+      "payMaster": 360000,
+      "avgAnnual": 1100,
+      "color": "#2c3e50",
+      "added": true,
+      "stage": "first",
+      "loc": "東京(品川)",
+      "tags": [
+        "エンタメ",
+        "技術",
+        "一次面接"
+      ],
+      "due": "2026-06-08",
+      "dueLabel": "現場マネージャー面接",
+      "dueLv": "soon"
+    },
+    {
+      "id": "c_nttdata",
+      "name": "NTTデータ",
+      "code": "9613",
+      "domain": "nttdata.com",
+      "ind17": "情報通信・サービスその他",
+      "cat": "IT・通信",
+      "sub": "大規模SIer / ITコンサル",
+      "emp": 14000,
+      "payBachelor": 260000,
+      "payMaster": 285000,
+      "avgAnnual": 905,
+      "color": "#0984e3",
+      "added": true,
+      "stage": "es",
+      "loc": "東京(豊洲)",
+      "tags": [
+        "SIer首位",
+        "公共・金融IT",
+        "書類選考中"
+      ],
+      "due": "2026-05-31",
+      "dueLabel": "本選考ES＆適性検査",
+      "dueLv": "soon"
+    },
+    {
+      "id": "c_unlisted_rms",
+      "name": "リクルートマネジメントソリューションズ",
+      "code": null,
+      "domain": "recruit-ms.co.jp",
+      "ind17": "情報通信・サービスその他",
+      "cat": "コンサル・シンクタンク",
+      "sub": "リクルートグループの組織人事コンサル・SPI開発",
+      "emp": 700,
+      "payBachelor": 320000,
+      "payMaster": 343000,
+      "avgAnnual": 1060,
+      "color": "#0984e3",
+      "added": true,
+      "stage": "first",
+      "loc": "東京",
+      "tags": [
+        "組織人事",
+        "高年収",
+        "一次面接"
+      ],
+      "due": "2026-05-28",
+      "dueLabel": "一次面接（オンライン）",
+      "dueLv": "soon"
+    },
+    {
+      "id": "c_tcs",
+      "name": "日本タタ・コンサルタンシー・サービシズ",
+      "code": null,
+      "domain": "tcs.com",
+      "ind17": "情報通信・サービスその他",
+      "cat": "コンサル・シンクタンク",
+      "sub": "外資系ITコンサル・SIer (三菱商事合弁)",
+      "emp": 4000,
+      "payBachelor": 305000,
+      "payMaster": 330000,
+      "avgAnnual": 860,
+      "color": "#00b894",
+      "added": true,
+      "stage": "es",
+      "loc": "東京",
+      "tags": [
+        "外資系IT",
+        "三菱商事系",
+        "書類選考中"
+      ],
+      "due": "2026-05-22",
+      "dueLabel": "ES提出締切",
+      "dueLv": "soon"
+    },
+    {
+      "id": "c_smbc",
+      "name": "三井住友銀行",
+      "code": "8316",
+      "domain": "smbc.co.jp",
+      "ind17": "金融・証券・保険",
+      "cat": "金融",
+      "sub": "メガバンク",
+      "emp": 28000,
+      "payBachelor": 255000,
+      "payMaster": 275000,
+      "avgAnnual": 880,
+      "color": "#16a085",
+      "added": true,
+      "stage": "entry",
+      "loc": "東京(丸の内)",
+      "tags": [
+        "メガバンク",
+        "志望検討",
+        "リクルーター面談"
+      ],
+      "due": "2026-06-05",
+      "dueLabel": "インターン参加者座談会",
+      "dueLv": "soon"
+    },
+    {
+      "id": "c_keyence",
+      "name": "キーエンス",
+      "code": "6861",
+      "domain": "keyence.co.jp",
+      "ind17": "電機・精密",
+      "cat": "メーカー",
+      "sub": "ファクトリーオートメーション・精密センサ",
+      "emp": 3000,
+      "payBachelor": 350000,
+      "payMaster": 370000,
+      "avgAnnual": 2279,
+      "color": "#e74c3c",
+      "added": true,
+      "stage": "first",
+      "loc": "大阪/東京",
+      "tags": [
+        "超高年収",
+        "自己資本比率95%",
+        "説得面接"
+      ],
+      "due": "2026-06-10",
+      "dueLabel": "20秒自己PR＆1次面接",
+      "dueLv": "soon"
+    },
+    {
+      "id": "c_tokiomarine",
+      "name": "東京海上日動火災保険",
+      "code": "8766",
+      "domain": "tokiomarine-nichido.co.jp",
+      "ind17": "金融・証券・保険",
+      "cat": "金融",
+      "sub": "損害保険首位",
+      "emp": 17000,
+      "payBachelor": 260000,
+      "payMaster": 285000,
+      "avgAnnual": 1450,
+      "color": "#2980b9",
+      "added": true,
+      "stage": "second",
+      "loc": "東京(丸の内)",
+      "tags": [
+        "損保トップ",
+        "OB訪問済",
+        "二次面接"
+      ],
+      "due": "2026-06-15",
+      "dueLabel": "二次人事面接",
+      "dueLv": "soon"
+    },
+    {
+      "id": "c_itwh",
+      "name": "伊藤忠商事",
+      "code": "8001",
+      "domain": "itochu.co.jp",
+      "ind17": "商社・卸売",
+      "cat": "商社",
+      "sub": "総合商社首位級",
+      "emp": 4200,
+      "payBachelor": 325000,
+      "payMaster": 365000,
+      "avgAnnual": 1804,
+      "color": "#d35400",
+      "added": true,
+      "stage": "entry",
+      "loc": "東京(青山)",
+      "tags": [
+        "総合商社",
+        "非資源No1",
+        "エントリー検討"
+      ],
+      "due": "2026-06-01",
+      "dueLabel": "本選考プレエントリー開始",
+      "dueLv": "soon"
+    },
+    {
+      "id": "c_nomura_ri",
+      "name": "野村総合研究所",
+      "code": "4307",
+      "domain": "nri.co.jp",
+      "ind17": "情報通信・サービスその他",
+      "cat": "コンサル・シンクタンク",
+      "sub": "国内最大手シンクタンク・ITソリューション",
+      "emp": 6700,
+      "payBachelor": 280000,
+      "payMaster": 305000,
+      "avgAnnual": 1242,
+      "color": "#34495e",
+      "added": true,
+      "stage": "first",
+      "loc": "東京(大手町)",
+      "tags": [
+        "NRI",
+        "コンサル最高峰",
+        "一次面接"
+      ],
+      "due": "2026-06-07",
+      "dueLabel": "現場コンサルタント面接",
+      "dueLv": "soon"
+    },
+    {
+      "id": "c_mercari",
+      "name": "メルカリ",
+      "code": "4385",
+      "domain": "about.mercari.com",
+      "ind17": "情報通信・サービスその他",
+      "cat": "IT・通信",
+      "sub": "CtoCマーケットプレイス・フィンテック",
+      "emp": 2000,
+      "payBachelor": 380000,
+      "payMaster": 410000,
+      "avgAnnual": 920,
+      "color": "#e84393",
+      "added": true,
+      "stage": "es",
+      "loc": "東京(六本木)",
+      "tags": [
+        "メガベンチャー",
+        "プロダクト思考",
+        "ES提出済"
+      ],
+      "due": "2026-05-25",
+      "dueLabel": "コーディングテスト受検",
+      "dueLv": "soon"
+    },
+    {
+      "id": "c_nintendo",
+      "name": "任天堂",
+      "code": "7974",
+      "domain": "nintendo.co.jp",
+      "ind17": "その他製品",
+      "cat": "メーカー",
+      "sub": "家庭用ゲーム機・ソフト世界的大手",
+      "emp": 2800,
+      "payBachelor": 260000,
+      "payMaster": 277000,
+      "avgAnnual": 988,
+      "color": "#e74c3c",
+      "added": true,
+      "stage": "entry",
+      "loc": "京都/東京",
+      "tags": [
+        "独創性",
+        "グローバルIP",
+        "ES執筆中"
+      ],
+      "due": "2026-06-03",
+      "dueLabel": "クリエイティブES提出",
+      "dueLv": "soon"
+    }
+  ],
+  "selectionEvents": [
+    {
+      "id": "ev_demo_1",
+      "companyId": "c_unlisted_rms",
+      "type": "es",
+      "title": "本選考 ES提出",
+      "datetime": "2026-05-18 12:00",
+      "due": "2026-05-18 12:00",
+      "status": "completed",
+      "format": "マイページ提出",
+      "notes": "マイページから提出完了（ガクチカ・志望動機）"
+    },
+    {
+      "id": "ev_demo_2",
+      "companyId": "c_unlisted_rms",
+      "type": "test",
+      "title": "WEBテスト（SPI受検）",
+      "datetime": "2026-05-20 18:00",
+      "due": "2026-05-20 18:00",
+      "status": "completed",
+      "format": "テストセンター",
+      "notes": "テストセンター受検済、言語・非言語手応えあり"
+    },
+    {
+      "id": "ev_demo_3",
+      "companyId": "c_tcs",
+      "type": "es",
+      "title": "エントリーシート提出",
+      "datetime": "2026-05-22 23:59",
+      "due": "2026-05-22 23:59",
+      "status": "completed",
+      "format": "マイページ",
+      "notes": "志望動機300字・自己PR400字"
+    },
+    {
+      "id": "ev_demo_4",
+      "companyId": "c_mercari",
+      "type": "test",
+      "title": "技術オンラインテスト",
+      "datetime": "2026-05-25 20:00",
+      "due": "2026-05-25 20:00",
+      "status": "upcoming",
+      "format": "オンライン",
+      "notes": "アルゴリズム・SQL基礎の確認"
+    },
+    {
+      "id": "ev_demo_5",
+      "companyId": "c_deloitte",
+      "type": "es",
+      "title": "春採用 本選考ES・適性検査",
+      "datetime": "2026-05-25 17:00",
+      "due": "2026-05-25 17:00",
+      "status": "completed",
+      "format": "TG-WEB",
+      "notes": "TG-WEBテスト受検も同日時まで"
+    },
+    {
+      "id": "ev_demo_6",
+      "companyId": "c_unlisted_rms",
+      "type": "interview_1",
+      "title": "一次面接（オンライン）",
+      "datetime": "2026-05-28 15:00",
+      "due": "2026-05-28 15:00",
+      "status": "upcoming",
+      "format": "Zoom",
+      "notes": "Zoomリンクは前日にメール送付。学生時代に注力したこと深掘り対策"
+    },
+    {
+      "id": "ev_demo_7",
+      "companyId": "c_nttdata",
+      "type": "es",
+      "title": "本選考ES提出締切",
+      "datetime": "2026-05-31 23:59",
+      "due": "2026-05-31 23:59",
+      "status": "upcoming",
+      "format": "マイページ",
+      "notes": "「ITを使って社会インフラを変革する提案」400字"
+    },
+    {
+      "id": "ev_demo_8",
+      "companyId": "c_nintendo",
+      "type": "es",
+      "title": "クリエイティブES提出",
+      "datetime": "2026-06-03 17:00",
+      "due": "2026-06-03 17:00",
+      "status": "upcoming",
+      "format": "郵送/WEB",
+      "notes": "「自分をゲームのキャラクターに例えると」300字"
+    },
+    {
+      "id": "ev_demo_9",
+      "companyId": "c_smbc",
+      "type": "interview_1",
+      "title": "リクルーター個別面談",
+      "datetime": "2026-06-05 14:00",
+      "due": "2026-06-05 14:00",
+      "status": "upcoming",
+      "format": "対面(東京本店)",
+      "notes": "金融業界を志望する動機とキャリアプランの壁打ち"
+    },
+    {
+      "id": "ev_demo_10",
+      "companyId": "c_nomura_ri",
+      "type": "interview_1",
+      "title": "一次面接（現場コンサル）",
+      "datetime": "2026-06-07 10:00",
+      "due": "2026-06-07 10:00",
+      "status": "upcoming",
+      "format": "オンライン",
+      "notes": "論理的思考力と仮説構築力のチェック"
+    },
+    {
+      "id": "ev_demo_11",
+      "companyId": "c_sony",
+      "type": "interview_1",
+      "title": "現場エンジニア一次面接",
+      "datetime": "2026-06-08 16:30",
+      "due": "2026-06-08 16:30",
+      "status": "upcoming",
+      "format": "オンライン",
+      "notes": "研究テーマ概要とソニーの事業とのシナジー"
+    },
+    {
+      "id": "ev_demo_12",
+      "companyId": "c_keyence",
+      "type": "interview_1",
+      "title": "説得面接（一次選考）",
+      "datetime": "2026-06-10 13:00",
+      "due": "2026-06-10 13:00",
+      "status": "upcoming",
+      "format": "オンライン",
+      "notes": "20秒自己PR＋「なぜその選択をしたか」を3分で説得"
+    },
+    {
+      "id": "ev_demo_13",
+      "companyId": "c_deloitte",
+      "type": "interview_2",
+      "title": "ケース二次面接",
+      "datetime": "2026-06-12 11:00",
+      "due": "2026-06-12 11:00",
+      "status": "upcoming",
+      "format": "対面(丸の内オフィス)",
+      "notes": "お題「某カフェチェーンの売上を2倍にする施策」を15分で立案"
+    },
+    {
+      "id": "ev_demo_14",
+      "companyId": "c_tokiomarine",
+      "type": "interview_2",
+      "title": "二次人事面接",
+      "datetime": "2026-06-15 15:30",
+      "due": "2026-06-15 15:30",
+      "status": "upcoming",
+      "format": "対面",
+      "notes": "志望順位と他社選考状況の確認"
+    },
+    {
+      "id": "ev_demo_15",
+      "companyId": "c_mitsubishi_corp",
+      "type": "interview_final",
+      "title": "役員最終面接",
+      "datetime": "2026-06-18 10:00",
+      "due": "2026-06-18 10:00",
+      "status": "upcoming",
+      "format": "対面(丸の内本店役員フロア)",
+      "notes": "商社パーソンとしての気概・グローバルでの覚悟を熱量を持って伝える"
+    },
+    {
+      "id": "ev_demo_16",
+      "companyId": "c_toyota",
+      "type": "offer",
+      "title": "内々定承諾面談",
+      "datetime": "2026-06-30 14:00",
+      "due": "2026-06-30 14:00",
+      "status": "upcoming",
+      "format": "対面(名古屋オフィス)",
+      "notes": "配属希望部署のヒアリングと入社意思確認"
+    }
+  ],
+  "esEntries": [
+    {
+      "id": "es_msol_sample",
+      "companyId": "c_unlisted_rms",
+      "questionType": "ガクチカ",
+      "title": "RMS ガクチカ 400字",
+      "question": "あなたがこれまでに最も情熱を持って取り組み、成果をあげた経験について述べてください。（400字以内）",
+      "answer": "長期インターン先のBtoB営業において、顧客課題に寄り添う提案プロセスの刷新に取り組みました。当時、商談獲得率が3%と低迷していたため、過去40件の失注データを分析し業界別のペイン仮説集を作成。従来のサービス紹介から課題解決型アプローチへ転換しました。さらにチーム内で週次ロープレを主導し、ノウハウを横展開した結果、個人の商談獲得数は目標比160%を達成し、チーム全体の成約率も2.2倍に向上しました。この経験で培った「本質的課題の特定力」と「周囲を巻き込む推進力」を活かし、貴社の組織コンサルタントとして顧客の変革を支え抜きます。",
+      "characterLimit": 400,
+      "status": "submitted",
+      "linkedStoryIds": [
+        "story_intern_sales"
+      ],
+      "tags": [
+        "営業",
+        "ガクチカ",
+        "課題解決",
+        "リーダーシップ"
+      ],
+      "createdAt": "2026-05-15T10:00:00.000Z",
+      "updatedAt": "2026-05-18T11:30:00.000Z"
+    },
+    {
+      "id": "es_tcs_sample",
+      "companyId": "c_tcs",
+      "questionType": "志望動機",
+      "title": "日本TCS 志望動機 300字",
+      "question": "TCSを志望する理由と、学生時代に培った強みをどう活かすかを記述してください。（300字）",
+      "answer": "世界最大級のグローバルIT知見とTataグループの総合力を背景に、日系企業の真のDX推進を支える貴社の姿勢に強く共感しました。学生時代に長期インターンで営業プロセスの再構築を主導した経験から、困難な状況でも事実に基づいて課題を構造化し、周囲と連携して解決に導く力を培いました。多様な国籍のエンジニアと密に協働し、日本企業の海外展開や業務効率化を具現化するプロジェクトマネージャーとして貢献します。",
+      "characterLimit": 300,
+      "status": "submitted",
+      "linkedStoryIds": [
+        "story_intern_sales"
+      ],
+      "tags": [
+        "志望動機",
+        "IT",
+        "グローバル"
+      ],
+      "createdAt": "2026-05-19T14:00:00.000Z",
+      "updatedAt": "2026-05-22T19:20:00.000Z"
+    },
+    {
+      "id": "es_deloitte_sample",
+      "companyId": "c_deloitte",
+      "questionType": "志望動機",
+      "title": "DTC 志望理由 500字",
+      "question": "コンサルティング業界およびデロイト トーマツ コンサルティングを志望する理由を教えてください。（500字以内）",
+      "answer": "企業の変革に伴走し、社会に確固たる価値を生み出したいと考えコンサルティング業界を志望します。その中で貴社を強く志望する理由は、単なる戦略立案に留まらず、テクノロジーと業界専門性を融合した「End-to-Endの実装力」を有している点です。私は大学祭実行委員会において、協賛金集めの仕組みをデジタル化し前年比140%を達成した経験から、仕組みの改革が組織を根本から活性化させる手応えを得ました。世界規模の知見とローカルでの泥臭い伴走力を兼ね備える貴社で、顧客のDXと成長戦略を最後までやり遂げるプロフェッショナルを目指します。",
+      "characterLimit": 500,
+      "status": "submitted",
+      "linkedStoryIds": [
+        "story_fest_lead"
+      ],
+      "tags": [
+        "志望理由",
+        "戦略コンサル",
+        "DX"
+      ],
+      "createdAt": "2026-05-20T09:00:00.000Z",
+      "updatedAt": "2026-05-25T15:00:00.000Z"
+    },
+    {
+      "id": "es_toyota_sample",
+      "companyId": "c_toyota",
+      "questionType": "自己PR",
+      "title": "トヨタ自動車 自己PR 400字",
+      "question": "あなたの強みと、それを発揮した具体的なエピソードを教えてください。（400字以内）",
+      "answer": "私の強みは「泥臭く仮説検証を繰り返す粘り強さ」です。大学祭実行委員会では、地域企業120社への協賛金獲得を主導しました。当初は対面での断りが続き前年割れの危機に瀕していましたが、私は訪問先ごとに「学生客層へのリーチメリット」を定量化した提案書を再作成。断られた企業にも再度アプローチし、対話を重ねる中でニーズを汲み取りました。結果として過去最高の350万円の協賛金を獲得し、前年比140%を達成しました。トヨタの「現地現物」「カイゼン」の精神と合致するこの実行力を活かし、モビリティ社会の実現に向けて困難な課題にも前向きに挑戦し続けます。",
+      "characterLimit": 400,
+      "status": "submitted",
+      "linkedStoryIds": [
+        "story_fest_lead"
+      ],
+      "tags": [
+        "自己PR",
+        "カイゼン",
+        "粘り強さ"
+      ],
+      "createdAt": "2026-05-10T11:00:00.000Z",
+      "updatedAt": "2026-05-12T16:00:00.000Z"
+    },
+    {
+      "id": "es_mitsubishi_sample",
+      "companyId": "c_mitsubishi_corp",
+      "questionType": "志望動機",
+      "title": "三菱商事 挑戦したいビジネス 400字",
+      "question": "三菱商事で成し遂げたいことや挑戦したいビジネス領域について記述してください。（400字）",
+      "answer": "次世代エネルギー・脱炭素分野において、世界規模のサプライチェーン変革を牽引したいです。東南アジア留学中、インフラの未発達により停電が頻発する地域を目の当たりにし、エネルギーの安定供給が生活の基盤であることを痛感しました。総合商社の持つ産業横断的なネットワークと事業投資力を活かし、現地政府や企業と手を取り合いながらクリーンエネルギーの普及に挑みたいです。異なる文化を持つ仲間をまとめ上げたリーダーシップを武器に、地球規模の社会課題解決をビジネスの力で実現します。",
+      "characterLimit": 400,
+      "status": "submitted",
+      "linkedStoryIds": [
+        "story_abroad_debate"
+      ],
+      "tags": [
+        "志望動機",
+        "エネルギー",
+        "グローバルリーダー"
+      ],
+      "createdAt": "2026-05-16T18:00:00.000Z",
+      "updatedAt": "2026-05-18T20:00:00.000Z"
+    },
+    {
+      "id": "es_sony_sample",
+      "companyId": "c_sony",
+      "questionType": "ガクチカ",
+      "title": "ソニー ガクチカ 500字",
+      "question": "学生時代に成し遂げた最も大きな成果と、その過程での困難について述べてください。（500字以内）",
+      "answer": "大学院の研究室において、新規画像処理アルゴリズムの開発に挑戦し、処理速度を従来の35%高速化したことです。当初は既存モデルの精度限界に直面し、2ヶ月間成果が出ない焦りがありました。しかし私は失敗を単なるエラーと捉えず、データごとのボトルネックを可視化。並列計算の構造見直しとメモリ配置の最適化を愚直に試行錯誤しました。また指導教員や共同研究者とのディスカッションを週2回設定し、客観的な知見を積極的に取り入れました。結果、国際学会での口頭発表に採択され、技術的ブレークスルーを果たすことができました。「好奇心を起点に粘り強く未知を切り拓く力」をソニーの研究開発で発揮します。",
+      "characterLimit": 500,
+      "status": "submitted",
+      "linkedStoryIds": [
+        "story_lab_algo"
+      ],
+      "tags": [
+        "ガクチカ",
+        "研究開発",
+        "学会発表"
+      ],
+      "createdAt": "2026-05-22T13:00:00.000Z",
+      "updatedAt": "2026-05-24T17:00:00.000Z"
+    },
+    {
+      "id": "es_nttdata_sample",
+      "companyId": "c_nttdata",
+      "questionType": "志望動機",
+      "title": "NTTデータ 志望動機 400字",
+      "question": "NTTデータでどのような社会課題を解決したいか具体的に述べてください。（400字以内）",
+      "answer": "社会基盤を支える大規模システムのDXを通じて、行政サービスの利便性向上と地域間格差の是正に挑みたいです。大学時代、地方自治体との協働プロジェクトに参加した際、レガシーシステムによる手続きの煩雑さを実感しました。日本屈指の信頼性と最先端IT技術を併せ持つ貴社において、官公庁・自治体向けプラットフォームの刷新に携わり、すべての住民が恩恵を受けられるデジタル社会の構築に貢献したいです。",
+      "characterLimit": 400,
+      "status": "draft",
+      "linkedStoryIds": [
+        "story_hackathon"
+      ],
+      "tags": [
+        "志望動機",
+        "公共IT",
+        "社会課題"
+      ],
+      "createdAt": "2026-05-26T15:00:00.000Z",
+      "updatedAt": "2026-05-28T10:00:00.000Z"
+    },
+    {
+      "id": "es_keyence_sample",
+      "companyId": "c_keyence",
+      "questionType": "自己PR",
+      "title": "キーエンス 20秒自己PR",
+      "question": "簡潔にあなたの最大の強みを述べてください。（100字程度）",
+      "answer": "私の強みは「徹底的なファクト重視の課題解決力」です。長期インターンでは商談成約率の低迷に対し、失注データを構造化して改善策を打ち出し、チーム売上を2.2倍に向上させました。",
+      "characterLimit": 150,
+      "status": "submitted",
+      "linkedStoryIds": [
+        "story_intern_sales"
+      ],
+      "tags": [
+        "自己PR",
+        "ファクト重視",
+        "簡潔"
+      ],
+      "createdAt": "2026-05-27T08:00:00.000Z",
+      "updatedAt": "2026-05-27T08:30:00.000Z"
+    },
+    {
+      "id": "es_nri_sample",
+      "companyId": "c_nomura_ri",
+      "questionType": "志望動機",
+      "title": "NRI 経営コンサル志望理由 400字",
+      "question": "野村総合研究所の経営コンサルタントを志望する動機を記述してください。（400字以内）",
+      "answer": "政策提言からビジネス実行まで一貫して社会を動かす「ナビゲーション×ソリューション」に惹かれ志望します。研究活動で培ったデータ分析力と、インターンで発揮した現場巻き込み力を活かし、産業の構造変化を見据えた実践的な成長戦略をクライアントと共に描き出します。",
+      "characterLimit": 400,
+      "status": "draft",
+      "linkedStoryIds": [
+        "story_lab_algo",
+        "story_intern_sales"
+      ],
+      "tags": [
+        "志望動機",
+        "シンクタンク",
+        "経営戦略"
+      ],
+      "createdAt": "2026-05-28T11:00:00.000Z",
+      "updatedAt": "2026-05-28T12:00:00.000Z"
+    },
+    {
+      "id": "es_mercari_sample",
+      "companyId": "c_mercari",
+      "questionType": "ガクチカ",
+      "title": "メルカリ 挑戦したこと 400字",
+      "question": "これまでに最も大きな挑戦（Go Boldな経験）について述べてください。（400字以内）",
+      "answer": "学部3年時にハッカソンへ初参加し、3人チームのリーダーとして生成AIを用いた学習支援アプリを48時間で開発した経験です。全員が未経験のフレームワークを採用する大胆な挑戦を選び、タスクをモジュール化して並行開発を推進。最終的に技術革新賞を受賞しました。",
+      "characterLimit": 400,
+      "status": "submitted",
+      "linkedStoryIds": [
+        "story_hackathon"
+      ],
+      "tags": [
+        "GoBold",
+        "ハッカソン",
+        "アジャイル"
+      ],
+      "createdAt": "2026-05-20T16:00:00.000Z",
+      "updatedAt": "2026-05-21T09:00:00.000Z"
+    }
+  ],
+  "storyBank": [
+    {
+      "id": "story_intern_sales",
+      "title": "長期インターンでの新規法人開拓営業（成約率2.2倍達成）",
+      "category": "Internship",
+      "situation": "HRTechスタートアップの長期インターンにおいて、新規顧客開拓を担当。当初は商談獲得率が3%と低迷していた。",
+      "task": "商談獲得率を10%まで引き上げ、チーム全体の月間成約目標を達成すること。",
+      "action": "過去40件の失注要因を徹底分析し、業界別のペイン仮説集を作成。単なる機能訴求から顧客課題解決型のアプローチへ刷新した。また週1回チーム勉強会を主催しノウハウを共有した。",
+      "result": "個人として月間商談獲得目標160%を達成。チーム全体の成約率も従来の2.2倍に向上した。",
+      "learning": "事実（データ）に基づく現状分析と、周囲を巻き込む仕組み化が組織の成果を最大化することを学んだ。",
+      "tags": [
+        "課題解決力",
+        "主体性",
+        "巻き込み力",
+        "営業"
+      ],
+      "createdAt": "2026-05-01T10:00:00.000Z",
+      "updatedAt": "2026-05-01T10:00:00.000Z"
+    },
+    {
+      "id": "story_fest_lead",
+      "title": "学園祭実行委員会での協賛金獲得（前年比140%達成）",
+      "category": "Extracurricular",
+      "situation": "学園祭実行委員会の渉外責任者として、地域企業からの協賛金集めを担当。コロナ禍後の景気後退により、既存の依頼先から断りが相次いだ。",
+      "task": "目標協賛金300万円を達成し、ステージ企画の縮小を回避すること。",
+      "action": "地域企業120社を一軒ずつ訪問。学生アンケートを元に「若者向けマーケティング効果」を可視化した独自協賛プランを提案。断られてもニーズを聞き出し再提案した。",
+      "result": "過去最高の350万円の協賛金を獲得（前年比140%達成）。ステージ企画を完全実施できた。",
+      "learning": "相手の立場に立った価値提案と、決して諦めない粘り強い対話が信頼を勝ち取る源泉であると学んだ。",
+      "tags": [
+        "企画提案力",
+        "折衝力",
+        "粘り強さ",
+        "リーダーシップ"
+      ],
+      "createdAt": "2026-05-02T11:00:00.000Z",
+      "updatedAt": "2026-05-02T11:00:00.000Z"
+    },
+    {
+      "id": "story_lab_algo",
+      "title": "研究室でのアルゴリズム開発（処理速度35%高速化・学会発表）",
+      "category": "Academic",
+      "situation": "大学院での画像処理研究において、新規アルゴリズムの計算負荷が高く実用化が困難であった。",
+      "task": "精度を落とすことなく処理速度を30%以上短縮し、国際学会への投稿基準を満たすこと。",
+      "action": "ボトルネック箇所をプロファイラで特定し、並列処理モデルを再設計。数式展開を簡略化する数学的アプローチとメモリ空間の効率化を両立させた。",
+      "result": "処理時間を35%高速化することに成功。査読付き国際学会に筆頭著者として採択された。",
+      "learning": "複雑な課題も要素分解し、仮説検証を積み重ねることでブレークスルーが生み出せることを体感した。",
+      "tags": [
+        "論理的思考",
+        "研究力",
+        "粘り強さ",
+        "学会発表"
+      ],
+      "createdAt": "2026-05-03T09:00:00.000Z",
+      "updatedAt": "2026-05-03T09:00:00.000Z"
+    },
+    {
+      "id": "story_abroad_debate",
+      "title": "留学先での英語ディベート大会（多国籍チーム準優勝）",
+      "category": "Academic",
+      "situation": "交換留学先のシンガポールにて、現地大学主催の政策提言ディベート大会に日本人1名で多国籍チームに参加。",
+      "task": "文化や価値観の異なる4名のチームで共通の提言方針をまとめ、大会で入賞すること。",
+      "action": "語学力では及ばない分、データ収集と論理構成の可視化でチームに貢献。意見対立時はホワイトボードを使って論点を整理し、合意形成をリードした。",
+      "result": "参加32チーム中、準優勝を獲得。最優秀ディベーター賞にもノミネートされた。",
+      "learning": "多様性のある環境では、互いの強みを認め合い、事実を基にした対話で共通目標に向かう重要性を学んだ。",
+      "tags": [
+        "グローバル",
+        "ファシリテーション",
+        "多様性",
+        "英語力"
+      ],
+      "createdAt": "2026-05-04T15:00:00.000Z",
+      "updatedAt": "2026-05-04T15:00:00.000Z"
+    },
+    {
+      "id": "story_hackathon",
+      "title": "48時間ハッカソン初挑戦（生成AIアプリ開発・技術革新賞）",
+      "category": "Other",
+      "situation": "学生向け全国ハッカソンに、大学の友人3名で初出場。制限時間48時間で動作するプロダクトを完成させる必要があった。",
+      "task": "「教育格差の是正」をテーマに、AIを活用した直感的な学習アプリをプロトタイプとして開発すること。",
+      "action": "リーダーとしてアジャイル開発を導入。機能を最小限（MVP）に絞り込み、フロントエンドとバックエンドの連携仕様を初動3時間で固めた。",
+      "result": "期限内に完全動作するデモを完成させ、審査員から実用性を高く評価され「技術革新賞」を受賞。",
+      "learning": "限られた時間とリソースの中で、勇気を持ってスコープを絞り込みスピード感を持ってやり切る大切さを学んだ。",
+      "tags": [
+        "アジャイル",
+        "迅速な決断力",
+        "技術力",
+        "チームワーク"
+      ],
+      "createdAt": "2026-05-05T14:00:00.000Z",
+      "updatedAt": "2026-05-05T14:00:00.000Z"
+    },
+    {
+      "id": "story_club_captain",
+      "title": "体育会バドミントン部主将としてリーグ昇格（練習改革）",
+      "category": "Extracurricular",
+      "situation": "体育会バドミントン部の主将を務めたが、部員のモチベーション格差により3年連続でリーグ残留に甘んじていた。",
+      "task": "チーム全員の当事者意識を高め、秋季リーグで2部昇格を果たすこと。",
+      "action": "全員一律の練習を廃止し、部員各自の得意ショットを伸ばす「個別カルテ制」を導入。月1回の個人面談で目標を共有し、チームの勝利への貢献を実感できる環境を整えた。",
+      "result": "秋季リーグ全勝優勝を果たし、念願の2部昇格を達成。",
+      "learning": "個々の個性に目を向け、自発的な動機付けを行うことが真のチーム力向上に繋がると学んだ。",
+      "tags": [
+        "リーダーシップ",
+        "組織改革",
+        "モチベーション管理"
+      ],
+      "createdAt": "2026-05-06T16:00:00.000Z",
+      "updatedAt": "2026-05-06T16:00:00.000Z"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "t1",
+      "text": "SPI・玉手箱のWEBテスト問題集を1周解く",
+      "done": false,
+      "tag": "テスト対策"
+    },
+    {
+      "id": "t2",
+      "text": "自己PR・ガクチカの400字要約を完成させる",
+      "done": true,
+      "tag": "ES対策"
+    },
+    {
+      "id": "t3",
+      "text": "商社・コンサル・IT業界の選考スケジュール一覧を整理する",
+      "done": true,
+      "tag": "業界研究"
+    },
+    {
+      "id": "t4",
+      "text": "志望企業3社のOB/OG訪問アポを取る",
+      "done": false,
+      "tag": "OB訪問"
+    },
+    {
+      "id": "t5",
+      "text": "逆質問リスト（役員面接用・現場社員用）を各5個作成する",
+      "done": false,
+      "tag": "面接対策"
+    }
+  ]
+};
+
   const STORAGE_KEY = 'shukatsu_board_storage_v2';
   const SETTINGS_KEY = 'shukatsu_board_settings_v2';
   const TASKS_KEY = 'shukatsu_board_tasks_v2';
@@ -3676,16 +4643,55 @@
   let esList = [];
   let storyBank = [];
 
+  function getScopedKey(baseKey) {
+    return currentAuthUser ? `${baseKey}_user_${currentAuthUser.id}` : null;
+  }
+
   function loadAll() {
     try {
       const fullCatalog = (window.OFFICIAL_CATALOG_1500 && window.OFFICIAL_CATALOG_1500.length)
         ? window.OFFICIAL_CATALOG_1500
         : DEFAULT_CATALOG;
 
-      const savedCatalogStr = localStorage.getItem(STORAGE_KEY);
+      if (!currentAuthUser) {
+        // ==================== 未ログイン: 展示用デモモード ====================
+        // 公共デモデータ（14社、各選考ステージ、ES10+、Story8+、Calendar Events）をメモリにロード
+        const demoCompMap = new Map();
+        SHOWCASE_DATA.companies.forEach(sc => demoCompMap.set(sc.id, sc));
+
+        catalog = fullCatalog.map(c => {
+          if (demoCompMap.has(c.id)) {
+            return Object.assign({}, c, demoCompMap.get(c.id));
+          }
+          return Object.assign({}, c, { added: false, stage: 'watch', due: '', dueLabel: '' });
+        });
+
+        // プレースホルダーのカスタム企業があれば先頭に保持
+        SHOWCASE_DATA.companies.forEach(sc => {
+          if (!catalog.find(x => x.id === sc.id)) {
+            catalog.unshift(Object.assign({}, sc));
+          }
+        });
+
+        selectionEvents = JSON.parse(JSON.stringify(SHOWCASE_DATA.selectionEvents || []));
+        esList = JSON.parse(JSON.stringify(SHOWCASE_DATA.esEntries || []));
+        storyBank = JSON.parse(JSON.stringify(SHOWCASE_DATA.storyBank || []));
+        currentTasks = JSON.parse(JSON.stringify(SHOWCASE_DATA.tasks || []));
+        currentSettings = { gradYear: '28卒' };
+        return;
+      }
+
+      // ==================== ログイン済み: ユーザー専用プライベートデータ ====================
+      const privateKey = getScopedKey(STORAGE_KEY);
+      const privateEventsKey = getScopedKey(EVENTS_KEY);
+      const privateEsKey = getScopedKey(ES_KEY);
+      const privateStoriesKey = getScopedKey(STORIES_KEY);
+      const privateSettingsKey = getScopedKey(SETTINGS_KEY);
+      const privateTasksKey = getScopedKey(TASKS_KEY);
+
+      const savedCatalogStr = localStorage.getItem(privateKey);
       if (savedCatalogStr) {
         let savedCatalog = JSON.parse(savedCatalogStr);
-        // マスターカタログの最新属性（年収・初任給・業種分類等）とユーザー保存進捗をスマート同期
         const userStateMap = new Map();
         savedCatalog.forEach(c => {
           if (c.added || (c.stage && c.stage !== 'watch') || c.due || c.dueLabel || c.myPageUrl || c.myPageId || c.noteMotiv || c.noteEs || c.noteInterview || c.isCustom) {
@@ -3698,7 +4704,7 @@
             return Object.assign({}, c, {
               added: u.added,
               stage: u.stage || c.stage,
-                            due: u.due !== undefined ? u.due : c.due,
+              due: u.due !== undefined ? u.due : c.due,
               dueLabel: u.dueLabel !== undefined ? u.dueLabel : c.dueLabel,
               dueLv: u.dueLv !== undefined ? u.dueLv : c.dueLv,
               myPageUrl: u.myPageUrl || '',
@@ -3709,23 +4715,36 @@
               tags: (u.tags && u.tags.length) ? u.tags : c.tags,
             });
           }
-          return c;
+          return Object.assign({}, c, { added: false, stage: 'watch', due: '', dueLabel: '' });
         });
         savedCatalog.forEach(c => {
           if (c.isCustom && !catalog.find(x => x.id === c.id)) {
             catalog.unshift(c);
           }
         });
-        saveAll();
       } else {
-        catalog = JSON.parse(JSON.stringify(fullCatalog));
+        // 新規ログインユーザー: デフォルトはクリーンな白紙選考リスト
+        catalog = fullCatalog.map(c => Object.assign({}, c, { added: false, stage: 'watch', due: '', dueLabel: '' }));
       }
 
-      const savedSettings = localStorage.getItem(SETTINGS_KEY);
+      // Private Selection Events
+      const savedEvents = localStorage.getItem(privateEventsKey);
+      selectionEvents = savedEvents ? JSON.parse(savedEvents) : [];
+
+      // Private ES List
+      const savedEs = localStorage.getItem(privateEsKey);
+      esList = savedEs ? JSON.parse(savedEs) : [];
+
+      // Private Story Bank
+      const savedStories = localStorage.getItem(privateStoriesKey);
+      storyBank = savedStories ? JSON.parse(savedStories) : [];
+
+      const savedSettings = localStorage.getItem(privateSettingsKey);
       if (savedSettings) currentSettings = Object.assign(currentSettings, JSON.parse(savedSettings));
-      const savedTasks = localStorage.getItem(TASKS_KEY);
-      if (savedTasks) currentTasks = JSON.parse(savedTasks);
-      else currentTasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
+
+      const savedTasks = localStorage.getItem(privateTasksKey);
+      currentTasks = savedTasks ? JSON.parse(savedTasks) : JSON.parse(JSON.stringify(DEFAULT_TASKS));
+
     } catch (e) {
       console.error('Storage load error:', e);
       catalog = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
@@ -3734,15 +4753,33 @@
   }
 
   function saveAll() {
+    if (!currentAuthUser) {
+      // 未ログイン状態ではローカル保存や上書きを防止
+      return;
+    }
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify(currentSettings));
-      localStorage.setItem(TASKS_KEY, JSON.stringify(currentTasks));
+      const privateKey = getScopedKey(STORAGE_KEY);
+      const privateSettingsKey = getScopedKey(SETTINGS_KEY);
+      const privateTasksKey = getScopedKey(TASKS_KEY);
+      const privateEventsKey = getScopedKey(EVENTS_KEY);
+      const privateEsKey = getScopedKey(ES_KEY);
+      const privateStoriesKey = getScopedKey(STORIES_KEY);
+
+      localStorage.setItem(privateKey, JSON.stringify(catalog));
+      localStorage.setItem(privateSettingsKey, JSON.stringify(currentSettings));
+      localStorage.setItem(privateTasksKey, JSON.stringify(currentTasks));
+      localStorage.setItem(privateEventsKey, JSON.stringify(selectionEvents));
+      localStorage.setItem(privateEsKey, JSON.stringify(esList));
+      localStorage.setItem(privateStoriesKey, JSON.stringify(storyBank));
       updateStorageInfo();
     } catch (e) {
       console.error('Storage save error:', e);
     }
     triggerCloudSave();
+  }
+
+  function saveAllV3() {
+    saveAll();
   }
 
   function updateStorageInfo() {
@@ -3837,6 +4874,11 @@
 
     document.querySelectorAll('.tab-lock').forEach(el => {
       el.style.display = currentAuthUser ? 'none' : 'inline';
+    });
+
+    // 展示用デモバナーの表示・非表示切り替え
+    document.querySelectorAll('.demo-seed-banner').forEach(el => {
+      el.style.display = currentAuthUser ? 'none' : 'flex';
     });
   }
 
@@ -3967,6 +5009,8 @@
     await supabaseClient.auth.signOut();
     currentAuthUser = null;
     updateAuthUI();
+    loadAll();
+    renderAll();
     switchView('db');
     renderDB(true);
     const dd = document.getElementById('userDropdown');
@@ -3977,6 +5021,9 @@
   async function syncAfterLogin() {
     if (!supabaseClient || !currentAuthUser) return;
     try {
+      // 1. まず未ログイン時の展示用デモデータを破棄し、ユーザー専用プライベートデータをロード
+      loadAll();
+      renderAll();
       const { data: cloudItems, error } = await supabaseClient
         .from('user_selections')
         .select('*')
@@ -4033,9 +5080,7 @@
         });
       }
 
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
-      } catch(e) {}
+      saveAll();
       renderAll();
       showToast('クラウド同期が完了しました');
     } catch (err) {
@@ -4573,6 +5618,7 @@
   }
   function onColDrop(e, stageKey) {
     e.preventDefault();
+    if (!requireAuth('選考ステージの変更')) return;
     e.currentTarget.classList.remove('drag-over');
     const cid = e.dataTransfer.getData('text/plain') || draggedCardId;
     if (!cid) return;
@@ -5193,6 +6239,7 @@
   }
 
   function toggleTaskDone(id) {
+    if (!requireAuth('就活タスクの更新')) return;
     const t = currentTasks.find(x => x.id === id);
     if (t) {
       t.done = !t.done;
@@ -5202,12 +6249,14 @@
   }
 
   function deleteTask(id) {
+    if (!requireAuth('就活タスクの削除')) return;
     currentTasks = currentTasks.filter(x => x.id !== id);
     saveAll();
     renderTasks();
   }
 
   function addNewTask() {
+    if (!requireAuth('就活タスクの追加')) return;
     const input = document.getElementById('newTaskInput');
     const text = (input.value || '').trim();
     if (!text) return;
@@ -5508,111 +6557,16 @@
 
   // ---- Enhanced loadAll & saveAll ----
   function loadAllV3() {
-    try {
-      const fullCatalog = (window.OFFICIAL_CATALOG_1500 && window.OFFICIAL_CATALOG_1500.length)
-        ? window.OFFICIAL_CATALOG_1500
-        : DEFAULT_CATALOG;
-
-      // Ensure MSOL is in catalog
-      const msolInFull = fullCatalog.find(x => x.id === 'c_msol' || x.name.includes('マネジメントソリューションズ'));
-      if (!msolInFull) {
-        fullCatalog.unshift({
-          id:'c_msol', name:'株式会社マネジメントソリューションズ', code:'7033', domain:'mgmtsol.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'PMO / 経営・ITマネジメントコンサルティング', emp:950, empNote:'連結', payBachelor:300000, payMaster:320000, avgAnnual:830, color:'#8b7bff', added:true, stage:'es', loc:'東京', tags:['PMO', '東証プライム', 'コンサル', '急成長'], due:'2026-05-28', dueLabel:'一次面接', dueLv:'soon', popRank:180, popBadge:'TOP 300'
-        });
-      }
-
-      const savedCatalogStr = localStorage.getItem(STORAGE_KEY);
-      if (savedCatalogStr) {
-        let savedCatalog = JSON.parse(savedCatalogStr);
-        const userStateMap = new Map();
-        savedCatalog.forEach(c => {
-          if (c.added || (c.stage && c.stage !== 'watch') || c.due || c.dueLabel || c.myPageUrl || c.myPageId || c.noteMotiv || c.noteEs || c.noteInterview || c.isCustom) {
-            userStateMap.set(c.id, c);
-          }
-        });
-        catalog = fullCatalog.map(c => {
-          if (userStateMap.has(c.id)) {
-            const u = userStateMap.get(c.id);
-            return Object.assign({}, c, {
-              added: u.added,
-              stage: u.stage || c.stage,
-              due: u.due !== undefined ? u.due : c.due,
-              dueLabel: u.dueLabel !== undefined ? u.dueLabel : c.dueLabel,
-              dueLv: u.dueLv !== undefined ? u.dueLv : c.dueLv,
-              myPageUrl: u.myPageUrl || '',
-              myPageId: u.myPageId || '',
-              noteMotiv: u.noteMotiv || '',
-              noteEs: u.noteEs || '',
-              noteInterview: u.noteInterview || '',
-              tags: (u.tags && u.tags.length) ? u.tags : c.tags,
-            });
-          }
-          return c;
-        });
-        savedCatalog.forEach(c => {
-          if (c.isCustom && !catalog.find(x => x.id === c.id)) {
-            catalog.unshift(c);
-          }
-        });
-      } else {
-        catalog = JSON.parse(JSON.stringify(fullCatalog));
-      }
-
-      // Load Selection Events
-      const savedEvents = localStorage.getItem(EVENTS_KEY);
-      if (savedEvents) {
-        selectionEvents = JSON.parse(savedEvents);
-      }
-
-      // Load ES List
-      const savedEs = localStorage.getItem(ES_KEY);
-      if (savedEs) {
-        esList = JSON.parse(savedEs);
-      }
-
-      // Load Story Bank
-      const savedStories = localStorage.getItem(STORIES_KEY);
-      if (savedStories) {
-        storyBank = JSON.parse(savedStories);
-      }
-
-      // If any of the V3 arrays is empty, run migration
-      if (!selectionEvents.length || !esList.length || !storyBank.length) {
-        migrateToV3State(catalog);
-      }
-
-      const savedSettings = localStorage.getItem(SETTINGS_KEY);
-      if (savedSettings) currentSettings = Object.assign(currentSettings, JSON.parse(savedSettings));
-      const savedTasks = localStorage.getItem(TASKS_KEY);
-      if (savedTasks) currentTasks = JSON.parse(savedTasks);
-      else currentTasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
-
-      saveAllV3();
-    } catch (e) {
-      console.error('Storage load error:', e);
-      catalog = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
-      migrateToV3State(catalog);
-    }
+    return loadAll();
   }
 
   function saveAllV3() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify(currentSettings));
-      localStorage.setItem(TASKS_KEY, JSON.stringify(currentTasks));
-      localStorage.setItem(EVENTS_KEY, JSON.stringify(selectionEvents));
-      localStorage.setItem(ES_KEY, JSON.stringify(esList));
-      localStorage.setItem(STORIES_KEY, JSON.stringify(storyBank));
-      updateStorageInfo();
-    } catch (e) {
-      console.error('Storage save error:', e);
-    }
-    triggerCloudSave();
+    return saveAll();
   }
 
   // Override loadAll & saveAll
-  window.loadAll = loadAllV3;
-  window.saveAll = saveAllV3;
+  window.loadAll = loadAll;
+  window.saveAll = saveAll;
 
   // =========================================================================
   // SELECTION TIMELINE CRUD & MODAL
@@ -5674,6 +6628,7 @@
   }
 
   function saveCurrentEvent() {
+    if (!requireAuth('選考スケジュールの保存')) return;
     const compId = document.getElementById('evCompanyId').value;
     const title = document.getElementById('evTitle').value.trim();
     const dateVal = document.getElementById('evDate').value;
@@ -5739,6 +6694,7 @@
   }
 
   function deleteCurrentEvent() {
+    if (!requireAuth('選考スケジュールの削除')) return;
     if (!currentEventEditId) return;
     if (!confirm('この選考イベントを削除しますか？')) return;
     const ev = selectionEvents.find(x => x.id === currentEventEditId);
@@ -5755,6 +6711,7 @@
 
   function deleteEvent(eventId, e) {
     if (e) e.stopPropagation();
+    if (!requireAuth('選考イベントの削除')) return;
     if (!confirm('この選考イベントを削除しますか？')) return;
     const ev = selectionEvents.find(x => x.id === eventId);
     const compId = ev ? ev.companyId : null;
@@ -5769,6 +6726,7 @@
 
   function toggleEventStatus(eventId, e) {
     if (e) e.stopPropagation();
+    if (!requireAuth('選考イベントの完了切り替え')) return;
     const ev = selectionEvents.find(x => x.id === eventId);
     if (!ev) return;
     ev.status = ev.status === 'completed' ? 'upcoming' : 'completed';
@@ -6360,6 +7318,7 @@
   // ES CLONE PICKER MODAL (Cross-Company Duplication)
   // =========================================================================
   function openEsClonePickerModal(targetCompanyId) {
+    if (!requireAuth('既存ESからの複製機能')) return;
     currentCloneTargetCompId = targetCompanyId;
     const c = catalog.find(x => x.id === targetCompanyId);
     const headTitle = document.getElementById('clonePickerHeadTitle');
@@ -6491,6 +7450,8 @@
   // ES MODAL (Edit & Create)
   // =========================================================================
   function openEsModal(esId = null, prefillCompanyId = null) {
+    if (!esId && !requireAuth('新規ESの作成')) return;
+    if (!esId && !requireAuth('新規ESエントリーシートの作成')) return;
     currentEsEditId = esId;
     const titleHead = document.getElementById('esModalTitle');
     const compSelect = document.getElementById('esModalCompany');
@@ -6614,6 +7575,7 @@
   }
 
   function saveCurrentEs() {
+    if (!requireAuth('ESの保存・編集')) return;
     const companyId = document.getElementById('esModalCompany').value || null;
     const status = document.getElementById('esModalStatus').value;
     const questionType = document.getElementById('esModalTypeSelect')?.value || 'その他';
@@ -6687,6 +7649,7 @@
   }
 
   function deleteCurrentEs() {
+    if (!requireAuth('ESの削除')) return;
     if (!currentEsEditId) return;
     if (!confirm('このESを削除しますか？')) return;
     const es = esList.find(x => x.id === currentEsEditId);
@@ -6702,6 +7665,8 @@
   }
 
   function deleteEs(esId, e) {
+    if (e) e.stopPropagation();
+    if (!requireAuth('ESの削除')) return;
     if (e) e.stopPropagation();
     if (!confirm('このESを削除しますか？')) return;
     const es = esList.find(x => x.id === esId);
@@ -6812,6 +7777,8 @@
   });
 
   function openStoryModal(storyId = null) {
+    if (!storyId && !requireAuth('新規Storyの作成')) return;
+    if (!storyId && !requireAuth('新規Storyの作成')) return;
     currentStoryEditId = storyId;
     const headTitle = document.getElementById('storyModalHeadTitle');
     const delBtn = document.getElementById('storyDeleteBtn');
@@ -6890,6 +7857,7 @@
   }
 
   function saveCurrentStory() {
+    if (!requireAuth('Storyの保存・編集')) return;
     const title = document.getElementById('storyTitle').value.trim();
     const category = document.getElementById('storyCategory').value;
     const summary = document.getElementById('storySummary').value.trim();
@@ -6950,6 +7918,7 @@
   }
 
   function deleteCurrentStory() {
+    if (!requireAuth('Storyの削除')) return;
     if (!currentStoryEditId) return;
     if (!confirm('このStoryを削除しますか？')) return;
     storyBank = storyBank.filter(x => x.id !== currentStoryEditId);
@@ -6966,6 +7935,7 @@
   }
 
   function deleteStory(storyId) {
+    if (!requireAuth('Storyの削除')) return;
     if (!confirm('このStoryを削除しますか？')) return;
     storyBank = storyBank.filter(x => x.id !== storyId);
     esList.forEach(es => {
@@ -7225,6 +8195,7 @@
   }
 
   function submitNewCompany() {
+    if (!requireAuth('新規企業の手動登録')) return;
     const name = document.getElementById('newCompName').value.trim();
     if (!name) {
       alert('企業名を入力してください');
@@ -7444,6 +8415,7 @@
   function renderAll() {
     if (currentView === 'db') renderDB();
     else if (currentView === 'list') renderList();
+    else if (currentView === 'kanban') renderKanban();
     else if (currentView === 'es') renderESDatabase();
     else if (currentView === 'story') renderStoryBank();
     else if (currentView === 'dash') renderDash();
@@ -7493,7 +8465,7 @@
   const hashSearchParams = new URLSearchParams(rawHash.includes('&') ? rawHash.split('&').slice(1).join('&') : '');
   const initHash = rawHash.split('&')[0];
 
-  if (['db', 'list', 'es', 'story', 'dash'].includes(initHash)) {
+  if (['db', 'list', 'kanban', 'es', 'story', 'dash'].includes(initHash)) {
     switchView(initHash);
     if (initHash === 'es') {
       if (hashSearchParams.get('view')) {
@@ -7585,6 +8557,9 @@
         closeModal('authModal');
         showToast('ログインしました！クラウドと同期中…');
         syncAfterLogin();
+      } else if (event === 'SIGNED_OUT') {
+        loadAll();
+        renderAll();
       }
     });
   }
