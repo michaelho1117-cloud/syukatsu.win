@@ -4,8 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
 <meta name="theme-color" content="#0a0e1a" />
-<title>就勝 (syukatsu.win) ― 日本新卒・留学生のための選考管理＆企業分析プラットフォーム</title>
-<meta name="description" content="就勝 (syukatsu.win) は、日本新卒就活生・留学生のための次世代選考管理＆企業分析プラットフォーム。1,700社以上の企業データベース、選考管理リスト、カンバン、リアルタイムES文字数管理、分析ダッシュボードを完全無料・登録不要で利用可能。" />
+<title>就勝 syukatsu.win</title>
+<meta name="description" content="就勝 syukatsu.win ― 日本新卒就活生・留学生のための次世代選考管理＆企業分析プラットフォーム。1,700社以上の企業データベース、選考管理リスト、カンバン、リアルタイムES文字数管理、分析ダッシュボードを完全無料・登録不要で利用可能。" />
 <meta name="keywords" content="就活, 就勝, syukatsu.win, 新卒, 28卒, 27卒, 選考管理, エントリーシート, ES, 面接, 企業研究, 留学生就活" />
 <!-- Favicon & App Icons -->
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
@@ -14,15 +14,15 @@
 <!-- Open Graph / Web Snapshot -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://syukatsu.win/" />
-<meta property="og:title" content="就勝 (syukatsu.win) ― 日本就活の全プロセスを構造化・可視化・加速する" />
+<meta property="og:title" content="就勝 syukatsu.win" />
 <meta property="og:description" content="1,700社以上の企業データベース、選考管理リスト、カンバン、リアルタイムES文字数管理、分析ダッシュボードを搭載した次世代就活コックピット。" />
 <meta property="og:image" content="https://syukatsu.win/assets/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:site_name" content="就勝 (syukatsu.win)" />
+<meta property="og:site_name" content="就勝 syukatsu.win" />
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="就勝 (syukatsu.win)" />
+<meta name="twitter:title" content="就勝 syukatsu.win" />
 <meta name="twitter:description" content="日本新卒就活生・留学生のための次世代選考管理＆企業分析プラットフォーム" />
 <meta name="twitter:image" content="https://syukatsu.win/assets/og-image.png" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -102,41 +102,31 @@
     font-size: 16px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     white-space: nowrap;
     cursor: pointer;
     user-select: none;
+    transition: opacity .18s ease;
   }
-  .logo .mark {
-    width: 32px;
-    height: 32px;
-    border-radius: 9px;
-    display: grid;
-    place-items: center;
-    font-size: 15px;
-    color: #ffffff;
-    font-weight: 900;
-    background: linear-gradient(135deg, #6366f1, #3730a3);
-    box-shadow: 0 0 16px rgba(99, 102, 241, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    flex-shrink: 0;
+  .logo:hover {
+    opacity: 0.88;
   }
   .logo .brand-text {
     display: flex;
     align-items: baseline;
-    gap: 7px;
+    gap: 6px;
   }
   .logo .brand-name {
     font-weight: 900;
-    font-size: 18px;
+    font-size: 20px;
     letter-spacing: 0.5px;
-    color: #ffffff;
+    color: #818cf8;
   }
   .logo .brand-domain {
-    font-weight: 800;
-    font-size: 14.5px;
+    font-weight: 900;
+    font-size: 18px;
     color: #818cf8;
-    letter-spacing: -0.2px;
+    letter-spacing: -0.3px;
   }
   .badge-grad {
     font-size: 11px;
@@ -1543,8 +1533,7 @@
 
   <!-- ===================== TOPBAR ===================== -->
   <header class="topbar">
-    <div class="logo" onclick="switchView('db')" title="就勝 (syukatsu.win) ホームへ">
-      <span class="mark">勝</span>
+    <div class="logo" onclick="switchView('db')" title="就勝 syukatsu.win">
       <span class="brand-text">
         <span class="brand-name">就勝</span>
         <span class="brand-domain">syukatsu.win</span>
@@ -2114,7 +2103,7 @@
   </div>
 
   <div class="toast" id="toast"></div>
-  <footer class="note">就勝 (syukatsu.win) ― 端末のローカルストレージに自動保存されます（完全プライベート・オフライン対応）</footer>
+  <footer class="note">就勝 syukatsu.win ― 端末のローカルストレージに自動保存されます（完全プライベート・オフライン対応）</footer>
 
 <script src="data/companies_catalog.js"></script>
 <script>
@@ -3680,7 +3669,7 @@
   function applySettings() {
     const b = document.getElementById('gradBadge');
     if (b) b.textContent = currentSettings.gradYear || '28卒';
-    document.title = `就勝 (syukatsu.win) ― ${currentSettings.gradYear || '28卒'}（Premium）`;
+    document.title = '就勝 syukatsu.win';
   }
 
   // JSON エクスポート / インポート
