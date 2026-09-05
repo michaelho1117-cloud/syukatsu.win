@@ -3347,7 +3347,7 @@
           <div class="form-group" style="gap:5px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <label class="form-label" style="font-size:11.5px; font-weight:600; color:#94a3b8;">パスワード</label>
-              <span style="font-size:10.5px; color:#64748b;">6文字以上</span>
+              <span id="authPassHint" style="font-size:10.5px; color:#64748b; display:none;">6文字以上</span>
             </div>
             <input type="password" class="form-input" id="authPassword" placeholder="••••••••" required minlength="6" autocomplete="current-password" style="height:38px; font-size:12.5px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff;" />
           </div>
@@ -4864,6 +4864,7 @@
     const btn = document.getElementById('authSubmitBtn');
     const passInput = document.getElementById('authPassword');
     const noticeText = document.getElementById('authNoticeText');
+    const passHint = document.getElementById('authPassHint');
 
     if (mode === 'login') {
       if (tabLogin) tabLogin.classList.add('active');
@@ -4872,6 +4873,7 @@
       if (btn) btn.textContent = 'ログイン';
       if (passInput) passInput.setAttribute('autocomplete', 'current-password');
       if (noticeText) noticeText.textContent = '登録済みのアカウントに保存された選考データを同期します';
+      if (passHint) passHint.style.display = 'none';
     } else {
       if (tabReg) tabReg.classList.add('active');
       if (tabLogin) tabLogin.classList.remove('active');
@@ -4879,6 +4881,7 @@
       if (btn) btn.textContent = 'アカウントを作成';
       if (passInput) passInput.setAttribute('autocomplete', 'new-password');
       if (noticeText) noticeText.textContent = '登録するとブラウザを閉じても選考データがクラウド保存されます';
+      if (passHint) passHint.style.display = 'inline';
     }
   }
 
