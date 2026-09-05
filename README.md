@@ -1,7 +1,8 @@
-# 就活ボード ― 新卒就活・選考進捗管理アプリ（28卒 / 27卒 / 既卒対応）
+# 就勝 (syukatsu.win) ― 新卒就活・選考進捗管理プラットフォーム（28卒 / 27卒 / 既卒・留学生対応）
 
-> **洗練されたダークグラスモーフィズムUIで、企業研究から内定獲得までを一元管理できる就活コックピット。**  
-> サーバー不要・完全オフライン動作・LocalStorage自動保存・ゼロビルド構成。
+> **「就活に勝つ」―― 企業研究から内定獲得までを一元管理できる次世代就活コックピット。**  
+> 公式サイト：[https://syukatsu.win](https://syukatsu.win)  
+> サーバー不要・完全オフライン動作・LocalStorage自動保存・Supabase クラウド同期対応。
 
 ---
 
@@ -92,4 +93,4 @@ d:/shinsotsu/
 
 ---
 
-© 2026 就活ボード (Shukatsu Board) - All Rights Reserved.
+© 2026 就勝 (syukatsu.win) - All Rights Reserved.
