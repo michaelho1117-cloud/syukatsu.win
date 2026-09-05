@@ -111,6 +111,17 @@
   .logo:hover {
     opacity: 0.88;
   }
+  .logo .brand-icon {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.6));
+    transition: transform .2s ease;
+  }
+  .logo:hover .brand-icon {
+    transform: scale(1.08);
+  }
   .logo .brand-text {
     display: flex;
     align-items: baseline;
@@ -1323,6 +1334,7 @@
       height: 54px;
     }
     header.topbar .spacer { display: none; }
+    header.topbar .logo .brand-icon { width: 22px; height: 22px; }
     header.topbar .logo .brand-domain { display: none; }
     header.topbar .logo .badge-grad { font-size: 10.5px; padding: 2px 6px; }
     .searchbox {
@@ -1536,6 +1548,7 @@
   <!-- ===================== TOPBAR ===================== -->
   <header class="topbar">
     <div class="logo" onclick="switchView('db')" title="就勝 syukatsu.win">
+      <img src="assets/logo-mark.png" alt="就勝" class="brand-icon" />
       <span class="brand-text">
         <span class="brand-name">就勝</span>
         <span class="brand-domain">syukatsu.win</span>
@@ -2618,10 +2631,23 @@
 
 
 
+  const NO_LOGO_SET = new Set([
+    'c_9843','c_jfe_shoji','c_9042','c_dir','c_4543','c_3099','c_323A','c_5384','c_unlisted_iqvia','c_4733',
+    'c_unlisted_mercer','c_unlisted_vision_con','c_5831','c_8088','c_7167','c_4401','c_unlisted_nttdatakeieiken','c_9830','c_7984','c_8154',
+    'c_7729','c_4208','c_dentsu_digital','c_9508','c_3844','c_9644','c_7864','c_4694','c_2810','c_9519',
+    'c_543A','c_2292','c_5805','c_2585','c_6250','c_7345','c_4044','c_6523','c_6516','c_5851',
+    'c_6104','c_6420','c_2296','c_hitachi_sys','c_4914','c_2726','c_7721','c_6622','c_2385','c_7593',
+    'c_2752','c_7373','c_9250','c_9212','c_269A','c_7707','c_4419','c_339A','c_9238','c_421A',
+    'c_6580','c_6577','c_330A','c_4591','c_2981'
+  ]);
+
   function logoHtml(c) {
     const initial = (c.name || '企').slice(0, 1);
     const bg = c.color || '#8b7bff';
-    return `<div class="ico" style="background:${bg};color:#fff"><img src="assets/logos/${c.id}.png" alt="${c.name}" loading="lazy" onerror="this.remove()"><span>${initial}</span></div>`;
+    if (NO_LOGO_SET.has(c.id) || c.isCustom) {
+      return `<div class="ico" style="background:${bg};color:#fff"><span>${initial}</span></div>`;
+    }
+    return `<div class="ico" style="background:${bg};color:#fff"><img src="assets/logos/${c.id}.png" alt="${c.name}" loading="lazy" decoding="async" width="44" height="44" onerror="this.remove()"><span>${initial}</span></div>`;
   }
 
   // 締切カウントダウン計算
@@ -3375,7 +3401,11 @@
     const mIco = document.getElementById('mIco');
     const initial = (c.name || '企').slice(0, 1);
     mIco.style.background = c.color || '#8b7bff';
-    mIco.innerHTML = `<img src="assets/logos/${c.id}.png" alt="${c.name}" onerror="this.remove()"><span>${initial}</span>`;
+    if (NO_LOGO_SET.has(c.id) || c.isCustom) {
+      mIco.innerHTML = `<span>${initial}</span>`;
+    } else {
+      mIco.innerHTML = `<img src="assets/logos/${c.id}.png" alt="${c.name}" decoding="async" onerror="this.remove()"><span>${initial}</span>`;
+    }
 
     // 企業統計バー反映
     document.getElementById('mStatPay').textContent = fmtPay(c);
