@@ -26,11 +26,23 @@
 <meta name="twitter:description" content="日本新卒就活生・留学生のための次世代選考管理＆企業分析プラットフォーム" />
 <meta name="twitter:image" content="https://syukatsu.win/assets/og-image.png" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  (function() {
+    try {
+      var saved = localStorage.getItem('syukatsu_theme') || 'auto';
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var effective = saved === 'auto' ? (prefersDark ? 'dark' : 'light') : saved;
+      document.documentElement.setAttribute('data-theme', effective);
+      document.documentElement.setAttribute('data-theme-setting', saved);
+    } catch(e){}
+  })();
+</script>
 <style>
-  :root {
+  :root, html[data-theme="dark"] {
     --bg-0: #0a0e1a;
     --bg-1: #0f1424;
     --bg-2: #141b30;
+    --topbar-bg: rgba(12, 16, 30, 0.82);
     --glass: rgba(255, 255, 255, 0.04);
     --glass-2: rgba(255, 255, 255, 0.07);
     --glass-3: rgba(255, 255, 255, 0.12);
@@ -51,6 +63,75 @@
     --glow-gold: 0 0 24px rgba(217, 178, 95, 0.35);
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+    --card-bg: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+    --card-brd: rgba(255, 255, 255, 0.09);
+    --card-hover-brd: rgba(255, 255, 255, 0.22);
+    --card-hover-shadow: 0 16px 44px rgba(0,0,0,.5);
+    --modal-bg: linear-gradient(180deg, #161e33, #101628);
+    --modal-brd: rgba(255, 255, 255, 0.14);
+    --modal-overlay: rgba(8, 11, 22, 0.82);
+    --input-bg: rgba(255, 255, 255, 0.04);
+    --input-brd: rgba(255, 255, 255, 0.12);
+    --th-bg: #131a2c;
+    --tr-hover: rgba(255, 255, 255, 0.04);
+    --brand-color: #818cf8;
+    --body-bg-gradient:
+      radial-gradient(1200px 600px at 12% -8%, rgba(139,123,255,.18), transparent 60%),
+      radial-gradient(1000px 620px at 108% 0%, rgba(79,216,232,.12), transparent 55%),
+      radial-gradient(900px 700px at 50% 120%, rgba(217,178,95,.10), transparent 60%),
+      linear-gradient(180deg, #0f1424, #0a0e1a);
+    --scrollbar-thumb: rgba(255, 255, 255, 0.16);
+    --scrollbar-thumb-hover: rgba(255, 255, 255, 0.28);
+    --dropdown-bg: #141926;
+  }
+
+  html[data-theme="light"] {
+    --bg-0: #f8fafc;
+    --bg-1: #ffffff;
+    --bg-2: #f1f5f9;
+    --topbar-bg: rgba(255, 255, 255, 0.88);
+    --glass: rgba(255, 255, 255, 0.82);
+    --glass-2: rgba(241, 245, 249, 0.88);
+    --glass-3: rgba(226, 232, 240, 0.92);
+    --glass-brd: rgba(0, 0, 0, 0.09);
+    --glass-brd-hover: rgba(0, 0, 0, 0.18);
+    --ink: #0f172a;
+    --sub: #475569;
+    --muted: #64748b;
+    --gold: #b45309;
+    --gold-2: #d97706;
+    --violet: #6366f1;
+    --cyan: #0284c7;
+    --pink: #db2777;
+    --green: #059669;
+    --red: #e11d48;
+    --orange: #ea580c;
+    --shadow: 0 4px 20px rgba(15, 23, 42, 0.07);
+    --glow-gold: 0 0 24px rgba(217, 119, 6, 0.25);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+    --card-bg: #ffffff;
+    --card-brd: rgba(0, 0, 0, 0.08);
+    --card-hover-brd: rgba(99, 102, 241, 0.35);
+    --card-hover-shadow: 0 12px 32px rgba(15, 23, 42, 0.10);
+    --modal-bg: #ffffff;
+    --modal-brd: rgba(0, 0, 0, 0.12);
+    --modal-overlay: rgba(15, 23, 42, 0.45);
+    --input-bg: #ffffff;
+    --input-brd: rgba(0, 0, 0, 0.14);
+    --th-bg: #f8fafc;
+    --tr-hover: rgba(241, 245, 249, 0.8);
+    --brand-color: #4338ca; /* Matches original p3 concept */
+    --body-bg-gradient:
+      radial-gradient(1200px 600px at 12% -8%, rgba(99,102,241,.06), transparent 60%),
+      radial-gradient(1000px 620px at 108% 0%, rgba(14,165,233,.05), transparent 55%),
+      radial-gradient(900px 700px at 50% 120%, rgba(245,158,11,.04), transparent 60%),
+      linear-gradient(180deg, #f8fafc, #f1f5f9);
+    --scrollbar-thumb: rgba(0, 0, 0, 0.18);
+    --scrollbar-thumb-hover: rgba(0, 0, 0, 0.32);
+    --dropdown-bg: #ffffff;
   }
 
   * { box-sizing: border-box; }
@@ -65,18 +146,15 @@
     color: var(--ink);
     font-size: 14px;
     line-height: 1.55;
-    background:
-      radial-gradient(1200px 600px at 12% -8%, rgba(139,123,255,.18), transparent 60%),
-      radial-gradient(1000px 620px at 108% 0%, rgba(79,216,232,.12), transparent 55%),
-      radial-gradient(900px 700px at 50% 120%, rgba(217,178,95,.10), transparent 60%),
-      linear-gradient(180deg, var(--bg-1), var(--bg-0));
+    background: var(--body-bg-gradient);
     background-attachment: fixed;
     padding-bottom: calc(var(--safe-bottom) + 20px);
+    transition: background-color .2s ease, color .2s ease;
   }
 
   ::-webkit-scrollbar { height: 8px; width: 8px; }
-  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.16); border-radius: 20px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.28); }
+  ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 20px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
   ::-webkit-scrollbar-track { background: transparent; }
 
   /* ===== Topbar ===== */
@@ -85,16 +163,17 @@
     padding-top: var(--safe-top);
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding-left: max(20px, env(safe-area-inset-left));
-    padding-right: max(20px, env(safe-area-inset-right));
+    gap: 8px;
+    padding-left: max(14px, env(safe-area-inset-left));
+    padding-right: max(14px, env(safe-area-inset-right));
     position: sticky;
     top: 0;
     z-index: 50;
-    background: rgba(12, 16, 30, 0.78);
+    background: var(--topbar-bg);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid var(--glass-brd);
+    transition: background .2s ease, border-color .2s ease;
   }
 
   .logo {
@@ -120,20 +199,22 @@
     font-weight: 900;
     font-size: 20px;
     letter-spacing: 0.5px;
-    color: #818cf8;
+    color: var(--brand-color);
+    transition: color .2s ease;
   }
   .logo .brand-domain {
     font-weight: 900;
     font-size: 18px;
-    color: #818cf8;
+    color: var(--brand-color);
     letter-spacing: -0.3px;
+    transition: color .2s ease;
   }
   .badge-grad {
     font-size: 11px;
     color: var(--gold-2);
     border: 1px solid rgba(217, 178, 95, 0.4);
     border-radius: 999px;
-    padding: 2px 9px;
+    padding: 2px 8px;
     font-weight: 800;
     background: rgba(217, 178, 95, 0.08);
     cursor: pointer;
@@ -143,24 +224,70 @@
     background: rgba(217, 178, 95, 0.2);
   }
 
+  /* Compact Utility Bar (Theme & i18n) */
+  .util-cluster {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    border-radius: 12px;
+    padding: 3px 5px;
+    height: 36px;
+    box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    flex-shrink: 0;
+  }
+  .util-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 0;
+    background: transparent;
+    color: var(--sub);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 7px;
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    transition: all .16s ease;
+    white-space: nowrap;
+    line-height: 1;
+  }
+  .util-pill-btn:hover {
+    color: var(--ink);
+    background: var(--glass-2);
+  }
+  .util-pill-btn:active {
+    transform: scale(0.96);
+  }
+  .util-sep {
+    width: 1px;
+    height: 14px;
+    background: var(--glass-brd);
+    margin: 0 1px;
+  }
+
   nav.tabs {
     display: flex;
-    gap: 4px;
-    margin-left: 6px;
+    gap: 3px;
+    margin-left: 2px;
   }
   nav.tabs button {
     border: 0;
     background: transparent;
     color: var(--sub);
-    padding: 8px 14px;
-    border-radius: 10px;
+    padding: 6px 9px;
+    border-radius: 9px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     transition: .18s;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     white-space: nowrap;
   }
   nav.tabs button.active {
@@ -173,18 +300,20 @@
     background: var(--glass);
   }
 
-  .spacer { flex: 1; }
+  .spacer { flex: 1; min-width: 6px; }
 
   .searchbox {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     background: var(--glass);
     border: 1px solid var(--glass-brd);
-    border-radius: 12px;
-    padding: 7px 12px;
+    border-radius: 10px;
+    padding: 5px 9px;
     color: var(--sub);
-    min-width: 220px;
+    min-width: 120px;
+    max-width: 170px;
+    flex: 0 1 170px;
     transition: .2s;
   }
   .searchbox:focus-within {
@@ -196,7 +325,7 @@
     background: transparent;
     outline: none;
     width: 100%;
-    font-size: 13px;
+    font-size: 12px;
     color: var(--ink);
   }
   .searchbox input::placeholder { color: var(--sub); }
@@ -204,17 +333,18 @@
   .top-btn {
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 5px;
     border: 1px solid var(--glass-brd);
     background: var(--glass);
-    border-radius: 12px;
-    padding: 8px 13px;
-    font-size: 13px;
+    border-radius: 10px;
+    padding: 6px 9px;
+    font-size: 12px;
     font-weight: 800;
     cursor: pointer;
     color: var(--ink);
     transition: .18s;
     white-space: nowrap;
+    flex-shrink: 0;
   }
   .top-btn:hover {
     background: var(--glass-2);
@@ -415,7 +545,7 @@
     box-shadow: var(--glow-gold);
   }
   .toolbar-select {
-    background: var(--bg-1);
+    background: var(--card-bg);
     color: var(--ink);
     border: 1px solid var(--glass-brd);
     border-radius: 10px;
@@ -444,8 +574,8 @@
     border-radius: 16px;
     padding: 16px;
     overflow: hidden;
-    background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-    border: 1px solid var(--glass-brd);
+    background: var(--card-bg);
+    border: 1px solid var(--card-brd);
     box-shadow: var(--shadow);
     transition: transform .14s ease, box-shadow .16s ease, border-color .16s;
     display: flex;
@@ -461,8 +591,8 @@
   }
   .card:hover {
     transform: translateY(-3px);
-    border-color: rgba(255,255,255,.2);
-    box-shadow: 0 16px 44px rgba(0,0,0,.5);
+    border-color: var(--card-hover-brd);
+    box-shadow: var(--card-hover-shadow);
   }
   .card.added {
     border-color: rgba(78,227,154,.45);
@@ -771,9 +901,9 @@
     border-radius: 12px;
     padding: 10px 12px;
     box-sizing: border-box;
-    background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-    border: 1px solid var(--glass-brd);
-    box-shadow: 0 4px 14px rgba(0,0,0,.25);
+    background: var(--card-bg);
+    border: 1px solid var(--card-brd);
+    box-shadow: var(--shadow);
     transition: transform .12s ease, box-shadow .16s ease, border-color .16s, opacity .16s;
     cursor: grab;
     user-select: none;
@@ -795,8 +925,8 @@
   }
   .kcard:hover {
     transform: translateY(-2px);
-    border-color: rgba(255,255,255,.25);
-    box-shadow: 0 8px 24px rgba(0,0,0,.45);
+    border-color: var(--card-hover-brd);
+    box-shadow: var(--card-hover-shadow);
   }
   .kcard .kcard-inner {
     display: flex;
@@ -852,8 +982,8 @@
   .table-card {
     border-radius: 18px;
     overflow: hidden;
-    background: var(--glass);
-    border: 1px solid var(--glass-brd);
+    background: var(--card-bg);
+    border: 1px solid var(--card-brd);
     box-shadow: var(--shadow);
     backdrop-filter: blur(10px);
   }
@@ -864,7 +994,7 @@
     color: var(--sub);
     font-size: 12px;
     font-weight: 800;
-    background: #131a2c;
+    background: var(--th-bg);
     border-bottom: 1px solid var(--glass-brd);
     white-space: nowrap;
     user-select: none;
@@ -876,11 +1006,11 @@
   thead th .arrow { color: var(--gold-2); font-size: 11px; margin-left: 3px; }
   tbody td {
     padding: 12px 14px;
-    border-bottom: 1px solid rgba(255,255,255,.05);
+    border-bottom: 1px solid var(--glass-brd);
     vertical-align: middle;
   }
   tbody tr { transition: background .15s; cursor: pointer; }
-  tbody tr:hover { background: rgba(255,255,255,.04); }
+  tbody tr:hover { background: var(--tr-hover); }
   tbody tr:last-child td { border-bottom: 0; }
   .company { display: flex; align-items: center; gap: 11px; }
   .company .ico { width: 32px; height: 32px; border-radius: 9px; flex: 0 0 32px; font-size: 13px; }
@@ -985,8 +1115,8 @@
   .panel {
     border-radius: 18px;
     padding: 20px;
-    background: var(--glass);
-    border: 1px solid var(--glass-brd);
+    background: var(--card-bg);
+    border: 1px solid var(--card-brd);
     box-shadow: var(--shadow);
     backdrop-filter: blur(10px);
   }
@@ -1004,7 +1134,7 @@
   .funnel { display: flex; flex-direction: column; gap: 11px; }
   .funnel .row { display: flex; align-items: center; gap: 12px; }
   .funnel .fname { width: 96px; font-size: 12px; color: var(--sub); font-weight: 700; text-align: right; }
-  .funnel .bar-track { flex: 1; background: rgba(255,255,255,.05); border-radius: 8px; height: 28px; overflow: hidden; }
+  .funnel .bar-track { flex: 1; background: var(--glass-2); border-radius: 8px; height: 28px; overflow: hidden; }
   .funnel .bar {
     height: 100%;
     border-radius: 8px;
@@ -1126,7 +1256,7 @@
     position: fixed;
     inset: 0;
     z-index: 100;
-    background: rgba(8, 11, 22, 0.82);
+    background: var(--modal-overlay);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     display: none;
@@ -1138,16 +1268,17 @@
   @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
   .modal {
-    background: linear-gradient(180deg, #161e33, #101628);
-    border: 1px solid rgba(255,255,255,.14);
+    background: var(--modal-bg);
+    border: 1px solid var(--modal-brd);
     border-radius: 20px;
     width: 100%;
     max-width: 680px;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 24px 60px rgba(0,0,0,.7);
+    box-shadow: 0 24px 60px rgba(0,0,0,.35);
     overflow: hidden;
+    color: var(--ink);
   }
   .modal-head {
     padding: 16px 20px;
@@ -1155,9 +1286,9 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(255,255,255,.02);
+    background: var(--glass-2);
   }
-  .modal-head h3 { margin: 0; font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .modal-head h3 { margin: 0; font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px; color: var(--ink); }
   .modal-close {
     margin-left: auto;
     border: 0;
@@ -1186,15 +1317,15 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    background: rgba(255,255,255,.02);
+    background: var(--glass-2);
   }
 
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-label { font-size: 12px; font-weight: 800; color: var(--sub); }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .form-input, .form-select, .form-textarea {
-    background: rgba(255,255,255,.04);
-    border: 1px solid var(--glass-brd);
+    background: var(--input-bg);
+    border: 1px solid var(--input-brd);
     border-radius: 10px;
     padding: 9px 12px;
     font-size: 13px;
@@ -1208,6 +1339,13 @@
     box-shadow: 0 0 0 3px rgba(139,123,255,.15);
   }
   .form-textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
+
+  .theme-choice-btn.active {
+    border-color: var(--violet) !important;
+    background: var(--glass-2) !important;
+    color: var(--ink) !important;
+    box-shadow: 0 0 0 2px rgba(139,123,255,.3);
+  }
 
   .tag-manager { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
   .modal-tag {
@@ -1227,7 +1365,7 @@
     font-size: 10.5px;
     padding: 2px 8px;
     border-radius: 999px;
-    background: rgba(255,255,255,.04);
+    background: var(--glass-2);
     border: 1px solid var(--glass-brd);
     color: var(--sub);
     cursor: pointer;
@@ -1268,7 +1406,7 @@
     right: 0;
     height: calc(56px + var(--safe-bottom));
     padding-bottom: var(--safe-bottom);
-    background: rgba(12, 16, 30, 0.94);
+    background: var(--topbar-bg);
     backdrop-filter: blur(20px);
     border-top: 1px solid var(--glass-brd);
     z-index: 60;
@@ -1332,12 +1470,28 @@
       font-size: 13px;
       padding: 6px 8px 6px 4px;
     }
-    header.topbar .top-btn {
+    header.topbar .top-btn:not(.primary) {
+      display: none;
+    }
+    header.topbar .top-btn.primary {
       padding: 7px 10px;
       font-size: 13px;
       flex-shrink: 0;
     }
-    header.topbar .top-btn .btn-text {
+    header.topbar .top-btn.primary .btn-text {
+      display: none;
+    }
+    header.topbar .util-cluster {
+      padding: 2px 4px;
+      height: 32px;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+    header.topbar .util-pill-btn {
+      padding: 4px 6px;
+      font-size: 11px;
+    }
+    header.topbar .util-text {
       display: none;
     }
     .hero {
@@ -1556,6 +1710,17 @@
     <button class="top-btn" onclick="openSettingsModal()" title="データ設定・バックアップ">
       ⚙️<span class="btn-text"> データ管理</span>
     </button>
+    <div class="util-cluster" id="utilCluster">
+      <button class="util-pill-btn" id="themeToggleBtn" onclick="toggleThemeNext()" title="日夜モード切替 (現在: 自動)">
+        <span id="themeIcon">💻</span>
+        <span class="util-text" id="themeText">自動</span>
+      </button>
+      <div class="util-sep"></div>
+      <button class="util-pill-btn" id="langBtn" onclick="openModal('langModal')" title="多言語設定 (準備中: 日本語 / 中文 / EN)">
+        <span>🌐</span>
+        <span class="util-text">JA</span>
+      </button>
+    </div>
     <div id="authArea" style="display:inline-flex;align-items:center;">
       <button class="top-btn" id="authLoginBtn" onclick="openAuthModal('login')" title="クラウド同期・ログイン" style="border-color:rgba(139,123,255,.45);background:rgba(139,123,255,.12);color:var(--ink);font-weight:700;">
         ☁️<span class="btn-text"> ログイン / 登録</span>
@@ -2006,6 +2171,18 @@
       </div>
       <div class="modal-body">
         <div class="form-group">
+          <label class="form-label">外観・日夜テーマ（Appearance）</label>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+            <button type="button" class="top-btn theme-choice-btn" id="themeChoiceAuto" onclick="applyTheme('auto')" style="justify-content:center;font-size:12px;">💻 自動（連動）</button>
+            <button type="button" class="top-btn theme-choice-btn" id="themeChoiceLight" onclick="applyTheme('light')" style="justify-content:center;font-size:12px;">☀️ 昼（ライト）</button>
+            <button type="button" class="top-btn theme-choice-btn" id="themeChoiceDark" onclick="applyTheme('dark')" style="justify-content:center;font-size:12px;">🌙 夜（ダーク）</button>
+          </div>
+          <span style="font-size:11px;color:var(--sub)">OSの外観設定に自動追従、またはお好みのテーマに固定できます。</span>
+        </div>
+
+        <div style="height:1px;background:var(--glass-brd);margin:6px 0"></div>
+
+        <div class="form-group">
           <label class="form-label">卒業年・ステータス設定</label>
           <select class="form-select" id="settingGradYear" onchange="updateGradYearSetting(this.value)">
             <option value="28卒">28卒（現大学1年生・2年生など）</option>
@@ -2057,6 +2234,36 @@
         <span style="font-size:11px;color:var(--muted)" id="storageInfo">ローカルストレージ安全保存中</span>
         <div style="flex:1"></div>
         <button class="top-btn primary" onclick="closeModal('settingsModal')">完了</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: 多言語設定 (i18n Slot) ===================== -->
+  <div class="modal-overlay" id="langModal" onclick="onModalOverlayClick(event, 'langModal')">
+    <div class="modal" style="max-width:380px">
+      <div class="modal-head">
+        <h3>🌐 言語設定 / Language</h3>
+        <button class="modal-close" onclick="closeModal('langModal')">✕</button>
+      </div>
+      <div class="modal-body" style="gap:10px;">
+        <p style="margin:0 0 4px;font-size:12px;color:var(--sub)">
+          プラットフォームの表示言語です。多言語展開（繁簡中文・英語）は順次公開予定です。
+        </p>
+        <button class="top-btn" style="width:100%;justify-content:space-between;background:var(--glass-2);border-color:var(--violet);" onclick="closeModal('langModal');showToast('🇯🇵 日本語が適用されています');">
+          <span>🇯🇵 日本語 (Japanese)</span>
+          <span style="color:var(--green);font-weight:900;">✓ 適用中</span>
+        </button>
+        <button class="top-btn" style="width:100%;justify-content:space-between;opacity:0.8;" onclick="showToast('🇨🇳 简体中文は近日リリース予定です')">
+          <span>🇨🇳 简体中文 (Chinese)</span>
+          <span style="font-size:11px;color:var(--gold-2);background:rgba(217,178,95,.15);padding:2px 7px;border-radius:999px;font-weight:700;">近日公開</span>
+        </button>
+        <button class="top-btn" style="width:100%;justify-content:space-between;opacity:0.8;" onclick="showToast('🇺🇸 English is coming soon')">
+          <span>🇺🇸 English</span>
+          <span style="font-size:11px;color:var(--gold-2);background:rgba(217,178,95,.15);padding:2px 7px;border-radius:999px;font-weight:700;">Coming soon</span>
+        </button>
+      </div>
+      <div class="modal-foot">
+        <button class="top-btn primary" style="width:100%;justify-content:center;" onclick="closeModal('langModal')">閉じる</button>
       </div>
     </div>
   </div>
@@ -3830,6 +4037,92 @@
     toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
   }
 
+  // ===== Theme Controller (System Auto Follow + Manual Toggle) =====
+  const THEME_KEY = 'syukatsu_theme';
+  let currentThemeSetting = 'auto'; // 'auto' | 'light' | 'dark'
+
+  function initTheme() {
+    try {
+      currentThemeSetting = localStorage.getItem(THEME_KEY) || 'auto';
+    } catch(e) {
+      currentThemeSetting = 'auto';
+    }
+    applyTheme(currentThemeSetting, false);
+
+    // System theme change listener
+    if (window.matchMedia) {
+      const mq = window.matchMedia('(prefers-color-scheme: dark)');
+      const listener = () => {
+        if (currentThemeSetting === 'auto') {
+          applyTheme('auto', false);
+        }
+      };
+      if (mq.addEventListener) mq.addEventListener('change', listener);
+      else if (mq.addListener) mq.addListener(listener);
+    }
+  }
+
+  function applyTheme(setting, showNotification = true) {
+    currentThemeSetting = setting;
+    try {
+      localStorage.setItem(THEME_KEY, setting);
+    } catch(e) {}
+
+    const isSystemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const effectiveTheme = setting === 'auto' ? (isSystemDark ? 'dark' : 'light') : setting;
+
+    document.documentElement.setAttribute('data-theme', effectiveTheme);
+    document.documentElement.setAttribute('data-theme-setting', setting);
+
+    // Update topbar button text & icon
+    const iconEl = document.getElementById('themeIcon');
+    const textEl = document.getElementById('themeText');
+    const btnEl = document.getElementById('themeToggleBtn');
+
+    let label = '自動';
+    let icon = '💻';
+    let tip = '日夜モード: 自動（OSの外観設定に連動）';
+
+    if (setting === 'light') {
+      label = '昼';
+      icon = '☀️';
+      tip = '日夜モード: 昼（ライトモード固定）';
+    } else if (setting === 'dark') {
+      label = '夜';
+      icon = '🌙';
+      tip = '日夜モード: 夜（ダークモード固定）';
+    }
+
+    if (iconEl) iconEl.textContent = icon;
+    if (textEl) textEl.textContent = label;
+    if (btnEl) btnEl.title = `${tip} - クリックで切り替え`;
+
+    // Highlight active button in settings modal
+    ['themeChoiceAuto', 'themeChoiceLight', 'themeChoiceDark'].forEach(id => {
+      const b = document.getElementById(id);
+      if (b) b.classList.remove('active');
+    });
+    const activeModalBtnId = setting === 'auto' ? 'themeChoiceAuto' : (setting === 'light' ? 'themeChoiceLight' : 'themeChoiceDark');
+    const activeModalBtn = document.getElementById(activeModalBtnId);
+    if (activeModalBtn) activeModalBtn.classList.add('active');
+
+    // Update meta theme-color for mobile browser header bar
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+      metaTheme.setAttribute('content', effectiveTheme === 'dark' ? '#0a0e1a' : '#f8fafc');
+    }
+
+    if (showNotification) {
+      showToast(`${icon} テーマを「${label}」に切り替えました`);
+    }
+  }
+
+  function toggleThemeNext() {
+    const cycle = { 'auto': 'light', 'light': 'dark', 'dark': 'auto' };
+    const next = cycle[currentThemeSetting] || 'auto';
+    applyTheme(next, true);
+  }
+
   // グローバルショートカット (Esc でモーダルを閉じる, / で検索ボックスにフォーカス)
   document.addEventListener('keydown', e => {
     const isEditing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName);
@@ -3850,6 +4143,7 @@
   });
 
   // 起動時初期化
+  initTheme();
   loadAll();
   applySettings();
   updateAuthUI();
