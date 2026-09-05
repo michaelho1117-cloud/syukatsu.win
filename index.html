@@ -444,6 +444,15 @@
     flex-shrink: 0;
   }
 
+  @keyframes pulseGlow {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(78, 227, 154, 0.7); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 7px rgba(78, 227, 154, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(78, 227, 154, 0); }
+  }
+  .pulse-indicator {
+    animation: pulseGlow 2s infinite ease-in-out;
+  }
+
   /* ES Count & Chips */
   .es-chip {
     font-size: 11px;
@@ -3453,12 +3462,15 @@
 
   <!-- ===================== MODAL: ログイン・新規登録 (Linear Minimalist) ===================== -->
   <div class="modal-overlay" id="authModal" onclick="onModalOverlayClick(event, 'authModal')">
-    <div class="modal" style="max-width:380px; border-radius:16px; background:rgba(13, 19, 33, 0.95); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.08); box-shadow:0 20px 50px rgba(0,0,0,0.6);">
+    <div class="modal" style="max-width:390px; border-radius:16px; background:rgba(13, 19, 33, 0.96); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.08); box-shadow:0 20px 50px rgba(0,0,0,0.6);">
       <div class="modal-head" style="padding:16px 20px 0; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:flex-end; justify-content:space-between;">
         <h3 id="authModalTitle" style="display:none">☁️ クラウド同期ログイン</h3>
-        <div class="auth-tabs" style="display:flex; gap:24px; margin:0; padding:0; border:none;">
+        <div class="auth-tabs" id="authTabsHeader" style="display:flex; gap:24px; margin:0; padding:0; border:none;">
           <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">ログイン</button>
           <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">アカウント登録</button>
+        </div>
+        <div id="authConfirmHeader" style="display:none; font-weight:800; font-size:14.5px; color:#fff; padding-bottom:10px; align-items:center; gap:6px;">
+          <span>✉️</span><span>メールアドレスの確認</span>
         </div>
         <button class="modal-close" onclick="closeModal('authModal')" style="margin-bottom:8px;">✕</button>
       </div>
@@ -3500,6 +3512,44 @@
             </button>
           </div>
         </form>
+
+        <!-- メール認証・OTPコード入力ビュー (新規登録送信後) -->
+        <div id="authConfirmView" style="display:none; flex-direction:column; gap:14px; margin:0;">
+          <div style="text-align:center; padding:6px 0 2px;">
+            <div style="width:48px; height:48px; border-radius:50%; background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.35); display:inline-flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:10px;">✉️</div>
+            <h4 style="margin:0 0 6px; font-size:15.5px; font-weight:800; color:#fff;">確認メールを送信しました</h4>
+            <p style="margin:0; font-size:12px; color:#94a3b8; line-height:1.5;">
+              <strong id="authConfirmEmailDisplay" style="color:#e2e8f0; word-break:break-all;"></strong> 宛てに認証メールをお送りしました。<br>
+              メール内のリンクをクリックするか、下記の6桁コードを入力してください。
+            </p>
+          </div>
+
+          <form onsubmit="handleOtpSubmit(event)" style="display:flex; flex-direction:column; gap:10px; margin:0;">
+            <div class="form-group" style="gap:5px;">
+              <label class="form-label" style="font-size:11.5px; font-weight:600; color:#94a3b8; text-align:center; display:block;">6桁の認証コード（Token）</label>
+              <input type="text" class="form-input" id="authOtpInput" placeholder="123456" maxlength="8" autocomplete="one-time-code" style="height:42px; font-size:18px; letter-spacing:6px; text-align:center; font-weight:800; background:rgba(255,255,255,0.04); border:1px solid rgba(99,102,241,0.4); border-radius:8px; color:#fff;" />
+            </div>
+
+            <div id="authOtpErrorMsg" style="display:none; color:#ff6b81; font-size:12px; padding:8px 10px; background:rgba(255,107,129,0.1); border-radius:6px; border:1px solid rgba(255,107,129,0.3)"></div>
+
+            <button type="submit" class="auth-btn-primary" id="authOtpSubmitBtn" style="height:38px; font-size:13px;">
+              認証して登録完了
+            </button>
+          </form>
+
+          <!-- スマホ連動・リアルタイム自動ログイン検知バー -->
+          <div style="padding:9px 12px; background:rgba(78, 227, 154, 0.08); border:1px solid rgba(78, 227, 154, 0.22); border-radius:8px; display:flex; align-items:center; gap:9px;">
+            <span class="pulse-indicator" style="width:7px; height:7px; border-radius:50%; background:#4ee39a; display:inline-block; flex-shrink:0;"></span>
+            <span style="font-size:11.5px; color:#a7f3d0; line-height:1.4;">
+              スマホ等でメール内のリンクを開くと、この画面も<strong>自動でログイン</strong>します
+            </span>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; padding-top:4px;">
+            <button type="button" onclick="resendSignupEmail()" id="btnResendEmail" style="background:none; border:none; color:#a5b4fc; cursor:pointer; padding:0; text-decoration:underline;">メールを再送信</button>
+            <button type="button" onclick="cancelAuthConfirm()" style="background:none; border:none; color:#94a3b8; cursor:pointer; padding:0;">← 登録画面に戻る</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -4980,6 +5030,7 @@
   }
 
   function openAuthModal(mode = 'login') {
+    if (typeof cancelAuthConfirm === 'function') cancelAuthConfirm();
     switchAuthTab(mode);
     const err = document.getElementById('authErrorMsg');
     if (err) err.style.display = 'none';
@@ -5071,6 +5122,156 @@
     if (dd) dd.classList.remove('open');
   });
 
+  let pendingAuthEmail = '';
+  let pendingAuthPassword = '';
+  let emailConfirmPollTimer = null;
+  let emailConfirmPollCount = 0;
+
+  function showAuthConfirmView(email, password) {
+    pendingAuthEmail = email;
+    pendingAuthPassword = password;
+    const tabsHeader = document.getElementById('authTabsHeader');
+    const confirmHeader = document.getElementById('authConfirmHeader');
+    const notice = document.getElementById('authNotice');
+    const form = document.getElementById('authForm');
+    const confirmView = document.getElementById('authConfirmView');
+    const emailDisp = document.getElementById('authConfirmEmailDisplay');
+    const otpInput = document.getElementById('authOtpInput');
+    const otpErr = document.getElementById('authOtpErrorMsg');
+
+    if (tabsHeader) tabsHeader.style.display = 'none';
+    if (confirmHeader) confirmHeader.style.display = 'flex';
+    if (notice) notice.style.display = 'none';
+    if (form) form.style.display = 'none';
+    if (confirmView) confirmView.style.display = 'flex';
+    if (emailDisp) emailDisp.textContent = email;
+    if (otpInput) { otpInput.value = ''; setTimeout(() => otpInput.focus(), 150); }
+    if (otpErr) otpErr.style.display = 'none';
+  }
+
+  function cancelAuthConfirm() {
+    stopEmailConfirmPolling();
+    const tabsHeader = document.getElementById('authTabsHeader');
+    const confirmHeader = document.getElementById('authConfirmHeader');
+    const notice = document.getElementById('authNotice');
+    const form = document.getElementById('authForm');
+    const confirmView = document.getElementById('authConfirmView');
+
+    if (tabsHeader) tabsHeader.style.display = 'flex';
+    if (confirmHeader) confirmHeader.style.display = 'none';
+    if (notice) notice.style.display = 'flex';
+    if (form) form.style.display = 'flex';
+    if (confirmView) confirmView.style.display = 'none';
+  }
+
+  function startEmailConfirmPolling(email, password) {
+    stopEmailConfirmPolling();
+    pendingAuthEmail = email;
+    pendingAuthPassword = password;
+    emailConfirmPollCount = 0;
+
+    emailConfirmPollTimer = setInterval(async () => {
+      emailConfirmPollCount++;
+      if (emailConfirmPollCount > 120) {
+        stopEmailConfirmPolling();
+        return;
+      }
+      try {
+        if (!supabaseClient || !pendingAuthEmail || !pendingAuthPassword) return;
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email: pendingAuthEmail,
+          password: pendingAuthPassword
+        });
+        if (data && data.session && data.user) {
+          stopEmailConfirmPolling();
+          currentAuthUser = data.user;
+          updateAuthUI();
+          closeModal('authModal');
+          showToast('メール認証が完了しました！自動ログインしました 🎉');
+          await syncAfterLogin();
+        }
+      } catch (e) {
+        // Silent polling while awaiting user verification
+      }
+    }, 2500);
+  }
+
+  function stopEmailConfirmPolling() {
+    if (emailConfirmPollTimer) {
+      clearInterval(emailConfirmPollTimer);
+      emailConfirmPollTimer = null;
+    }
+  }
+
+  async function handleOtpSubmit(e) {
+    e.preventDefault();
+    if (!supabaseClient || !pendingAuthEmail) return;
+    const token = (document.getElementById('authOtpInput').value || '').trim();
+    const btn = document.getElementById('authOtpSubmitBtn');
+    const errorEl = document.getElementById('authOtpErrorMsg');
+    if (!token) return;
+
+    btn.disabled = true;
+    btn.textContent = '認証中...';
+    errorEl.style.display = 'none';
+
+    try {
+      let { data, error } = await supabaseClient.auth.verifyOtp({
+        email: pendingAuthEmail,
+        token: token,
+        type: 'signup'
+      });
+      if (error) {
+        const res2 = await supabaseClient.auth.verifyOtp({
+          email: pendingAuthEmail,
+          token: token,
+          type: 'email'
+        });
+        if (res2.error) throw error;
+        data = res2.data;
+      }
+      stopEmailConfirmPolling();
+      currentAuthUser = data.user;
+      updateAuthUI();
+      closeModal('authModal');
+      showToast('メール認証が完了しました！ようこそ就勝へ 🎉');
+      await syncAfterLogin();
+    } catch (err) {
+      console.error('OTP verify error:', err);
+      errorEl.textContent = '認証コードが無効または期限切れです。入力内容をご確認ください。';
+      errorEl.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '認証して登録完了';
+    }
+  }
+
+  async function resendSignupEmail() {
+    if (!supabaseClient || !pendingAuthEmail) return;
+    const btn = document.getElementById('btnResendEmail');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = '送信中...';
+    }
+    try {
+      const { error } = await supabaseClient.auth.resend({
+        type: 'signup',
+        email: pendingAuthEmail
+      });
+      if (error) throw error;
+      showToast('確認メールを再送信しました！');
+      if (btn) {
+        btn.textContent = '再送信済み';
+        setTimeout(() => {
+          if (btn) { btn.disabled = false; btn.textContent = 'メールを再送信'; }
+        }, 30000);
+      }
+    } catch (err) {
+      alert('メール再送信に失敗しました: ' + (err.message || err));
+      if (btn) { btn.disabled = false; btn.textContent = 'メールを再送信'; }
+    }
+  }
+
   async function handleAuthSubmit(e) {
     e.preventDefault();
     if (!supabaseClient) {
@@ -5102,8 +5303,8 @@
           throw new Error('User already registered');
         }
         if (!data.session) {
-          errorEl.textContent = '確認メールが送信されました。メールをご確認いただくか、Supabase管理画面で「Confirm email」を無効化して即時ログインを有効にしてください。';
-          errorEl.style.display = 'block';
+          showAuthConfirmView(email, password);
+          startEmailConfirmPolling(email, password);
           return;
         }
         currentAuthUser = data.user;
@@ -5119,9 +5320,9 @@
       if (rawMsg.includes('Failed to fetch') || rawMsg.includes('fetch')) {
         friendlyMsg = '通信に失敗しました。Ctrl+F5（Mac: Cmd+Shift+R）でブラウザキャッシュを更新して再読み込みしてください。';
       } else if (rawMsg.includes('Email not confirmed')) {
-        friendlyMsg = 'メール認証が未完了です。Supabase管理画面で「Confirm email」をオフ（推奨）にしてください。';
+        friendlyMsg = 'メールアドレスの認証が未完了です。受信トレイの確認メールをご確認いただくか、認証コードを入力してください。';
       } else if (rawMsg.includes('rate limit')) {
-        friendlyMsg = 'メール送信制限に達しました。Supabase管理画面の Authentication > Providers > Email で「Confirm email」をオフにしてください。';
+        friendlyMsg = 'メール送信制限に達しました。しばらく時間をおいてから再度お試しください。';
       } else if (rawMsg.includes('Invalid login credentials')) {
         friendlyMsg = 'メールアドレスまたはパスワードが正しくありません。';
       } else if (rawMsg.includes('already registered')) {
@@ -8575,6 +8776,9 @@
     if (el) el.classList.add('open');
   }
   function closeModal(id) {
+    if (id === 'authModal' && typeof stopEmailConfirmPolling === 'function') {
+      stopEmailConfirmPolling();
+    }
     const el = document.getElementById(id);
     if (el) el.classList.remove('open');
   }
