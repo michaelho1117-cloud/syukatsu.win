@@ -1587,6 +1587,868 @@
       font-size: 12.5px;
     }
   }
+
+  /* ===== Timeline in Company Detail ===== */
+  .timeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .timeline-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-brd);
+    border-radius: 12px;
+    transition: all 0.15s ease;
+  }
+  .timeline-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--glass-brd-hover);
+  }
+  .timeline-item.completed {
+    opacity: 0.65;
+    background: rgba(255, 255, 255, 0.01);
+  }
+  .timeline-item.completed .timeline-title {
+    text-decoration: line-through;
+    color: var(--sub);
+  }
+  .timeline-status-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--glass-brd);
+    background: transparent;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    color: transparent;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+    padding: 0;
+  }
+  .timeline-item.completed .timeline-status-btn {
+    border-color: var(--green);
+    background: rgba(78, 227, 154, 0.2);
+    color: var(--green);
+  }
+  .timeline-item.upcoming .timeline-status-btn:hover {
+    border-color: var(--gold-2);
+    color: var(--gold-2);
+  }
+  .timeline-dt {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--ink);
+    min-width: 105px;
+    flex-shrink: 0;
+  }
+  .timeline-dt small {
+    display: block;
+    font-size: 10px;
+    color: var(--sub);
+    font-weight: 500;
+  }
+  .timeline-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .timeline-title {
+    font-size: 13.5px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .timeline-memo {
+    font-size: 11.5px;
+    color: var(--sub);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .timeline-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-left: auto;
+  }
+
+  /* Event Type Badges */
+  .ev-type-badge {
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 6px;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid transparent;
+  }
+  .ev-type-badge.type-es { background: rgba(139,123,255,.15); color: #b3a9ff; border-color: rgba(139,123,255,.35); }
+  .ev-type-badge.type-webtest { background: rgba(79,216,232,.15); color: #4fd8e8; border-color: rgba(79,216,232,.35); }
+  .ev-type-badge.type-aptitude { background: rgba(127,176,255,.15); color: #7fb0ff; border-color: rgba(127,176,255,.35); }
+  .ev-type-badge.type-gd { background: rgba(255,126,182,.15); color: #ff7eb6; border-color: rgba(255,126,182,.35); }
+  .ev-type-badge.type-interview { background: rgba(78,227,154,.15); color: #4ee39a; border-color: rgba(78,227,154,.35); }
+  .ev-type-badge.type-briefing { background: rgba(217,178,95,.15); color: var(--gold-2); border-color: rgba(217,178,95,.35); }
+  .ev-type-badge.type-other { background: rgba(255,255,255,.07); color: var(--sub); border-color: var(--glass-brd); }
+
+  /* Due countdown badges */
+  .badge-due-past { font-size: 10.5px; font-weight: 800; padding: 2px 7px; border-radius: 6px; background: rgba(255,255,255,.08); color: var(--muted); border: 1px solid var(--glass-brd); }
+  .badge-due-today { font-size: 10.5px; font-weight: 800; padding: 2px 8px; border-radius: 6px; background: linear-gradient(135deg, #ff6a5f, #e0345a); color: #fff; box-shadow: 0 0 10px rgba(224,52,90,.5); }
+  .badge-due-urgent { font-size: 10.5px; font-weight: 800; padding: 2px 7px; border-radius: 6px; background: rgba(255,106,95,.18); color: #ff7a6b; border: 1px solid rgba(255,106,95,.4); }
+  .badge-due-soon { font-size: 10.5px; font-weight: 800; padding: 2px 7px; border-radius: 6px; background: rgba(255,207,107,.15); color: #ffcf6b; border: 1px solid rgba(255,207,107,.4); }
+  .badge-due-normal { font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 6px; background: rgba(255,255,255,.05); color: var(--sub); border: 1px solid var(--glass-brd); }
+
+  /* Selection List Row styling */
+  .table-card table tbody td {
+    padding: 15px 14px;
+  }
+  .table-company-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .table-company-cell .ico {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    flex: 0 0 38px;
+    font-size: 15px;
+  }
+  .table-company-cell .name {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: .2px;
+  }
+  .table-company-cell .sub-meta {
+    font-size: 11.5px;
+    color: var(--sub);
+    margin-top: 2px;
+  }
+  .action-col-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  /* ===== ES Database & Story Bank Cards ===== */
+  .es-grid, .story-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+  .es-card, .story-card {
+    position: relative;
+    border-radius: 16px;
+    padding: 16px 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+    border: 1px solid var(--glass-brd);
+    box-shadow: var(--shadow);
+    transition: transform .14s ease, border-color .16s ease, box-shadow .16s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .es-card:hover, .story-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,.2);
+    box-shadow: 0 14px 36px rgba(0,0,0,.5);
+  }
+  .es-card-head, .story-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .es-card-title, .story-card-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .es-question-box {
+    background: rgba(0,0,0,.25);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+    color: var(--sub);
+    border-left: 3px solid var(--violet);
+    line-height: 1.4;
+  }
+  .es-answer-preview {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: rgba(240, 243, 246, 0.88);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .es-meta-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--sub);
+    flex-wrap: wrap;
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,.05);
+  }
+  .es-char-badge {
+    font-weight: 800;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: rgba(255,255,255,.05);
+    color: var(--ink);
+  }
+  .es-char-badge.ok { color: var(--green); }
+  .es-char-badge.over { color: var(--red); background: rgba(255,106,95,.15); }
+  .es-char-badge.warn { color: var(--gold-2); background: rgba(217,178,95,.12); }
+  .cal-more-pill {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--cyan);
+    background: rgba(79, 216, 232, 0.12);
+    border: 1px solid rgba(79, 216, 232, 0.28);
+    border-radius: 4px;
+    padding: 1px 5px;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .cal-more-pill:hover {
+    background: rgba(79, 216, 232, 0.25);
+    border-color: var(--cyan);
+    box-shadow: 0 0 6px rgba(79, 216, 232, 0.35);
+  }
+  .story-ref-badge {
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: rgba(139,123,255,.12);
+    color: var(--violet);
+    border: 1px solid rgba(139,123,255,.3);
+  }
+  .badge-count {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.08);
+    color: var(--sub);
+    border: 1px solid var(--glass-brd);
+  }
+
+  /* Story STAR blocks */
+  .star-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .star-field {
+    border: 1px solid var(--glass-brd);
+    border-radius: 12px;
+    padding: 12px 14px;
+    background: rgba(255,255,255,.02);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .star-field:focus-within {
+    border-color: var(--violet);
+    box-shadow: 0 0 0 3px rgba(139,123,255,.15);
+  }
+  .star-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .star-letter {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    font-weight: 900;
+    color: #fff;
+  }
+  .star-letter.s { background: #8b7bff; }
+  .star-letter.t { background: #4fd8e8; color: #06121a; }
+  .star-letter.a { background: #ff7eb6; color: #06121a; }
+  .star-letter.r { background: #4ee39a; color: #06121a; }
+  .star-letter.l { background: #d9b25f; color: #06121a; }
+  .star-field textarea {
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.6;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 65px;
+  }
+
+  /* Referenced ES Panel in Story Modal */
+  .referenced-es-box {
+    border: 1px solid rgba(139,123,255,.3);
+    background: rgba(139,123,255,.05);
+    border-radius: 14px;
+    padding: 14px;
+    margin-top: 6px;
+  }
+  .ref-es-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--glass-brd);
+    margin-top: 6px;
+    cursor: pointer;
+    transition: .15s;
+  }
+  .ref-es-item:hover {
+    background: rgba(255,255,255,.08);
+    border-color: var(--violet);
+  }
+  .comp-es-card {
+    border: 1px solid var(--glass-brd);
+    background: rgba(255,255,255,.03);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .comp-es-card:hover {
+    background: rgba(255,255,255,.06);
+    border-color: var(--glass-brd-hover);
+  }
+
+
+  /* =========================================================================
+     ES DATABASE ENHANCEMENT STYLES (List View, Smart Toolbar, Grouping, Picker)
+     ========================================================================= */
+  .es-control-panel {
+    background: rgba(18, 24, 38, 0.7);
+    border: 1px solid var(--glass-brd);
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .es-toolbar-primary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .es-search-wrap {
+    flex: 1;
+    min-width: 240px;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .es-search-wrap .search-ico {
+    position: absolute;
+    left: 12px;
+    font-size: 13px;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .es-search-wrap input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--glass-brd);
+    border-radius: 10px;
+    padding: 8px 32px 8px 34px;
+    color: var(--ink);
+    font-size: 12.5px;
+    outline: none;
+    transition: .15s;
+  }
+  .es-search-wrap input:focus {
+    border-color: var(--violet);
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .es-search-clear {
+    position: absolute;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: var(--sub);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px 4px;
+  }
+  .es-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .view-mode-toggle {
+    display: inline-flex;
+    background: rgba(0,0,0,.35);
+    border: 1px solid var(--glass-brd);
+    border-radius: 8px;
+    padding: 2px;
+  }
+  .view-mode-toggle .mode-btn {
+    background: transparent;
+    border: none;
+    color: var(--sub);
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: .15s;
+  }
+  .view-mode-toggle .mode-btn.active {
+    background: rgba(139, 123, 255, 0.25);
+    color: var(--ink);
+    box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  }
+  .es-groupby-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .es-toolbar-secondary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,.05);
+  }
+  .filter-pills-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .chip-sm {
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 8px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--glass-brd);
+    color: var(--sub);
+    cursor: pointer;
+    transition: .15s;
+    user-select: none;
+  }
+  .chip-sm:hover {
+    background: rgba(255,255,255,.08);
+    color: var(--ink);
+  }
+  .chip-sm.on {
+    background: rgba(139, 123, 255, 0.2);
+    border-color: rgba(139, 123, 255, 0.5);
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* Table / List View Styles */
+  .es-table-container {
+    background: rgba(18, 24, 38, 0.5);
+    border: 1px solid var(--glass-brd);
+    border-radius: 12px;
+    overflow-x: auto;
+    width: 100%;
+  }
+  .es-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .es-table th {
+    padding: 10px 12px;
+    background: rgba(255,255,255,.03);
+    color: var(--sub);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--glass-brd);
+  }
+  .es-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    color: var(--ink);
+    vertical-align: middle;
+  }
+  .es-table tr.es-table-row {
+    cursor: pointer;
+    transition: background .12s;
+  }
+  .es-table tr.es-table-row:hover {
+    background: rgba(139, 123, 255, 0.08);
+  }
+  .es-comp-anchor {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: .15s;
+  }
+  .es-comp-anchor:hover {
+    background: rgba(79, 216, 232, 0.15);
+    color: var(--cyan);
+  }
+  .es-industry-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgba(255,255,255,.06);
+    color: var(--sub);
+    border: 1px solid rgba(255,255,255,.08);
+  }
+  .es-type-badge {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+  .es-type-badge.type-pr { background: rgba(78, 227, 154, 0.15); color: var(--green); border: 1px solid rgba(78, 227, 154, 0.3); }
+  .es-type-badge.type-gakuchika { background: rgba(79, 216, 232, 0.15); color: var(--cyan); border: 1px solid rgba(79, 216, 232, 0.3); }
+  .es-type-badge.type-motiv { background: rgba(139, 123, 255, 0.15); color: var(--violet); border: 1px solid rgba(139, 123, 255, 0.3); }
+  .es-type-badge.type-study { background: rgba(255, 204, 0, 0.15); color: #ffd166; border: 1px solid rgba(255, 204, 0, 0.3); }
+  .es-type-badge.type-other { background: rgba(255, 255, 255, 0.08); color: var(--sub); border: 1px solid var(--glass-brd); }
+
+  /* Group Accordion */
+  .es-group-card {
+    border: 1px solid var(--glass-brd);
+    border-radius: 12px;
+    background: rgba(18, 24, 38, 0.4);
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .es-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(255,255,255,.03);
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    transition: background .15s;
+  }
+  .es-group-header:hover {
+    background: rgba(255,255,255,.06);
+  }
+  .es-group-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .es-group-arrow {
+    transition: transform .2s;
+    font-size: 10px;
+    color: var(--sub);
+  }
+  .es-group-card.collapsed .es-group-arrow {
+    transform: rotate(-90deg);
+  }
+  .es-group-card.collapsed .es-group-body {
+    display: none;
+  }
+  .es-group-body {
+    padding: 12px;
+  }
+
+  /* Clone Picker Modal Items */
+  .clone-picker-item {
+    border: 1px solid var(--glass-brd);
+    border-radius: 10px;
+    background: rgba(255,255,255,.02);
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: .15s;
+  }
+  .clone-picker-item:hover {
+    background: rgba(255,255,255,.05);
+    border-color: var(--violet);
+  }
+
+
+  /* =========================================================================
+     DASHBOARD BUILT-IN CALENDAR STYLES
+     ========================================================================= */
+  .cal-panel {
+    background: rgba(18, 24, 38, 0.6);
+    border: 1px solid var(--glass-brd);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+  }
+  .cal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .cal-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,0,0,.35);
+    border: 1px solid var(--glass-brd);
+    border-radius: 10px;
+    padding: 3px 8px;
+  }
+  .cal-nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--sub);
+    cursor: pointer;
+    font-size: 13px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    transition: .15s;
+  }
+  .cal-nav-btn:hover {
+    background: rgba(255,255,255,.08);
+    color: var(--ink);
+  }
+  .cal-current-month {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--ink);
+    min-width: 110px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+  .cal-today-btn {
+    background: rgba(139, 123, 255, 0.15);
+    border: 1px solid rgba(139, 123, 255, 0.35);
+    color: var(--violet);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: 4px;
+    transition: .15s;
+  }
+  .cal-today-btn:hover {
+    background: rgba(139, 123, 255, 0.25);
+  }
+  .cal-layout {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .cal-grid-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+  .cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .cal-weekdays .weekday {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--sub);
+    padding: 3px 0;
+  }
+  .cal-weekdays .weekday.sun { color: #ff7a6b; }
+  .cal-weekdays .weekday.sat { color: var(--cyan); }
+  .cal-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .cal-day-cell {
+    min-height: 82px;
+    background: rgba(255,255,255, 0.02);
+    border: 1px solid rgba(255,255,255, 0.04);
+    border-radius: 8px;
+    padding: 4px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    cursor: pointer;
+    transition: background .12s, border-color .12s;
+    position: relative;
+  }
+  .cal-day-cell:hover {
+    background: rgba(255,255,255, 0.05);
+    border-color: rgba(255,255,255, 0.12);
+  }
+  .cal-day-cell.other-month {
+    opacity: 0.32;
+  }
+  .cal-day-cell.is-today {
+    border-color: rgba(79, 216, 232, 0.5);
+    background: rgba(79, 216, 232, 0.05);
+  }
+  .cal-day-cell.is-selected {
+    border-color: var(--violet);
+    background: rgba(139, 123, 255, 0.12);
+    box-shadow: 0 0 0 1px var(--violet);
+  }
+  .cal-day-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--sub);
+  }
+  .cal-day-cell.is-today .cal-day-top .d-num {
+    color: var(--cyan);
+    font-weight: 900;
+  }
+  .cal-day-events {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+  }
+  .cal-event-pill {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    cursor: pointer;
+    transition: filter .12s;
+  }
+  .cal-event-pill:hover {
+    filter: brightness(1.25);
+  }
+  .cal-event-pill.type-es {
+    background: rgba(139, 123, 255, 0.2);
+    color: #c5beff;
+    border-left: 2px solid var(--violet);
+  }
+  .cal-event-pill.type-interview {
+    background: rgba(79, 216, 232, 0.2);
+    color: #8cefff;
+    border-left: 2px solid var(--cyan);
+  }
+  .cal-event-pill.type-test {
+    background: rgba(217, 178, 95, 0.2);
+    color: #f7d78a;
+    border-left: 2px solid var(--gold-2);
+  }
+  .cal-event-pill.type-other {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--ink);
+    border-left: 2px solid var(--sub);
+  }
+
+  /* Calendar Sidebar */
+  .cal-sidebar {
+    width: 290px;
+    background: rgba(0,0,0,.25);
+    border: 1px solid var(--glass-brd);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 380px;
+  }
+  .cal-sidebar-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .cal-sidebar-date-title {
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .cal-sidebar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    max-height: 360px;
+  }
+  .cal-side-item {
+    border: 1px solid var(--glass-brd);
+    background: rgba(255,255,255,.03);
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    transition: .15s;
+  }
+  .cal-side-item:hover {
+    background: rgba(255,255,255,.06);
+    border-color: var(--violet);
+  }
+  @media (max-width: 960px) {
+    .cal-layout {
+      flex-direction: column;
+    }
+    .cal-sidebar {
+      width: 100%;
+      min-height: auto;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -1603,9 +2465,10 @@
     </div>
     <nav class="tabs" id="tabs">
       <button data-view="db" class="active">🏢 企業DB</button>
-      <button data-view="list">📑 選考リスト <span class="tab-lock" style="font-size:11px;opacity:0.75" title="要ログイン">🔒</span></button>
-      <button data-view="kanban">📋 カンバン <span class="tab-lock" style="font-size:11px;opacity:0.75" title="要ログイン">🔒</span></button>
-      <button data-view="dash">📊 ダッシュボード <span class="tab-lock" style="font-size:11px;opacity:0.75" title="要ログイン">🔒</span></button>
+      <button data-view="list">📑 選考管理</button>
+      <button data-view="es">📝 ES</button>
+      <button data-view="story">💡 Story Bank</button>
+      <button data-view="dash">📊 ダッシュボード</button>
     </nav>
     <div class="spacer"></div>
     <div class="searchbox">
@@ -1687,7 +2550,7 @@
     <div class="hero">
       <div class="hero-title">
         <h1>選考<span class="g">管理リスト</span></h1>
-        <p>選考対象企業のステージ、締切日、初任給・年収一覧。表頭をクリックして並び替えが可能です。</p>
+        <p>「今、何をするべきか」に集中。直近の締切・アクション・ステータスを一目で把握できます。</p>
       </div>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
         <button class="top-btn" onclick="exportCSV()">📥 CSV出力</button>
@@ -1697,15 +2560,11 @@
     <div class="toolbar">
       <div class="filters" id="listFilters">
         <span class="chip on">すべて</span>
-        <span class="chip">コンサル・シンクタンク</span>
-        <span class="chip">IT・通信</span>
-        <span class="chip">商社</span>
-        <span class="chip">金融</span>
-        <span class="chip">メーカー</span>
-        <span class="chip">不動産・建設</span>
-        <span class="chip">広告・マスコミ</span>
-        <span class="chip">選考中のみ</span>
-                <span class="chip">締切あり</span>
+        <span class="chip">締切あり</span>
+        <span class="chip">エントリー中</span>
+        <span class="chip">ES・Webテスト</span>
+        <span class="chip">面接中</span>
+        <span class="chip">内定・内々定</span>
       </div>
       <div class="result-count">選考中・管理中 <b id="listShown">0</b> 社</div>
     </div>
@@ -1714,14 +2573,12 @@
         <table>
           <thead>
             <tr>
-              <th onclick="sortTable('name')" data-sort="name">企業名 <span class="arrow" id="arr-name">↕</span></th>
-              <th onclick="sortTable('cat')" data-sort="cat">業界 / 業種 <span class="arrow" id="arr-cat">↕</span></th>
-              <th onclick="sortTable('emp')" data-sort="emp">規模・従業員数 <span class="arrow" id="arr-emp">↕</span></th>
-              <th onclick="sortTable('annual')" data-sort="annual">平均年収 <span class="arrow" id="arr-annual">↕</span></th>
-              <th onclick="sortTable('pay')" data-sort="pay">初任給(大卒) <span class="arrow" id="arr-pay">↕</span></th>
-              <th onclick="sortTable('stage')" data-sort="stage">選考ステージ <span class="arrow" id="arr-stage">↕</span></th>
-              <th onclick="sortTable('due')" data-sort="due">直近の締切・予定 <span class="arrow" id="arr-due">↕</span></th>
-              <th style="width: 80px; text-align: center;">操作</th>
+              <th onclick="sortTable('name')" data-sort="name" style="min-width:240px">企業名 <span class="arrow" id="arr-name">↕</span></th>
+              <th onclick="sortTable('action')" data-sort="action" style="min-width:200px">次のアクション <span class="arrow" id="arr-action">↕</span></th>
+              <th onclick="sortTable('due')" data-sort="due" style="min-width:180px">締切 <span class="arrow" id="arr-due">↕</span></th>
+              <th onclick="sortTable('stage')" data-sort="stage" style="min-width:140px">ステータス <span class="arrow" id="arr-stage">↕</span></th>
+              <th style="min-width:160px">メモ / リンク</th>
+              <th style="width: 95px; text-align: center;">操作</th>
             </tr>
           </thead>
           <tbody id="tbody"></tbody>
@@ -1731,20 +2588,145 @@
   </section>
 
   <!-- ===================== VIEW 3: カンバン ===================== -->
-  <section class="view" id="view-kanban">
+  <!-- ===================== VIEW 3: ES Database ===================== -->
+    <!-- ===================== VIEW 3: ES データベース ===================== -->
+  <section class="view" id="view-es">
     <div class="hero">
       <div class="hero-title">
-        <h1>選考<span class="g">カンバンボード</span></h1>
-        <p>カードをドラッグ＆ドロップして選考ステージを進められます。クリックで選考詳細・面接記録を編集できます。</p>
+        <h1>ES <span class="g">データベース</span></h1>
+        <p>企業ごとの設問回答や汎用ガクチカ・志望動機を資産化。業界別・設问別に整理し、Story Bankと連携して何度でも使い回せます。</p>
       </div>
-      <div class="stat-strip">
-        <span>選考中 <b id="kActive" style="color:var(--cyan)">0</b> 社</span>
-        <span>内々定 <b id="kOffer" style="color:var(--green)">0</b> 社</span>
-        <span class="hot">直近締切 <b id="kDue">0</b> 件</span>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="top-btn primary" onclick="openEsModal()">＋ 新規ES作成</button>
       </div>
     </div>
-    <div class="board-wrap">
-      <div class="board" id="board"></div>
+
+    <!-- 2段式スマートコントロールパネル -->
+    <div class="es-control-panel">
+      <!-- 1段目: 全文検索、表示モード切替 (リスト/カード)、グループ化、新規ボタン -->
+      <div class="es-toolbar-primary">
+        <div class="es-search-wrap">
+          <span class="search-ico">🔍</span>
+          <input type="text" id="esSearchInput" placeholder="ESタイトル・設問・回答本文・企業名・Storyで全文検索…" oninput="onEsSearchInput(this.value)" autocomplete="off" />
+          <button class="es-search-clear" id="esSearchClear" onclick="clearEsSearch()" style="display:none" title="検索クリア">✕</button>
+        </div>
+
+        <div class="es-toolbar-actions">
+          <!-- 表示モード切替: リスト vs カード -->
+          <div class="view-mode-toggle" id="esViewToggle">
+            <button class="mode-btn active" id="btnEsViewList" onclick="setEsViewMode('list')" title="高密度コンパクトリスト表示">📋 リスト</button>
+            <button class="mode-btn" id="btnEsViewCard" onclick="setEsViewMode('card')" title="要約カード表示">🗂️ カード</button>
+          </div>
+
+          <!-- グループ化セレクタ -->
+          <div class="es-groupby-wrap">
+            <span style="font-size:11.5px;color:var(--sub);font-weight:700">グループ:</span>
+            <select class="toolbar-select" id="esGroupBySelect" onchange="onEsGroupByChange(this.value)" style="font-size:11.5px;padding:4px 8px;">
+              <option value="none">なし (フラット)</option>
+              <option value="industry">業界ごと (Industry)</option>
+              <option value="company">企業ごと (Company)</option>
+              <option value="type">設問タイプごと (Type)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2段目: 設問タイプピル、業界別フィルタ、ステータス、企業絞り込み -->
+      <div class="es-toolbar-secondary">
+        <!-- 設問タイプピル -->
+        <div class="filter-pills-row" id="esTypeFilters">
+          <span class="chip-sm on" data-type="all" onclick="onEsTypeFilterClick('all')">全設問</span>
+          <span class="chip-sm" data-type="自己PR" onclick="onEsTypeFilterClick('自己PR')">自己PR</span>
+          <span class="chip-sm" data-type="ガクチカ" onclick="onEsTypeFilterClick('ガクチカ')">ガクチカ</span>
+          <span class="chip-sm" data-type="志望動機" onclick="onEsTypeFilterClick('志望動機')">志望動機</span>
+          <span class="chip-sm" data-type="学業・研究" onclick="onEsTypeFilterClick('学業・研究')">学業・研究</span>
+          <span class="chip-sm" data-type="その他" onclick="onEsTypeFilterClick('その他')">その他</span>
+        </div>
+
+        <!-- 業界別ドロップダウン -->
+        <select class="toolbar-select" id="esIndustryFilter" onchange="onEsIndustryFilterChange(this.value)" style="font-size:11.5px;padding:4px 8px;">
+          <option value="all">🏢 すべての業界</option>
+          <option value="コンサル・シンクタンク">コンサル・シンクタンク</option>
+          <option value="IT・通信">IT・通信</option>
+          <option value="メーカー">メーカー</option>
+          <option value="商社">商社</option>
+          <option value="金融">金融</option>
+          <option value="広告・マスコミ">広告・マスコミ</option>
+          <option value="不動産・建設">不動産・建設</option>
+          <option value="小売・サービス">小売・サービス</option>
+          <option value="その他">その他・インフラ</option>
+          <option value="汎用・共通">汎用・共通ストック</option>
+        </select>
+
+        <!-- ステータス -->
+        <div class="filter-pills-row" id="esStatusFilters">
+          <span class="chip-sm on" data-status="all" onclick="onEsStatusFilterClick('all')">全状態</span>
+          <span class="chip-sm" data-status="draft" onclick="onEsStatusFilterClick('draft')">下書き</span>
+          <span class="chip-sm" data-status="submitted" onclick="onEsStatusFilterClick('submitted')">提出済み</span>
+        </div>
+
+        <!-- 企業個別絞り込み -->
+        <select class="toolbar-select" id="esCompanyFilter" onchange="onEsCompanyFilterChange(this.value)" style="max-width:180px;font-size:11.5px;padding:4px 8px;">
+          <option value="all">すべての企業 / 汎用</option>
+          <option value="general">汎用テンプレートのみ</option>
+        </select>
+
+        <div class="result-count" style="margin-left:auto"><b id="esShownCount">0</b> 件のES</div>
+      </div>
+    </div>
+
+    <!-- コンテナ: リスト表示またはカード表示がJSによって描画される -->
+    <div id="esMainContainer" style="padding-top:4px;min-height:200px">
+      <!-- テーブル用 (List View) -->
+      <div id="esTableViewWrap" class="es-table-container" style="display:none">
+        <table class="es-table">
+          <thead>
+            <tr>
+              <th style="width:190px">企業・業界</th>
+              <th style="width:95px">タイプ</th>
+              <th>設問・タイトル要約</th>
+              <th style="width:110px">文字数</th>
+              <th style="width:85px">状態</th>
+              <th style="width:140px">参照Story</th>
+              <th style="width:90px">更新日</th>
+              <th style="width:115px;text-align:right">操作</th>
+            </tr>
+          </thead>
+          <tbody id="esTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- グリッド用 (Card View) -->
+      <div class="es-grid" id="esGrid" style="display:none"></div>
+
+      <!-- グループ用 (Group By View) -->
+      <div id="esGroupView" style="display:none"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-story">
+    <div class="hero">
+      <div class="hero-title">
+        <h1>Story <span class="g">Bank</span></h1>
+        <p>あなたの経験・強みをSTARモデルで体系化。ES作成時に何度でも引用でき、使用状況も一目で分かります。</p>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="top-btn primary" onclick="openStoryModal()">＋ 新規Story作成</button>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="filters" id="storyFilters">
+        <span class="chip on" data-cat="all">すべて</span>
+        <span class="chip" data-cat="Internship">Internship</span>
+        <span class="chip" data-cat="Work">Work (就労・バイト)</span>
+        <span class="chip" data-cat="Academic">Academic (学業・研究)</span>
+        <span class="chip" data-cat="Extracurricular">Extracurricular (課外活動)</span>
+        <span class="chip" data-cat="Other">Other (その他)</span>
+      </div>
+      <div class="result-count"><b id="storyShownCount">0</b> 件のStory</div>
+    </div>
+    <div class="grid-wrap" style="padding-top:10px">
+      <div class="story-grid" id="storyGrid"></div>
     </div>
   </section>
 
@@ -1754,10 +2736,12 @@
       <div class="hero" style="padding: 0 0 16px;">
         <div class="hero-title">
           <h1>就活状況 <span class="g">ダッシュボード</span></h1>
-          <p>選考通過ファネル、業界・企業規模の分布、直近スケジュールを一元把握。</p>
+          <p>選考通過ファネル、業界別分布、月間選考スケジュールを一元把握。</p>
         </div>
       </div>
       <div class="kpis" id="kpis"></div>
+
+      <!-- 分析チャート: 選考ファネル & 業界別分布 -->
       <div class="grid2">
         <div class="panel">
           <h2>選考ファネル <span class="sub">通過・到達状況</span></h2>
@@ -1770,6 +2754,51 @@
             <div class="legend" id="legend"></div>
           </div>
         </div>
+      </div>
+
+      <!-- 📅 選考スケジュール月間カレンダー (Built-in Calendar) -->
+      <div class="panel cal-panel" id="dashCalendarPanel">
+        <div class="cal-head">
+          <div style="display:flex;align-items:center;gap:10px">
+            <h2 style="margin-bottom:0">📅 選考カレンダー <span class="sub">月間スケジュール & 締切</span></h2>
+            <span class="badge-count" id="calMonthEventCount">0件</span>
+          </div>
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="navCalendar(-1)" title="前月">◀</button>
+            <span class="cal-current-month" id="calCurrentMonthLabel">2026年 5月</span>
+            <button class="cal-nav-btn" onclick="navCalendar(1)" title="翌月">▶</button>
+            <button class="cal-today-btn" onclick="resetCalendarToCurrent()">今月</button>
+          </div>
+        </div>
+
+        <div class="cal-layout">
+          <!-- カレンダーグリッド -->
+          <div class="cal-grid-wrap">
+            <div class="cal-weekdays">
+              <span class="weekday sun">日</span>
+              <span class="weekday">月</span>
+              <span class="weekday">火</span>
+              <span class="weekday">水</span>
+              <span class="weekday">木</span>
+              <span class="weekday">金</span>
+              <span class="weekday sat">土</span>
+            </div>
+            <div class="cal-days" id="calDaysGrid"></div>
+          </div>
+
+          <!-- 選択した日付の予定サイドバー -->
+          <div class="cal-sidebar" id="calSidebar">
+            <div class="cal-sidebar-head">
+              <span class="cal-sidebar-date-title" id="calSelectedDateLabel">選択した日の予定</span>
+              <button class="btn-sm-ghost" id="calAddEventBtn" onclick="onCalendarAddEventClick()" style="font-size:11px;padding:2px 6px;color:var(--cyan);border-color:rgba(79,216,232,.35)">＋ 予定追加</button>
+            </div>
+            <div class="cal-sidebar-list" id="calSelectedDateList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 直近締切 & 就活TODOタスク -->
+      <div class="grid2">
         <div class="panel">
           <h2>直近の選考日程・締切 <span class="sub">締切のある企業</span></h2>
           <div class="deadlines" id="deadlines"></div>
@@ -1783,11 +2812,9 @@
           </div>
         </div>
       </div>
-      <div class="panel" style="margin-top: 16px;">
-        <h2>企業規模の分布 <span class="sub">大企業・中堅・ベンチャー内訳</span></h2>
-        <div class="barchart" id="barchart"></div>
       </div>
-    </div>
+
+        </div>
   </section>
 
   <!-- ===================== MOBILE BOTTOM NAV ===================== -->
@@ -1798,15 +2825,19 @@
     </button>
     <button class="mobile-nav-btn" data-view="list" onclick="switchView('list')">
       <span class="icon">📑</span>
-      <span>選考リスト <span class="tab-lock" style="font-size:9px">🔒</span></span>
+      <span>選考管理</span>
     </button>
-    <button class="mobile-nav-btn" data-view="kanban" onclick="switchView('kanban')">
-      <span class="icon">📋</span>
-      <span>カンバン <span class="tab-lock" style="font-size:9px">🔒</span></span>
+    <button class="mobile-nav-btn" data-view="es" onclick="switchView('es')">
+      <span class="icon">📝</span>
+      <span>ES</span>
+    </button>
+    <button class="mobile-nav-btn" data-view="story" onclick="switchView('story')">
+      <span class="icon">💡</span>
+      <span>Story</span>
     </button>
     <button class="mobile-nav-btn" data-view="dash" onclick="switchView('dash')">
       <span class="icon">📊</span>
-      <span>分析 <span class="tab-lock" style="font-size:9px">🔒</span></span>
+      <span>分析</span>
     </button>
     <button class="mobile-nav-btn" onclick="openSettingsModal()">
       <span class="icon">⚙️</span>
@@ -1877,7 +2908,6 @@
           <div class="form-group">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
               <label class="form-label" style="margin-bottom:0">直近の締切・面接予定日</label>
-              <button class="btn-sm-ghost" type="button" onclick="exportCompanyIcs()" title="この選考日程をカレンダー（.ics）に追加" style="font-size:11px;padding:2px 8px;border-color:rgba(79,216,232,0.4);color:var(--cyan)">📅 カレンダーに追加</button>
             </div>
             <input type="date" class="form-input" id="mDue" />
           </div>
@@ -1885,6 +2915,39 @@
             <label class="form-label">予定種別（ラベル）</label>
             <input class="form-input" id="mDueLabel" placeholder="ES提出 / SPI受検 / 一次面接など" />
           </div>
+        </div>
+
+                <!-- 選考スケジュール (Timeline) -->
+        <div class="timeline-section" style="border-top:1px solid var(--glass-brd);padding-top:14px;margin-top:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="font-size:13.5px;font-weight:800;display:flex;align-items:center;gap:8px">
+              <span>📅 選考スケジュール（複数イベント管理）</span>
+              <span class="badge-count" id="mTimelineCount">0件</span>
+            </div>
+            <button class="btn-sm-ghost" type="button" onclick="openEventModal(null, currentModalComp?.id)" style="color:var(--cyan);border-color:rgba(79,216,232,.35)">
+              ＋ 予定を追加
+            </button>
+          </div>
+          <div id="mTimelineList" class="timeline-list"></div>
+        </div>
+
+        <!-- この企業のES一覧 -->
+        <div class="comp-es-section" style="border-top:1px solid var(--glass-brd);padding-top:14px;margin-top:14px;margin-bottom:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="font-size:13.5px;font-weight:800;display:flex;align-items:center;gap:8px">
+              <span>📝 この企業のES一覧</span>
+              <span class="badge-count" id="mCompEsCount">0件</span>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn-sm-ghost" type="button" onclick="openEsClonePickerModal(currentModalComp?.id)" style="color:var(--cyan);border-color:rgba(79,216,232,.35)">
+                📥 既存ESから複製
+              </button>
+              <button class="btn-sm-ghost" type="button" onclick="openEsModal(null, currentModalComp?.id)" style="color:var(--violet);border-color:rgba(139,123,255,.35)">
+                ＋ この企業のESを作成
+              </button>
+            </div>
+          </div>
+          <div id="mCompEsList"></div>
         </div>
 
         <div class="form-row">
@@ -1948,6 +3011,9 @@
           </div>
           <textarea class="form-textarea" id="mNoteInterview" placeholder="面接官の雰囲気、聞かれた質問、手応え、次回への改善点…" oninput="updateCharCount('mNoteInterview', 'mNoteInterviewCount')"></textarea>
         </div>
+      
+
+
       </div>
       <div class="modal-foot">
         <button class="btn-sm-ghost" id="mDeleteBtn" onclick="deleteModalCompany()" style="color:var(--red)">企業を削除</button>
@@ -2177,8 +3243,317 @@
     </div>
   </div>
 
+  
+  <!-- ===================== MODAL: 選考イベント編集 ===================== -->
+  <div class="modal-overlay" id="eventModal" onclick="onModalOverlayClick(event, 'eventModal')">
+    <div class="modal" style="max-width:540px">
+      <div class="modal-head">
+        <h3 id="evModalTitle">📅 選考イベントの予定</h3>
+        <button class="modal-close" onclick="closeModal('eventModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="evId" />
+        <div class="form-group">
+          <label class="form-label">対象企業 <span style="color:var(--red)">*</span></label>
+          <select class="form-select" id="evCompanyId" required></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">種別 <span style="color:var(--red)">*</span></label>
+            <select class="form-select" id="evType">
+              <option value="ES">ES提出</option>
+              <option value="WEBテスト">WEBテスト / SPI</option>
+              <option value="適性検査">適性検査</option>
+              <option value="GD">グループディスカッション (GD)</option>
+              <option value="面接">面接 (一次/二次/最終)</option>
+              <option value="説明会">説明会 / セミナー</option>
+              <option value="その他" selected>その他</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">ステータス</label>
+            <select class="form-select" id="evStatus">
+              <option value="upcoming">予定 (Upcoming)</option>
+              <option value="completed">完了 (Completed)</option>
+              <option value="cancelled">辞退・中止 (Cancelled)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">イベント名・タイトル <span style="color:var(--red)">*</span></label>
+          <input class="form-input" id="evTitle" placeholder="例: 本選考 ES提出 / 一次面接(オンライン)" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">締切・実施日 <span style="color:var(--red)">*</span></label>
+            <input type="date" class="form-input" id="evDate" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">時刻（任意）</label>
+            <input type="time" class="form-input" id="evTime" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">メモ・リンク（Zoom・持ち物・注意点）</label>
+          <textarea class="form-textarea" id="evMemo" placeholder="Zoom会議室URL、ID・パスコード、服装指定、受験URLなど" style="min-height:75px"></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-sm-ghost" id="evDeleteBtn" onclick="deleteCurrentEvent()" style="color:var(--red);display:none">この予定を削除</button>
+        <div style="flex:1"></div>
+        <button class="btn-sm-ghost" onclick="closeModal('eventModal')">キャンセル</button>
+        <button class="top-btn primary" onclick="saveCurrentEvent()">予定を保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: ES作成・編集 ===================== -->
+  <div class="modal-overlay" id="esModal" onclick="onModalOverlayClick(event, 'esModal')">
+    <div class="modal" style="max-width:720px">
+      <div class="modal-head">
+        <h3 id="esModalTitle">📝 ES エントリーシート編集</h3>
+        <button class="modal-close" onclick="closeModal('esModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="esId" />
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">提出先企業（任意・汎用可）</label>
+            <select class="form-select" id="esModalCompany">
+              <option value="">（未指定・汎用テンプレート）</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">提出ステータス</label>
+            <select class="form-select" id="esModalStatus">
+              <option value="draft">下書き (Draft)</option>
+              <option value="submitted">提出済み (Submitted)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="flex:1.2">
+            <label class="form-label">設問タイプ</label>
+            <select class="form-select" id="esModalTypeSelect">
+              <option value="自己PR">自己PR</option>
+              <option value="ガクチカ">ガクチカ（学生時代に力を入れたこと）</option>
+              <option value="志望動機">志望動機・企業研究</option>
+              <option value="学業・研究">学業・研究・ゼミ</option>
+              <option value="長所・短所">長所・短所 / 挫折経験</option>
+              <option value="その他">その他</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex:2">
+            <label class="form-label">タイトル <span style="color:var(--red)">*</span></label>
+            <input class="form-input" id="esModalTitleInput" placeholder="例: 自己PR 400字 / 夏インターン志望動機" required />
+          </div>
+          <div class="form-group" style="flex:1">
+            <label class="form-label">文字数制限</label>
+            <select class="form-select" id="esModalLimit" onchange="onEsModalLimitChange(this.value)">
+              <option value="200">200字</option>
+              <option value="300">300字</option>
+              <option value="400" selected>400字</option>
+              <option value="500">500字</option>
+              <option value="custom">カスタム指定</option>
+              <option value="0">上限なし</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" id="esCustomLimitGroup" style="display:none">
+          <label class="form-label">カスタム文字数上限</label>
+          <input type="number" class="form-input" id="esCustomLimitInput" placeholder="例: 250" oninput="updateEsModalCharCount()" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">設問（Question） <span style="color:var(--red)">*</span></label>
+          <textarea class="form-textarea" id="esModalQuestion" placeholder="例: あなたが学生時代に最も力を入れて取り組んだことと、そこから得た学びを教えてください。" style="min-height:60px"></textarea>
+        </div>
+        <div class="form-group">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <label class="form-label" style="margin-bottom:0">回答本文（Answer） <span style="color:var(--red)">*</span></label>
+            <span id="esModalCharCounter" style="font-size:12px;font-weight:800;color:var(--ink)">0 / 400 字</span>
+          </div>
+          <textarea class="form-textarea" id="esModalAnswer" placeholder="回答文を入力してください…" style="min-height:160px;line-height:1.6" oninput="updateEsModalCharCount()"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">引用 Story Bank（複数選択可）</label>
+          <div id="esModalStoriesPicker" style="display:flex;flex-wrap:wrap;gap:6px;max-height:110px;overflow-y:auto;padding:6px;border:1px solid var(--glass-brd);border-radius:10px;background:rgba(0,0,0,.2)"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">タグ（カンマ区切り または Enter）</label>
+          <input class="form-input" id="esModalTags" placeholder="例: ガクチカ, チームワーク, 課題解決" />
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-sm-ghost" id="esModalDeleteBtn" onclick="deleteCurrentEs()" style="color:var(--red);display:none">このESを削除</button>
+        <button class="btn-sm-ghost" type="button" onclick="copyCurrentEsAnswerText()">📋 回答をコピー</button>
+        <div style="flex:1"></div>
+        <button class="btn-sm-ghost" onclick="closeModal('esModal')">キャンセル</button>
+        <button class="top-btn primary" onclick="saveCurrentEs()">ESを保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: Story Bank 編集 ===================== -->
+  <div class="modal-overlay" id="storyModal" onclick="onModalOverlayClick(event, 'storyModal')">
+    <div class="modal" style="max-width:820px">
+      <div class="modal-head">
+        <h3 id="storyModalHeadTitle">💡 Story Bank 経験エピソード編集</h3>
+        <button class="modal-close" onclick="closeModal('storyModal')">✕</button>
+      </div>
+      <div class="modal-body" style="gap:16px">
+        <input type="hidden" id="storyId" />
+        <div class="form-row">
+          <div class="form-group" style="flex:2">
+            <label class="form-label">エピソードタイトル <span style="color:var(--red)">*</span></label>
+            <input class="form-input" id="storyTitle" placeholder="例: 長期インターンでの法人新規開拓営業 / 学園祭実行委員での協賛獲得" required />
+          </div>
+          <div class="form-group" style="flex:1">
+            <label class="form-label">カテゴリ <span style="color:var(--red)">*</span></label>
+            <select class="form-select" id="storyCategory">
+              <option value="Internship">Internship (長期・短期インターン)</option>
+              <option value="Work">Work (アルバイト・就労)</option>
+              <option value="Academic">Academic (研究・ゼミ・学業)</option>
+              <option value="Extracurricular">Extracurricular (部活・サークル・課外活動)</option>
+              <option value="Other">Other (留学・趣味・個人開発・その他)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">サマリー / エレベーターピッチ（30秒要約）</label>
+          <textarea class="form-textarea" id="storySummary" placeholder="どのような課題に対して、自身がどう行動し、どんな成果を出したかの一行・要約まとめ" style="min-height:55px"></textarea>
+        </div>
+
+        <div style="font-size:13px;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:6px;margin-top:4px">
+          <span>🌟 STARフレームワーク（具体的エピソード記述）</span>
+        </div>
+        <div class="star-container">
+          <div class="star-field">
+            <div class="star-label">
+              <span class="star-letter s">S</span>
+              <span>Situation（状況・背景・直面していた困難）</span>
+            </div>
+            <textarea id="storySituation" placeholder="所属組織の状況、当時の前提、直面していた課題やピンチ…"></textarea>
+          </div>
+          <div class="star-field">
+            <div class="star-label">
+              <span class="star-letter t">T</span>
+              <span>Task（課題・自身に課された使命や目標）</span>
+            </div>
+            <textarea id="storyTask" placeholder="達成すべき定量目標、解決が求められていた本質的なボトルネック…"></textarea>
+          </div>
+          <div class="star-field">
+            <div class="star-label">
+              <span class="star-letter a">A</span>
+              <span>Action（行動・創意工夫・自ら起こした具体的なアクション）</span>
+            </div>
+            <textarea id="storyAction" placeholder="周囲をどう巻き込んだか、どのような独自の工夫・仮説検証を行ったか…"></textarea>
+          </div>
+          <div class="star-field">
+            <div class="star-label">
+              <span class="star-letter r">R</span>
+              <span>Result（結果・成果・数字実績や定量的変化）</span>
+            </div>
+            <textarea id="storyResult" placeholder="達成した数値（例: 成約率25%向上、30社開拓）、周囲の反応や表彰…"></textarea>
+          </div>
+          <div class="star-field">
+            <div class="star-label">
+              <span class="star-letter l">L</span>
+              <span>Learning（学び・教訓・社会人としてどう活かせるか）</span>
+            </div>
+            <textarea id="storyLearning" placeholder="この経験を通して得た本質的な気づき、仕事や再現性への応用…"></textarea>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">発揮した強み・アピールポイント</label>
+          <div class="tag-presets" style="margin-bottom:6px">
+            <span class="tag-preset-chip" onclick="addStoryStrengthChip('課題解決力')">+ 課題解決力</span>
+            <span class="tag-preset-chip" onclick="addStoryStrengthChip('主体性')">+ 主体性</span>
+            <span class="tag-preset-chip" onclick="addStoryStrengthChip('巻き込み力')">+ 巻き込み力</span>
+            <span class="tag-preset-chip" onclick="addStoryStrengthChip('折衝力')">+ 折衝力</span>
+            <span class="tag-preset-chip" onclick="addStoryStrengthChip('粘り強さ')">+ 粘り強さ</span>
+            <span class="tag-preset-chip" onclick="addStoryStrengthChip('論理的思考力')">+ 論理的思考</span>
+            <span class="tag-preset-chip" onclick="addStoryStrengthChip('柔軟性')">+ 柔軟性</span>
+            <span class="tag-preset-chip" onclick="addStoryStrengthChip('推進力')">+ 推進力</span>
+          </div>
+          <input class="form-input" id="storyStrengths" placeholder="強みをカンマ区切りで入力（例: 課題解決力, 主体性）" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">タグ</label>
+          <input class="form-input" id="storyTags" placeholder="タグをカンマ区切りで入力（例: BtoB, リーダー, 英語）" />
+        </div>
+
+        <!-- このStoryを使用したES (自動集計パネル) -->
+        <div class="referenced-es-box">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:13px;font-weight:800;color:var(--violet);display:flex;align-items:center;gap:6px">
+              <span>📝 このStoryを使用したES（自動集計）</span>
+              <span class="badge-count" id="storyRefEsCount">0件</span>
+            </span>
+          </div>
+          <div id="storyRefEsList" style="margin-top:6px"></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-sm-ghost" id="storyDeleteBtn" onclick="deleteCurrentStory()" style="color:var(--red);display:none">このStoryを削除</button>
+        <div style="flex:1"></div>
+        <button class="btn-sm-ghost" onclick="closeModal('storyModal')">キャンセル</button>
+        <button class="top-btn primary" onclick="saveCurrentStory()">Storyを保存</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- ===================== MODAL: 既存ESから複製ピッカー ===================== -->
+  <div class="modal-overlay" id="esClonePickerModal" onclick="onModalOverlayClick(event, 'esClonePickerModal')">
+    <div class="modal" style="max-width:760px">
+      <div class="modal-head">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:18px">📥</span>
+          <div>
+            <h3 id="clonePickerHeadTitle">既存ES / Storyから複製</h3>
+            <span style="color:var(--sub);font-size:11.5px" id="clonePickerSubTitle">過去に作成した優秀な回答を選び、この企業向けにクローン作成します</span>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeModal('esClonePickerModal')">✕</button>
+      </div>
+      <div class="modal-body" style="gap:12px">
+        <!-- 絞り込みバー -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <input type="text" class="form-input" id="clonePickerSearch" placeholder="キーワード検索…" style="flex:1;min-width:180px;font-size:12px;padding:6px 10px" oninput="renderClonePickerList()" />
+          <select class="toolbar-select" id="clonePickerTypeFilter" onchange="renderClonePickerList()" style="font-size:11.5px">
+            <option value="all">すべての設問タイプ</option>
+            <option value="自己PR">自己PR</option>
+            <option value="ガクチカ">ガクチカ</option>
+            <option value="志望動機">志望動機</option>
+            <option value="学業・研究">学業・研究</option>
+            <option value="その他">その他</option>
+          </select>
+          <select class="toolbar-select" id="clonePickerIndustryFilter" onchange="renderClonePickerList()" style="font-size:11.5px">
+            <option value="all">すべての業界</option>
+            <option value="コンサル・シンクタンク">コンサル・シンクタンク</option>
+            <option value="IT・通信">IT・通信</option>
+            <option value="メーカー">メーカー</option>
+            <option value="商社">商社</option>
+            <option value="金融">金融</option>
+            <option value="汎用・共通">汎用ストック</option>
+          </select>
+        </div>
+
+        <!-- 複製候補リスト -->
+        <div id="clonePickerList" style="max-height:360px;overflow-y:auto;padding-right:4px;display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <div class="modal-foot">
+        <span style="font-size:11.5px;color:var(--sub)" id="clonePickerCount">0件の候補</span>
+        <div style="flex:1"></div>
+        <button class="btn-sm-ghost" onclick="closeModal('esClonePickerModal')">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
-  <footer class="note">就勝 syukatsu.win ― 端末のローカルストレージに自動保存されます（完全プライベート・オフライン対応）</footer>
+  
 
 <script src="data/companies_catalog.js"></script>
 <script>
@@ -2246,6 +3621,7 @@
     { id:'c_kearney', name:'A.T.カーニー(Kearney)', code:null, domain:'kearney.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'世界大手 戦略コンサル(オペレーション/事業変革)', emp:350, empNote:'日本', payBachelor:500000, payMaster:520000, avgAnnual:1700, color:'#6b1f7c', added:false, stage:'watch', loc:'東京/全国', tags:["外資名門", "戦略コンサル", "高年収"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_rolandberger', name:'ローランド・ベルガー(Roland Berger)', code:null, domain:'rolandberger.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'欧州最大手 経営戦略コンサルファーム', emp:300, empNote:'日本', payBachelor:500000, payMaster:520000, avgAnnual:1650, color:'#009b3a', added:false, stage:'watch', loc:'東京/全国', tags:["外資名門", "戦略コンサル", "高年収"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_funaisoken', name:'船井総研ホールディングス', code:'9757', domain:'funaisoken.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'中堅・中小企業向け 総合経営コンサルティング最大手', emp:1400, empNote:'連結', payBachelor:250000, payMaster:274000, avgAnnual:740, color:'#e50012', added:false, stage:'watch', loc:'東京/全国', tags:["中小企業支援", "経営コンサル", "業種特化"], due:'', dueLabel:'', dueLv:'' },
+        { id:'c_msol', name:'株式会社マネジメントソリューションズ', code:'7033', domain:'mgmtsol.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'PMO / 経営・ITマネジメントコンサルティング', emp:950, empNote:'連結', payBachelor:300000, payMaster:320000, avgAnnual:830, color:'#8b7bff', added:true, stage:'es', loc:'東京', tags:['PMO', '東証プライム', 'コンサル', '急成長'], due:'2026-05-28', dueLabel:'一次面接', dueLv:'soon', popRank:180, popBadge:'TOP 300' },
     { id:'c_tcs', name:'日本タタ・コンサルタンシー・サービシズ', code:null, domain:'tcs.com/jp-ja', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'外資系ITコンサル・SIer (三菱商事合弁)', emp:4000, empNote:'国内(グローバル60万)', payBachelor:305000, payMaster:330000, avgAnnual:860, color:'#000000', added:false, stage:'watch', loc:'東京/全国', tags:["外資系", "ITコンサル", "三菱商事系", "グローバル", "日本TCS", "TCS", "Tata", "タタ"], due:'', dueLabel:'', dueLv:'', popRank:140, popBadge:'TOP 300' },
 
     // ── IT/SIer業界 ──
@@ -2289,10 +3665,16 @@
   const STORAGE_KEY = 'shukatsu_board_storage_v2';
   const SETTINGS_KEY = 'shukatsu_board_settings_v2';
   const TASKS_KEY = 'shukatsu_board_tasks_v2';
+  const EVENTS_KEY = 'shukatsu_events_v1';
+  const ES_KEY = 'shukatsu_es_v1';
+  const STORIES_KEY = 'shukatsu_stories_v1';
 
   let catalog = [];
   let currentSettings = { gradYear: '28卒' };
   let currentTasks = [];
+  let selectionEvents = [];
+  let esList = [];
+  let storyBank = [];
 
   function loadAll() {
     try {
@@ -2806,10 +4188,6 @@
   // ===================== ビュー切替 =====================
   let currentView = 'db';
   function switchView(v) {
-    if (!currentAuthUser && v !== 'db') {
-      requireAuth('選考リストやカンバン・分析ダッシュボードを利用');
-      return;
-    }
     currentView = v;
     document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('active', b.dataset.view === v));
     document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === v));
@@ -3210,22 +4588,27 @@
 
 
 
-  // ===================== VIEW 3: 選考リスト =====================
+  // ===================== VIEW 2: 選考管理リスト =====================
   const tbody = document.getElementById('tbody');
   let listFilter = 'すべて';
   const listChips = [...document.querySelectorAll('#listFilters .chip')];
 
   function listMatches(c) {
     if (keyword && !smartSearchMatches(c, keyword)) return false;
+    const nextAct = getCompanyNextAction(c.id);
     switch (listFilter) {
       case 'すべて': return true;
-      case '選考中のみ': return ['entry', 'es', 'first', 'final'].includes(c.stage);
-            case '締切あり': return !!c.due;
-      default: return catOf(c) === listFilter;
+      case '締切あり': return nextAct.hasEvent || !!c.due;
+      case '直近締切あり': return nextAct.days !== null && nextAct.days >= 0 && nextAct.days <= 7;
+      case 'エントリー中': return c.stage === 'entry';
+      case 'ES・Webテスト': return c.stage === 'es';
+      case '面接中': return ['first', 'final'].includes(c.stage);
+      case '内定・内々定': return c.stage === 'offer';
+      default: return true;
     }
   }
 
-  let sortCol = 'pop', sortAsc = true;
+  let sortCol = 'due', sortAsc = true;
 
   function sortTable(col) {
     if (sortCol === col) {
@@ -3242,28 +4625,25 @@
 
     // ソート
     added.sort((a, b) => {
-      let va = a[sortCol], vb = b[sortCol];
-      if (sortCol === 'pop') {
-        va = a.popRank || 9999; vb = b.popRank || 9999;
-      } else if (sortCol === 'name') {
+      let va, vb;
+      if (sortCol === 'name') {
         va = a.name || ''; vb = b.name || '';
         return sortAsc ? va.localeCompare(vb, 'ja') : vb.localeCompare(va, 'ja');
-      } else if (sortCol === 'cat') {
-        va = catOf(a); vb = catOf(b);
-        return sortAsc ? va.localeCompare(vb, 'ja') : vb.localeCompare(va, 'ja');
-      } else if (sortCol === 'emp') {
-        va = a.emp || 0; vb = b.emp || 0;
-      } else if (sortCol === 'annual') {
-        va = a.avgAnnual || 0; vb = b.avgAnnual || 0;
-      } else if (sortCol === 'pay') {
-        va = a.payBachelor || 0; vb = b.payBachelor || 0;
-
       } else if (sortCol === 'stage') {
         const order = ['watch', 'entry', 'es', 'first', 'final', 'offer'];
         va = order.indexOf(a.stage); vb = order.indexOf(b.stage);
       } else if (sortCol === 'due') {
-        va = a.due || '9999-99-99'; vb = b.due || '9999-99-99';
+        const actA = getCompanyNextAction(a.id);
+        const actB = getCompanyNextAction(b.id);
+        va = actA.datetime || '9999-99-99'; vb = actB.datetime || '9999-99-99';
         return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+      } else if (sortCol === 'action') {
+        const actA = getCompanyNextAction(a.id);
+        const actB = getCompanyNextAction(b.id);
+        va = actA.title || ''; vb = actB.title || '';
+        return sortAsc ? va.localeCompare(vb, 'ja') : vb.localeCompare(va, 'ja');
+      } else {
+        va = a.popRank || 9999; vb = b.popRank || 9999;
       }
       return sortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
     });
@@ -3274,48 +4654,100 @@
     if (activeArr) activeArr.textContent = sortAsc ? '▲' : '▼';
 
     if (added.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:48px 16px;color:var(--sub);font-size:13px">選考管理中の企業はありません。「企業DB」から企業を追加してください</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:56px 16px;color:var(--sub);font-size:13px">選考管理中の企業はありません。「企業DB」から志望企業を追加してください。</td></tr>';
+      document.getElementById('listShown').textContent = '0';
       return;
     }
 
     tbody.innerHTML = added.map(c => {
+      const nextAct = getCompanyNextAction(c.id);
       const st = stageMap[c.stage] || stageMap.watch;
-      const dueInfo = getDueStatus(c);
-      const size = sizeLabel(c);
-      const popBadgeHtml = c.popBadge ? `<span style="display:inline-flex;align-items:center;justify-content:center;font-size:10px;height:19px;padding:0 6px;margin-left:6px;border-radius:5px;background:rgba(217,178,95,.18);color:var(--gold-2);border:1px solid rgba(217,178,95,.4);font-weight:700;line-height:1;vertical-align:middle">${c.popBadge}</span>` : '';
+      const initial = (c.name || '企').slice(0, 1);
+      const popBadgeHtml = c.popBadge ? `<span style="font-size:10px;padding:1px 6px;margin-left:5px;border-radius:4px;background:rgba(217,178,95,.18);color:var(--gold-2);border:1px solid rgba(217,178,95,.4);font-weight:700">${c.popBadge}</span>` : '';
+
+      // Next Action HTML
+      let actionHtml = '';
+      if (nextAct.hasEvent && nextAct.event) {
+        actionHtml = `
+          <div class="action-col-cell">
+            <div style="display:flex;align-items:center;gap:6px">
+              ${renderEventTypeBadge(nextAct.type)}
+              <span style="font-weight:800;font-size:13px;color:var(--ink);">${nextAct.title}</span>
+            </div>
+            ${nextAct.event.memo ? `<div style="font-size:11px;color:var(--sub);margin-top:2px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${nextAct.event.memo}</div>` : ''}
+          </div>
+        `;
+      } else if (nextAct.title && nextAct.title !== '予定なし') {
+        actionHtml = `
+          <div class="action-col-cell">
+            <div style="display:flex;align-items:center;gap:6px">
+              ${renderEventTypeBadge(nextAct.type)}
+              <span style="font-weight:700;font-size:13px">${nextAct.title}</span>
+            </div>
+          </div>
+        `;
+      } else {
+        actionHtml = `
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="color:var(--muted);font-size:12px">予定なし</span>
+            <button class="btn-sm-ghost" style="padding:2px 6px;font-size:10.5px;color:var(--cyan);border-color:rgba(79,216,232,.3)" onclick="event.stopPropagation();openEventModal(null, '${c.id}')">＋予定</button>
+          </div>
+        `;
+      }
+
+      // Due HTML
+      let dueHtml = '';
+      if (nextAct.dueText && nextAct.dueText !== '—') {
+        dueHtml = `
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font-weight:800;font-size:13px;color:var(--ink)">${nextAct.dueText}</span>
+            ${nextAct.badgeText ? `<span class="badge-due-${nextAct.badgeCls}">${nextAct.badgeText}</span>` : ''}
+          </div>
+        `;
+      } else {
+        dueHtml = `<span style="color:var(--muted);font-size:12px">—</span>`;
+      }
+
+      // Memo / Link HTML
+      const memoItems = [];
+      if (c.myPageUrl) {
+        memoItems.push(`<button class="btn-sm-ghost" style="font-size:11px;padding:2px 7px;color:var(--cyan);border-color:rgba(79,216,232,.3)" onclick="event.stopPropagation();openExternalUrl('${c.myPageUrl}')">↗ MyPage</button>`);
+      }
+      if (c.myPageId) {
+        memoItems.push(`<span style="font-size:11px;color:var(--sub)" title="ログインID: ${c.myPageId}">ID: ${c.myPageId}</span>`);
+      }
+      if (c.tags && c.tags.length) {
+        memoItems.push(`<span class="tag" style="font-size:10px;height:18px;padding:0 5px">${c.tags[0]}</span>`);
+      }
+      const memoHtml = memoItems.length ? `<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${memoItems.join('')}</div>` : `<span style="color:var(--muted);font-size:11.5px">—</span>`;
+
       return `
         <tr onclick="openDetailModal('${c.id}')">
           <td>
-            <div class="company">
+            <div class="table-company-cell">
               ${logoHtml(c)}
               <div>
-                <div class="name">${c.name} ${popBadgeHtml} ${c.isCustom ? `<span style="font-size:10px;color:var(--gold-2)">[手動]</span>` : ''}</div>
-                <div class="url">${c.domain || ''}</div>
+                <div class="name">${c.name} ${popBadgeHtml}</div>
+                <div class="sub-meta">${catOf(c)} ・ ${c.sub || '—'}</div>
               </div>
             </div>
           </td>
-          <td><span class="pill ind">${catOf(c)}</span><div style="color:var(--sub);font-size:11px;margin-top:3px">${c.sub || '—'}</div></td>
-          <td>${size ? `<span class="pill size">${size}</span>` : ''} <span style="font-size:11.5px;color:var(--sub)">${fmtEmp(c)}</span></td>
-          <td style="color:var(--gold-2);font-weight:700">${fmtAnnual(c)}</td>
-          <td>
-            <div style="font-size:12px"><span style="color:var(--sub);font-size:10px">大卒:</span> <b>${fmtPay(c)}</b></div>
-            <div style="font-size:11px;color:var(--sub);margin-top:2px"><span style="font-size:10px">院卒:</span> <b style="color:var(--ink)">${fmtPayMaster(c)}</b></div>
-          </td>
+          <td>${actionHtml}</td>
+          <td>${dueHtml}</td>
           <td onclick="event.stopPropagation()">
-            <select class="toolbar-select" style="font-size:11.5px;padding:4px 8px" onchange="onTableStageChange('${c.id}', this.value)">
+            <select class="toolbar-select" style="font-size:12px;padding:4px 8px;border-radius:8px" onchange="onTableStageChange('${c.id}', this.value)">
               ${stages.map(s => `<option value="${s.key}" ${s.key === c.stage ? 'selected' : ''}>${s.label}</option>`).join('')}
             </select>
           </td>
-          <td>
-            <span class="${dueInfo.cls ? `due ${dueInfo.cls}` : 'due'}">${dueInfo.text || '—'}</span>
-            ${dueInfo.badge ? `<span style="font-size:10.5px;margin-left:4px" class="${dueInfo.cls}">${dueInfo.badge}</span>` : ''}
-          </td>
+          <td onclick="event.stopPropagation()">${memoHtml}</td>
           <td class="row-actions" onclick="event.stopPropagation()">
-            <button class="action-icon-btn" onclick="openDetailModal('${c.id}')" title="詳細・面接ノート編集">✏️</button>
+            <button class="action-icon-btn" onclick="openDetailModal('${c.id}')" title="詳細・タイムライン">✏️</button>
+            <button class="action-icon-btn" onclick="openEventModal(null, '${c.id}')" title="予定を追加" style="color:var(--cyan)">📅＋</button>
             <button class="action-icon-btn delete" onclick="toggleAdd('${c.id}', event)" title="選考リストから外す">✕</button>
           </td>
-        </tr>`;
-    }).join('') || `<tr><td colspan="8" style="color:var(--sub);padding:40px;text-align:center">選考管理中の企業はありません。「企業DB」から気になる会社を追加してください。</td></tr>`;
+        </tr>
+      `;
+    }).join('');
 
     document.getElementById('listShown').textContent = catalog.filter(c => c.added).length;
   }
@@ -3342,7 +4774,310 @@
   // ===================== VIEW 4: ダッシュボード =====================
   const DONUT_COLORS = ['#8b7bff','#4ee39a','#f4d489','#ff7eb6','#4fd8e8','#a100ff','#7fb0ff','#ff9f6b'];
 
+  
+  // =========================================================================
+  // DASHBOARD BUILT-IN CALENDAR LOGIC
+  // =========================================================================
+  let calYear = 2026;
+  let calMonth = 4; // 0-indexed (4 = May)
+  let selectedCalDate = null;
+
+  function initCalendarState() {
+    // If events exist, default to the month of the first upcoming event
+    if (selectionEvents.length) {
+      const sorted = [...selectionEvents].filter(e => e.due || e.datetime).sort((a,b) => (a.due||a.datetime||'').localeCompare(b.due||b.datetime||''));
+      if (sorted.length) {
+        const dStr = sorted[0].due || sorted[0].datetime;
+        const d = new Date(dStr.replace(' ', 'T'));
+        if (!isNaN(d.getTime())) {
+          calYear = d.getFullYear();
+          calMonth = d.getMonth();
+          selectedCalDate = dStr.slice(0, 10);
+          return;
+        }
+      }
+    }
+    const now = new Date();
+    calYear = now.getFullYear();
+    calMonth = now.getMonth();
+    const mm = String(calMonth + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    selectedCalDate = `${calYear}-${mm}-${dd}`;
+  }
+
+  function navCalendar(delta) {
+    calMonth += delta;
+    if (calMonth > 11) {
+      calMonth = 0;
+      calYear++;
+    } else if (calMonth < 0) {
+      calMonth = 11;
+      calYear--;
+    }
+    renderCalendar();
+  }
+
+  function resetCalendarToCurrent() {
+    const now = new Date();
+    calYear = now.getFullYear();
+    calMonth = now.getMonth();
+    const mm = String(calMonth + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    selectedCalDate = `${calYear}-${mm}-${dd}`;
+    renderCalendar();
+  }
+
+  function selectCalendarDate(dateStr) {
+    selectedCalDate = dateStr;
+    renderCalendar();
+  }
+
+  function onCalendarAddEventClick() {
+    openEventModal(null, null);
+    if (selectedCalDate) {
+      setTimeout(() => {
+        const dt = document.getElementById('evDatetime');
+        if (dt) dt.value = selectedCalDate + ' 12:00';
+      }, 50);
+    }
+  }
+
+  function renderCalendar() {
+    const gridEl = document.getElementById('calDaysGrid');
+    const monthLabel = document.getElementById('calCurrentMonthLabel');
+    const countEl = document.getElementById('calMonthEventCount');
+    if (!gridEl || !monthLabel) return;
+
+    monthLabel.textContent = `${calYear}年 ${calMonth + 1}月`;
+
+    // Gather all events mapped by YYYY-MM-DD
+    const eventsByDate = {};
+    let monthEventTotal = 0;
+
+    // From selectionEvents
+    selectionEvents.forEach(ev => {
+      const dt = ev.due || ev.datetime;
+      if (!dt) return;
+      const dateKey = dt.slice(0, 10);
+      if (!eventsByDate[dateKey]) eventsByDate[dateKey] = [];
+      eventsByDate[dateKey].push({
+        id: ev.id,
+        companyId: ev.companyId,
+        title: ev.title,
+        type: ev.stage || ev.type || 'other',
+        time: dt.length > 10 ? dt.slice(11, 16) : '',
+        memo: ev.notes || ev.dueLabel || ev.memo || '',
+        status: ev.status || 'upcoming'
+      });
+    });
+
+    // From added companies with c.due if not already mapped
+    catalog.filter(c => c.added && c.due).forEach(c => {
+      const dKey = c.due.slice(0, 10);
+      if (!eventsByDate[dKey]) eventsByDate[dKey] = [];
+      const alreadyHas = eventsByDate[dKey].some(e => e.companyId === c.id);
+      if (!alreadyHas) {
+        eventsByDate[dKey].push({
+          id: 'comp_due_' + c.id,
+          companyId: c.id,
+          title: c.dueLabel || '選考締切',
+          type: c.stage || 'other',
+          time: c.due.length > 10 ? c.due.slice(11, 16) : '',
+          memo: c.dueLabel || '',
+          status: 'upcoming'
+        });
+      }
+    });
+
+    // Auto-select first event date in month if none selected or selection is outside current month
+    const curMonthPrefix = `${calYear}-${String(calMonth + 1).padStart(2, '0')}`;
+    if (!selectedCalDate || !selectedCalDate.startsWith(curMonthPrefix)) {
+      const datesInMonth = Object.keys(eventsByDate).filter(d => d.startsWith(curMonthPrefix));
+      if (datesInMonth.length) {
+        datesInMonth.sort();
+        selectedCalDate = datesInMonth[0];
+      } else {
+        selectedCalDate = `${curMonthPrefix}-01`;
+      }
+    }
+
+        // First day of month & days in month
+    const firstDayIndex = new Date(calYear, calMonth, 1).getDay(); // 0 = Sun
+    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+    const daysInPrevMonth = new Date(calYear, calMonth, 0).getDate();
+
+    // Check today string
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+    let cellsHtml = '';
+
+    // Prev month padding days
+    for (let i = firstDayIndex - 1; i >= 0; i--) {
+      const dayNum = daysInPrevMonth - i;
+      const prevM = calMonth === 0 ? 12 : calMonth;
+      const prevY = calMonth === 0 ? calYear - 1 : calYear;
+      const dStr = `${prevY}-${String(prevM).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+      const dayEvents = eventsByDate[dStr] || [];
+      const isSel = selectedCalDate === dStr ? ' is-selected' : '';
+
+      cellsHtml += `
+        <div class="cal-day-cell other-month${isSel}" onclick="selectCalendarDate('${dStr}')">
+          <div class="cal-day-top">
+            <span class="d-num">${dayNum}</span>
+          </div>
+          <div class="cal-day-events">
+            ${dayEvents.slice(0, 2).map(ev => renderCalEventPill(ev)).join('')}
+            ${dayEvents.length > 2 ? (() => {
+        const moreTitles = dayEvents.slice(2).map(e => `• [${e.type || '予定'}] ${(catalog.find(x => x.id === e.companyId)?.name || '企業')}: ${e.title} ${e.time || ''}`).join('\n');
+        return `<span class="cal-more-pill" title="${moreTitles}" onclick="event.stopPropagation();selectCalendarDate('${dStr}')">+${dayEvents.length - 2}件</span>`;
+      })() : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    // Current month days
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dStr = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const dayEvents = eventsByDate[dStr] || [];
+      monthEventTotal += dayEvents.length;
+
+      const isToday = dStr === todayStr ? ' is-today' : '';
+      const isSel = selectedCalDate === dStr ? ' is-selected' : '';
+
+      cellsHtml += `
+        <div class="cal-day-cell${isToday}${isSel}" onclick="selectCalendarDate('${dStr}')">
+          <div class="cal-day-top">
+            <span class="d-num">${d}</span>
+            ${dayEvents.length ? `<span class="badge-count" style="font-size:9px;padding:0 4px">${dayEvents.length}</span>` : ''}
+          </div>
+          <div class="cal-day-events">
+            ${dayEvents.slice(0, 2).map(ev => renderCalEventPill(ev)).join('')}
+            ${dayEvents.length > 2 ? `<span style="font-size:9.5px;color:var(--cyan)">+${dayEvents.length - 2}件</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    // Next month padding days to fill 35 or 42 grid cells
+    const totalRendered = firstDayIndex + daysInMonth;
+    const targetTotal = totalRendered <= 35 ? 35 : 42;
+    const nextDays = targetTotal - totalRendered;
+    for (let d = 1; d <= nextDays; d++) {
+      const nextM = calMonth === 11 ? 1 : calMonth + 2;
+      const nextY = calMonth === 11 ? calYear + 1 : calYear;
+      const dStr = `${nextY}-${String(nextM).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const dayEvents = eventsByDate[dStr] || [];
+      const isSel = selectedCalDate === dStr ? ' is-selected' : '';
+
+      cellsHtml += `
+        <div class="cal-day-cell other-month${isSel}" onclick="selectCalendarDate('${dStr}')">
+          <div class="cal-day-top">
+            <span class="d-num">${d}</span>
+          </div>
+          <div class="cal-day-events">
+            ${dayEvents.slice(0, 2).map(ev => renderCalEventPill(ev)).join('')}
+            ${dayEvents.length > 2 ? (() => {
+        const moreTitles = dayEvents.slice(2).map(e => `• [${e.type || '予定'}] ${(catalog.find(x => x.id === e.companyId)?.name || '企業')}: ${e.title} ${e.time || ''}`).join('\n');
+        return `<span class="cal-more-pill" title="${moreTitles}" onclick="event.stopPropagation();selectCalendarDate('${dStr}')">+${dayEvents.length - 2}件</span>`;
+      })() : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    gridEl.innerHTML = cellsHtml;
+    if (countEl) countEl.textContent = `${monthEventTotal}件`;
+
+    // Render Sidebar for selected date
+    renderCalSidebar(selectedCalDate, eventsByDate[selectedCalDate] || []);
+  }
+
+  function renderCalEventPill(ev) {
+    const comp = catalog.find(x => x.id === ev.companyId);
+    const compName = comp ? comp.name : '企業';
+    let typeClass = 'type-other';
+    let typeLabel = ev.type || '予定';
+    const tLower = (ev.type || '').toLowerCase();
+    if (tLower.includes('es') || tLower.includes('エントリー')) {
+      typeClass = 'type-es';
+      typeLabel = 'ES';
+    } else if (tLower.includes('面接') || tLower.includes('first') || tLower.includes('final') || tLower.includes('interview')) {
+      typeClass = 'type-interview';
+      typeLabel = '面接';
+    } else if (tLower.includes('test') || tLower.includes('適性') || tLower.includes('spi') || tLower.includes('web')) {
+      typeClass = 'type-test';
+      typeLabel = 'テスト';
+    }
+
+    return `
+      <div class="cal-event-pill ${typeClass}" onclick="event.stopPropagation();onCalPillClick('${ev.companyId}')" title="${compName}: ${ev.title} ${ev.time}">
+        [${typeLabel}] ${compName}
+      </div>
+    `;
+  }
+
+  function onCalPillClick(companyId) {
+    if (companyId) {
+      openDetailModal(companyId);
+    }
+  }
+
+  function renderCalSidebar(dateStr, events) {
+    const labelEl = document.getElementById('calSelectedDateLabel');
+    const listEl = document.getElementById('calSelectedDateList');
+    if (!labelEl || !listEl) return;
+
+    if (dateStr) {
+      const parts = dateStr.split('-');
+      const dObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+      const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
+      const dow = daysOfWeek[dObj.getDay()] || '';
+      labelEl.textContent = `${parseInt(parts[1])}月${parseInt(parts[2])}日 (${dow}) の予定`;
+    } else {
+      labelEl.textContent = '選択した日の予定';
+    }
+
+    if (!events.length) {
+      listEl.innerHTML = `
+        <div style="padding:28px 12px;text-align:center;color:var(--sub);font-size:12px;">
+          この日の選考予定はありません。<br>
+          <span style="font-size:11px;color:var(--muted)">右上の「＋ 予定追加」から追加できます</span>
+        </div>
+      `;
+      return;
+    }
+
+    listEl.innerHTML = events.map(ev => {
+      const comp = catalog.find(x => x.id === ev.companyId);
+      const compName = comp ? comp.name : '企業名未定';
+      let typeBadge = '';
+      const tLower = (ev.type || '').toLowerCase();
+      if (tLower.includes('es')) {
+        typeBadge = '<span class="es-type-badge type-motiv" style="font-size:10px;padding:1px 6px">ES提出</span>';
+      } else if (tLower.includes('面接')) {
+        typeBadge = '<span class="es-type-badge type-pr" style="font-size:10px;padding:1px 6px">面接</span>';
+      } else {
+        typeBadge = '<span class="es-type-badge type-other" style="font-size:10px;padding:1px 6px">' + (ev.type || '選考') + '</span>';
+      }
+
+      return `
+        <div class="cal-side-item" onclick="openDetailModal('${ev.companyId}')">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+            <span style="font-weight:800;font-size:13px;color:var(--ink)">🏢 ${compName}</span>
+            ${typeBadge}
+          </div>
+          <div style="font-weight:700;font-size:12px;color:var(--ink)">${ev.title}</div>
+          ${ev.time ? `<div style="font-size:11px;color:var(--cyan);font-weight:700">⏰ ${ev.time}</div>` : ''}
+          ${ev.memo ? `<div style="font-size:11px;color:var(--sub);line-height:1.4">${ev.memo}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
   function renderDash() {
+    renderCalendar();
     const added = catalog.filter(c => c.added);
     const total = added.length;
     const activeKeys = ['entry','es','first','final'];
@@ -3407,16 +5142,7 @@
       return `<div class="item"><span class="sw" style="background:${col};color:${col}"></span>${cat}<span class="n">${n}</span></div>`;
     }).join('') || `<div style="color:var(--sub)">データがありません</div>`;
 
-    // 企業規模分布
-    const sizeBuckets = { '大企業': 0, '中堅': 0, '中小': 0, 'ベンチャー規模': 0, '不明': 0 };
-    added.forEach(c => { const s = sizeLabel(c); sizeBuckets[s || '不明']++; });
-    const barCols = [['大企業','大企業'],['中堅','中堅'],['中小','中小'],['ベンチャー規模','ベンチャー'],['不明','規模不明']];
-    const maxBar = Math.max(1, ...barCols.map(([k]) => sizeBuckets[k]));
-    document.getElementById('barchart').innerHTML = barCols.map(([k, cap]) => {
-      const v = sizeBuckets[k];
-      const h = Math.round(v / maxBar * 100);
-      return `<div class="bcol"><div class="num">${v}</div><div class="b" style="height:${v ? Math.max(h, 4) : 0}%"></div><div class="cap">${cap}</div></div>`;
-    }).join('');
+
 
     // 直近締切
     const withDue = added.filter(c => c.due).slice();
@@ -3497,6 +5223,1761 @@
     showToast('タスクを追加しました');
   }
 
+
+  // =========================================================================
+  // V3 CORE DATA MODELS: SelectionEvent · ESEntry · StoryEntry & Migration
+  // =========================================================================
+
+  function detectEventType(label) {
+    if (!label) return 'その他';
+    const s = String(label).toUpperCase();
+    if (s.includes('ES') || s.includes('書類') || s.includes('シート') || s.includes('エントリー')) return 'ES';
+    if (s.includes('WEBテスト') || s.includes('SPI') || s.includes('テスト') || s.includes('玉手箱') || s.includes('TG-WEB') || s.includes('CAB') || s.includes('GAB')) return 'WEBテスト';
+    if (s.includes('適性')) return '適性検査';
+    if (s.includes('GD') || s.includes('グループディスカッション') || s.includes('グループワーク')) return 'GD';
+    if (s.includes('面接') || s.includes('面談')) return '面接';
+    if (s.includes('説明会') || s.includes('セミナー') || s.includes('座談会')) return '説明会';
+    return 'その他';
+  }
+
+  function renderEventTypeBadge(type) {
+    const map = {
+      'ES': { cls: 'type-es', text: 'ES' },
+      'WEBテスト': { cls: 'type-webtest', text: 'WEBテスト' },
+      '適性検査': { cls: 'type-aptitude', text: '適性検査' },
+      'GD': { cls: 'type-gd', text: 'GD' },
+      '面接': { cls: 'type-interview', text: '面接' },
+      '説明会': { cls: 'type-briefing', text: '説明会' },
+      'その他': { cls: 'type-other', text: 'その他' }
+    };
+    const item = map[type] || map['その他'];
+    return `<span class="ev-type-badge ${item.cls}">${item.text}</span>`;
+  }
+
+  function getCompanyNextAction(companyId) {
+    const events = selectionEvents.filter(e => e.companyId === companyId && e.status === 'upcoming');
+    if (!events.length) {
+      const c = catalog.find(x => x.id === companyId);
+      if (c && c.due) {
+        const dueInfo = getDueStatus(c);
+        return {
+          hasEvent: false,
+          type: detectEventType(c.dueLabel),
+          title: c.dueLabel || '選考締切',
+          datetime: c.due,
+          dueText: dueInfo.text || c.due,
+          badgeCls: dueInfo.cls || 'normal',
+          badgeText: dueInfo.badge || '',
+          days: dueInfo.days
+        };
+      }
+      return {
+        hasEvent: false,
+        type: null,
+        title: '予定なし',
+        datetime: null,
+        dueText: '—',
+        badgeCls: '',
+        badgeText: '',
+        days: null
+      };
+    }
+
+    // Sort by datetime ascending
+    events.sort((a, b) => (a.datetime || '').localeCompare(b.datetime || ''));
+    const nextEv = events[0];
+    const dtStr = nextEv.datetime || '';
+    const dateOnly = dtStr.split('T')[0].split(' ')[0];
+    const timeOnly = (dtStr.includes('T') || dtStr.includes(' ')) ? (dtStr.split('T')[1] || dtStr.split(' ')[1]).slice(0, 5) : '';
+
+    let days = null;
+    let badgeCls = 'normal';
+    let badgeText = '';
+    if (dateOnly) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const parts = dateOnly.split('-');
+      if (parts.length === 3) {
+        const target = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        target.setHours(0, 0, 0, 0);
+        days = Math.round((target - today) / (1000 * 60 * 60 * 24));
+        if (days < 0) {
+          badgeCls = 'past';
+          badgeText = '期限切';
+        } else if (days === 0) {
+          badgeCls = 'today';
+          badgeText = '本日締切';
+        } else if (days <= 3) {
+          badgeCls = 'urgent';
+          badgeText = `あと${days}日`;
+        } else if (days <= 7) {
+          badgeCls = 'soon';
+          badgeText = `あと${days}日`;
+        } else {
+          badgeCls = 'normal';
+          badgeText = `あと${days}日`;
+        }
+      }
+    }
+
+    let formattedDate = dateOnly;
+    if (dateOnly) {
+      const p = dateOnly.split('-');
+      if (p.length === 3) {
+        formattedDate = `${parseInt(p[1])}/${parseInt(p[2])}`;
+        if (timeOnly) formattedDate += ` ${timeOnly}`;
+      }
+    }
+
+    return {
+      hasEvent: true,
+      event: nextEv,
+      type: nextEv.type,
+      title: nextEv.title,
+      datetime: nextEv.datetime,
+      dueText: formattedDate,
+      badgeCls,
+      badgeText,
+      days
+    };
+  }
+
+  // ---- Migration to V3 State ----
+  function migrateToV3State(cat) {
+    console.log('[Migration] Starting migrateToV3State...');
+    let migratedEventsCount = 0;
+    let migratedEsCount = 0;
+
+    // 1. Migrate deadlines from companies into SelectionEvent
+    cat.forEach(c => {
+      if (c.due && !selectionEvents.some(e => e.companyId === c.id)) {
+        selectionEvents.push({
+          id: 'ev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+          companyId: c.id,
+          title: c.dueLabel || '選考締切',
+          type: detectEventType(c.dueLabel),
+          datetime: c.due,
+          status: 'upcoming',
+          memo: '',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+        migratedEventsCount++;
+      }
+
+      // 2. Migrate existing notes into ES Entry
+      if (c.noteEs && !esList.some(e => e.companyId === c.id && e.tags.includes('ES控え'))) {
+        esList.push({
+          id: 'es_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+          companyId: c.id,
+          title: `${c.name} 本選考ES`,
+          question: 'ES設問・提出テキスト控え',
+          answer: c.noteEs,
+          characterLimit: 400,
+          status: 'submitted',
+          linkedStoryIds: [],
+          tags: ['ES控え'],
+          submittedAt: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+        migratedEsCount++;
+      }
+      if (c.noteMotiv && !esList.some(e => e.companyId === c.id && e.tags.includes('志望動機'))) {
+        esList.push({
+          id: 'es_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+          companyId: c.id,
+          title: `${c.name} 志望動機・企業研究`,
+          question: '志望理由および他社との差別化ポイント',
+          answer: c.noteMotiv,
+          characterLimit: null,
+          status: 'draft',
+          linkedStoryIds: [],
+          tags: ['志望動機'],
+          submittedAt: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+        migratedEsCount++;
+      }
+    });
+
+    // 3. Seed Story Bank with STAR models if empty
+    if (!storyBank.length) {
+      storyBank.push({
+        id: 'story_seed_1',
+        title: '長期インターンでの新規法人開拓営業（成約率2.2倍達成）',
+        category: 'Internship',
+        summary: 'HRTechスタートアップにて、失注分析から顧客ペイン別の提案型営業への刷新を主導し、チーム全体の成約率を2.2倍に向上させた経験。',
+        situation: '大学3年次に参画したBtoB向けHRTechサービスにて、月間架電数に対して商談獲得率が3%と低迷。従来の会社説明中心の営業スタイルでは差別化が図れず、顧客の課題感と乖離が生じていた。',
+        task: '個人目標として月間商談獲得15件の達成、および営業チーム5名の成約率改善を推進する役割を担った。',
+        action: '1) 過去の失注理由40件を詳細に分析し、業界・企業規模ごとの課題仮説集を策定。2) 従来のサービス紹介から、顧客の採用ボトルネックを特定するヒアリング主導の課題解決型ピッチへ転換。3) 毎週のロールプレイングを主導し、成功パターンをチーム全員に共有・型化した。',
+        result: '個人の商談獲得数が月間24件（目標比160%）を達成。チーム全体の成約率も3%から6.8%（2.2倍）へ大幅改善し、半期MVPを受賞した。',
+        learning: '「顧客の本質的課題に寄り添う仮説思考」と「組織へ仕組みとして定着させる巻き込み力」の重要性を体得した。',
+        strengths: ['課題解決力', '主体性', '巻き込み力', '折衝力'],
+        tags: ['BtoB', 'SaaS', '営業', 'リーダーシップ'],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      });
+
+      storyBank.push({
+        id: 'story_seed_2',
+        title: '学園祭実行委員会での協賛金獲得（前年比140%達成）',
+        category: 'Extracurricular',
+        summary: '学園祭実行委員会の渉外リーダーとして、地域企業120社への提案を刷新し、過去最高額の協賛金350万円を獲得。',
+        situation: 'コロナ禍以降、地元商店街からの協賛金が減少傾向にあり、企画予算が不足する危機に直面。従来の電話帳ローラー作戦では協賛継続が困難であった。',
+        task: '渉外局員15名をリードし、協賛金目標300万円（前年比120%）の必達を目指した。',
+        action: '単なる寄付依頼ではなく「学生への企業認知拡大・新卒採用接点」という双方のメリットを提示した協賛パッケージ（SNSプロモーション・ブース出展枠等）を新規設計。メンバー向けに丁寧なヒアリング研修を実施した。',
+        result: '新規協賛企業を28社開拓し、総協賛金額350万円（前年比140%・目標比116%）を達成。大型企画を無事完遂させた。',
+        learning: '相手のメリットを起点に新しい価値を共創する「交渉・提案力」と、メンバーの意欲を引き出す目標管理の真髄を学んだ。',
+        strengths: ['企画提案力', '折衝力', '粘り強さ', 'リーダーシップ'],
+        tags: ['学生団体', '渉外', 'チームマネジメント'],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      });
+      console.log('[Migration] Seeded 2 STAR stories into storyBank');
+    }
+
+    // 4. Seed sample events and link sample ES for target demo companies if empty
+    const msolComp = cat.find(x => x.id === 'c_msol' || x.name.includes('マネジメントソリューションズ'));
+    if (msolComp) {
+      msolComp.added = true;
+      if (!selectionEvents.some(e => e.companyId === msolComp.id)) {
+        selectionEvents.push(
+          { id: 'ev_msol_1', companyId: msolComp.id, title: '本選考 ES提出', type: 'ES', datetime: '2026-05-18 12:00', status: 'completed', memo: 'マイページから提出完了', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+          { id: 'ev_msol_2', companyId: msolComp.id, title: 'WEBテスト（SPI受検）', type: 'WEBテスト', datetime: '2026-05-20 18:00', status: 'completed', memo: 'テストセンター受検済', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+          { id: 'ev_msol_3', companyId: msolComp.id, title: '一次面接（オンライン）', type: '面接', datetime: '2026-05-28 15:00', status: 'upcoming', memo: 'Zoomリンクは前日にメール送付。学生時代に注力したこと深掘り対策', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
+        );
+      }
+      if (!esList.some(e => e.companyId === msolComp.id)) {
+        esList.push({
+          id: 'es_msol_sample',
+          companyId: msolComp.id,
+          title: 'MSOL 自己PR 400字',
+          question: 'あなたがこれまでに最も情熱を持って取り組み、成果をあげた経験について述べてください。（400字以内）',
+          answer: '長期インターン先のBtoB営業において、顧客課題に寄り添う提案プロセスの刷新に取り組みました。当時、商談獲得率が3%と低迷していたため、過去40件の失注データを分析し業界別のペイン仮説集を作成。従来のサービス紹介から課題解決型アプローチへ転換しました。さらにチーム内で週次ロープレを主導し、ノウハウを横展開した結果、個人の商談獲得数は目標比160%を達成し、チーム全体の成約率も2.2倍に向上しました。この経験で培った「本質的課題の特定力」と「周囲を巻き込む推進力」を活かし、貴社のPMOコンサルタントとして顧客の変革を支え抜きます。',
+          characterLimit: 400,
+          status: 'draft',
+          linkedStoryIds: ['story_seed_1'],
+          tags: ['自己PR', 'ガクチカ', '営業'],
+          submittedAt: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+      }
+    }
+
+    const tcsComp = cat.find(x => x.id === 'c_tcs');
+    if (tcsComp) {
+      tcsComp.added = true;
+      if (!selectionEvents.some(e => e.companyId === tcsComp.id)) {
+        selectionEvents.push(
+          { id: 'ev_tcs_1', companyId: tcsComp.id, title: 'エントリーシート提出', type: 'ES', datetime: '2026-05-22 23:59', status: 'upcoming', memo: '志望動機300字・自己PR400字', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
+        );
+      }
+      if (!esList.some(e => e.companyId === tcsComp.id)) {
+        esList.push({
+          id: 'es_tcs_sample',
+          companyId: tcsComp.id,
+          title: '日本TCS 志望動機 300字',
+          question: 'TCSを志望する理由と、学生時代に培った強みをどう活かすかを記述してください。（300字）',
+          answer: '世界最大級のグローバルIT知見とTataグループの総合力を背景に、日系企業の真のDX推進を支える貴社の姿勢に強く共感しました。学生時代に長期インターンで営業プロセスの再構築を主導した経験から、困難な状況でも事実に基づいて課題を構造化し、周囲と連携して解決に導く力を培いました。多様なバックグラウンドを持つプロフェッショナルと協働し、日本企業のグローバル競争力強化に貢献します。',
+          characterLimit: 300,
+          status: 'submitted',
+          linkedStoryIds: ['story_seed_1'],
+          tags: ['志望動機', 'IT', 'グローバル'],
+          submittedAt: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+      }
+    }
+
+    const deloitteComp = cat.find(x => x.id === 'c_deloitte');
+    if (deloitteComp) {
+      deloitteComp.added = true;
+      if (!selectionEvents.some(e => e.companyId === deloitteComp.id)) {
+        selectionEvents.push(
+          { id: 'ev_deloitte_1', companyId: deloitteComp.id, title: '春採用 本選考ES・適性検査', type: 'ES', datetime: '2026-05-25 17:00', status: 'upcoming', memo: 'TG-WEBテスト受験も同日時まで', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
+        );
+      }
+    }
+
+    console.log(`[Migration] Finished. Events migrated: ${migratedEventsCount}, ES migrated: ${migratedEsCount}`);
+  }
+
+  // ---- Enhanced loadAll & saveAll ----
+  function loadAllV3() {
+    try {
+      const fullCatalog = (window.OFFICIAL_CATALOG_1500 && window.OFFICIAL_CATALOG_1500.length)
+        ? window.OFFICIAL_CATALOG_1500
+        : DEFAULT_CATALOG;
+
+      // Ensure MSOL is in catalog
+      const msolInFull = fullCatalog.find(x => x.id === 'c_msol' || x.name.includes('マネジメントソリューションズ'));
+      if (!msolInFull) {
+        fullCatalog.unshift({
+          id:'c_msol', name:'株式会社マネジメントソリューションズ', code:'7033', domain:'mgmtsol.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'PMO / 経営・ITマネジメントコンサルティング', emp:950, empNote:'連結', payBachelor:300000, payMaster:320000, avgAnnual:830, color:'#8b7bff', added:true, stage:'es', loc:'東京', tags:['PMO', '東証プライム', 'コンサル', '急成長'], due:'2026-05-28', dueLabel:'一次面接', dueLv:'soon', popRank:180, popBadge:'TOP 300'
+        });
+      }
+
+      const savedCatalogStr = localStorage.getItem(STORAGE_KEY);
+      if (savedCatalogStr) {
+        let savedCatalog = JSON.parse(savedCatalogStr);
+        const userStateMap = new Map();
+        savedCatalog.forEach(c => {
+          if (c.added || (c.stage && c.stage !== 'watch') || c.due || c.dueLabel || c.myPageUrl || c.myPageId || c.noteMotiv || c.noteEs || c.noteInterview || c.isCustom) {
+            userStateMap.set(c.id, c);
+          }
+        });
+        catalog = fullCatalog.map(c => {
+          if (userStateMap.has(c.id)) {
+            const u = userStateMap.get(c.id);
+            return Object.assign({}, c, {
+              added: u.added,
+              stage: u.stage || c.stage,
+              due: u.due !== undefined ? u.due : c.due,
+              dueLabel: u.dueLabel !== undefined ? u.dueLabel : c.dueLabel,
+              dueLv: u.dueLv !== undefined ? u.dueLv : c.dueLv,
+              myPageUrl: u.myPageUrl || '',
+              myPageId: u.myPageId || '',
+              noteMotiv: u.noteMotiv || '',
+              noteEs: u.noteEs || '',
+              noteInterview: u.noteInterview || '',
+              tags: (u.tags && u.tags.length) ? u.tags : c.tags,
+            });
+          }
+          return c;
+        });
+        savedCatalog.forEach(c => {
+          if (c.isCustom && !catalog.find(x => x.id === c.id)) {
+            catalog.unshift(c);
+          }
+        });
+      } else {
+        catalog = JSON.parse(JSON.stringify(fullCatalog));
+      }
+
+      // Load Selection Events
+      const savedEvents = localStorage.getItem(EVENTS_KEY);
+      if (savedEvents) {
+        selectionEvents = JSON.parse(savedEvents);
+      }
+
+      // Load ES List
+      const savedEs = localStorage.getItem(ES_KEY);
+      if (savedEs) {
+        esList = JSON.parse(savedEs);
+      }
+
+      // Load Story Bank
+      const savedStories = localStorage.getItem(STORIES_KEY);
+      if (savedStories) {
+        storyBank = JSON.parse(savedStories);
+      }
+
+      // If any of the V3 arrays is empty, run migration
+      if (!selectionEvents.length || !esList.length || !storyBank.length) {
+        migrateToV3State(catalog);
+      }
+
+      const savedSettings = localStorage.getItem(SETTINGS_KEY);
+      if (savedSettings) currentSettings = Object.assign(currentSettings, JSON.parse(savedSettings));
+      const savedTasks = localStorage.getItem(TASKS_KEY);
+      if (savedTasks) currentTasks = JSON.parse(savedTasks);
+      else currentTasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
+
+      saveAllV3();
+    } catch (e) {
+      console.error('Storage load error:', e);
+      catalog = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
+      migrateToV3State(catalog);
+    }
+  }
+
+  function saveAllV3() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(currentSettings));
+      localStorage.setItem(TASKS_KEY, JSON.stringify(currentTasks));
+      localStorage.setItem(EVENTS_KEY, JSON.stringify(selectionEvents));
+      localStorage.setItem(ES_KEY, JSON.stringify(esList));
+      localStorage.setItem(STORIES_KEY, JSON.stringify(storyBank));
+      updateStorageInfo();
+    } catch (e) {
+      console.error('Storage save error:', e);
+    }
+    triggerCloudSave();
+  }
+
+  // Override loadAll & saveAll
+  window.loadAll = loadAllV3;
+  window.saveAll = saveAllV3;
+
+  // =========================================================================
+  // SELECTION TIMELINE CRUD & MODAL
+  // =========================================================================
+  let currentEventEditId = null;
+
+  function openEventModal(eventId = null, companyId = null) {
+    currentEventEditId = eventId;
+    const modal = document.getElementById('eventModal');
+    const compSelect = document.getElementById('evCompanyId');
+    const titleEl = document.getElementById('evModalTitle');
+    const delBtn = document.getElementById('evDeleteBtn');
+
+    // Populate company select with all tracked/catalog companies
+    compSelect.innerHTML = '';
+    const tracked = catalog.filter(c => c.added);
+    tracked.sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+    tracked.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = c.name;
+      compSelect.appendChild(opt);
+    });
+
+    if (eventId) {
+      const ev = selectionEvents.find(x => x.id === eventId);
+      if (!ev) return;
+      titleEl.textContent = '📅 選考イベントの編集';
+      document.getElementById('evId').value = ev.id;
+      compSelect.value = ev.companyId;
+      document.getElementById('evType').value = ev.type || 'その他';
+      document.getElementById('evStatus').value = ev.status || 'upcoming';
+      document.getElementById('evTitle').value = ev.title || '';
+      
+      const dtParts = (ev.datetime || '').split('T')[0].split(' ');
+      document.getElementById('evDate').value = dtParts[0] || '';
+      const timePart = (ev.datetime || '').includes('T') ? (ev.datetime.split('T')[1] || '').slice(0, 5) : (dtParts[1] || '');
+      document.getElementById('evTime').value = timePart;
+      document.getElementById('evMemo').value = ev.memo || '';
+      if (delBtn) delBtn.style.display = 'inline-block';
+    } else {
+      titleEl.textContent = '📅 新規予定を追加';
+      document.getElementById('evId').value = '';
+      if (companyId) compSelect.value = companyId;
+      document.getElementById('evType').value = '面接';
+      document.getElementById('evStatus').value = 'upcoming';
+      document.getElementById('evTitle').value = '';
+      
+      // Default to tomorrow
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      document.getElementById('evDate').value = d.toISOString().slice(0, 10);
+      document.getElementById('evTime').value = '10:00';
+      document.getElementById('evMemo').value = '';
+      if (delBtn) delBtn.style.display = 'none';
+    }
+
+    openModal('eventModal');
+  }
+
+  function saveCurrentEvent() {
+    const compId = document.getElementById('evCompanyId').value;
+    const title = document.getElementById('evTitle').value.trim();
+    const dateVal = document.getElementById('evDate').value;
+    const timeVal = document.getElementById('evTime').value;
+    const type = document.getElementById('evType').value;
+    const status = document.getElementById('evStatus').value;
+    const memo = document.getElementById('evMemo').value.trim();
+
+    if (!compId) {
+      alert('企業を選択してください');
+      return;
+    }
+    if (!title) {
+      alert('イベント名を入力してください');
+      return;
+    }
+    if (!dateVal) {
+      alert('日付を入力してください');
+      return;
+    }
+
+    const datetime = timeVal ? `${dateVal} ${timeVal}` : dateVal;
+    const now = new Date().toISOString();
+
+    if (currentEventEditId) {
+      const ev = selectionEvents.find(x => x.id === currentEventEditId);
+      if (ev) {
+        ev.companyId = compId;
+        ev.title = title;
+        ev.type = type;
+        ev.status = status;
+        ev.datetime = datetime;
+        ev.memo = memo;
+        ev.updatedAt = now;
+      }
+    } else {
+      selectionEvents.push({
+        id: 'ev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        companyId: compId,
+        title,
+        type,
+        status,
+        datetime,
+        memo,
+        createdAt: now,
+        updatedAt: now
+      });
+    }
+
+    // Also auto-ensure the company is added to tracking
+    const comp = catalog.find(x => x.id === compId);
+    if (comp && !comp.added) {
+      comp.added = true;
+    }
+
+    saveAllV3();
+    renderAll();
+    if (currentModalComp && currentModalComp.id === compId) {
+      renderTimeline(compId);
+    }
+    closeModal('eventModal');
+    showToast('選考イベントを保存しました');
+  }
+
+  function deleteCurrentEvent() {
+    if (!currentEventEditId) return;
+    if (!confirm('この選考イベントを削除しますか？')) return;
+    const ev = selectionEvents.find(x => x.id === currentEventEditId);
+    const compId = ev ? ev.companyId : null;
+    selectionEvents = selectionEvents.filter(x => x.id !== currentEventEditId);
+    saveAllV3();
+    renderAll();
+    if (compId && currentModalComp && currentModalComp.id === compId) {
+      renderTimeline(compId);
+    }
+    closeModal('eventModal');
+    showToast('選考イベントを削除しました');
+  }
+
+  function deleteEvent(eventId, e) {
+    if (e) e.stopPropagation();
+    if (!confirm('この選考イベントを削除しますか？')) return;
+    const ev = selectionEvents.find(x => x.id === eventId);
+    const compId = ev ? ev.companyId : null;
+    selectionEvents = selectionEvents.filter(x => x.id !== eventId);
+    saveAllV3();
+    renderAll();
+    if (compId && currentModalComp && currentModalComp.id === compId) {
+      renderTimeline(compId);
+    }
+    showToast('選考イベントを削除しました');
+  }
+
+  function toggleEventStatus(eventId, e) {
+    if (e) e.stopPropagation();
+    const ev = selectionEvents.find(x => x.id === eventId);
+    if (!ev) return;
+    ev.status = ev.status === 'completed' ? 'upcoming' : 'completed';
+    ev.updatedAt = new Date().toISOString();
+    saveAllV3();
+    renderAll();
+    if (currentModalComp && currentModalComp.id === ev.companyId) {
+      renderTimeline(ev.companyId);
+    }
+    showToast(ev.status === 'completed' ? '✓ 完了にしました' : '予定に戻しました');
+  }
+
+  function renderTimeline(companyId) {
+    const container = document.getElementById('mTimelineList');
+    const countEl = document.getElementById('mTimelineCount');
+    if (!container) return;
+
+    const events = selectionEvents.filter(e => e.companyId === companyId);
+    events.sort((a, b) => (a.datetime || '').localeCompare(b.datetime || ''));
+
+    if (countEl) countEl.textContent = `${events.length}件`;
+
+    if (!events.length) {
+      container.innerHTML = `
+        <div style="padding:16px;text-align:center;color:var(--sub);font-size:12px;background:rgba(255,255,255,.02);border-radius:10px;border:1px dashed var(--glass-brd)">
+          選考日程・締切はまだ登録されていません。「＋ 予定を追加」から追加できます。
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = events.map(ev => {
+      const isDone = ev.status === 'completed';
+      const dtParts = (ev.datetime || '').split('T')[0].split(' ');
+      const datePart = dtParts[0] || '日付未定';
+      const timePart = (ev.datetime || '').includes('T') ? (ev.datetime.split('T')[1] || '').slice(0, 5) : (dtParts[1] || '');
+
+      return `
+        <div class="timeline-item ${ev.status}">
+          <button class="timeline-status-btn" onclick="toggleEventStatus('${ev.id}', event)" title="${isDone ? '完了（クリックで予定に戻す）' : '未完了（クリックで完了にする）'}">
+            ${isDone ? '✓' : ''}
+          </button>
+          <div class="timeline-dt">
+            ${datePart}
+            ${timePart ? `<small>${timePart}</small>` : ''}
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-title">
+              ${renderEventTypeBadge(ev.type)}
+              <span>${ev.title}</span>
+            </div>
+            ${ev.memo ? `<div class="timeline-memo">${ev.memo}</div>` : ''}
+          </div>
+          <div class="timeline-actions">
+            <button class="action-icon-btn" onclick="openEventModal('${ev.id}', '${companyId}')" title="編集">✏️</button>
+            <button class="action-icon-btn delete" onclick="deleteEvent('${ev.id}', event)" title="削除">✕</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderCompanyEsList(companyId) {
+    const container = document.getElementById('mCompEsList');
+    const countEl = document.getElementById('mCompEsCount');
+    if (!container) return;
+
+    const list = esList.filter(e => e.companyId === companyId);
+    list.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+
+    if (countEl) countEl.textContent = `${list.length}件`;
+
+    if (!list.length) {
+      container.innerHTML = `
+        <div style="padding:16px;text-align:center;color:var(--sub);font-size:12px;background:rgba(255,255,255,.02);border-radius:10px;border:1px dashed var(--glass-brd)">
+          この企業に紐づくESはまだありません。「＋ この企業のESを作成」から作成できます。
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = list.map(es => {
+      const len = (es.answer || '').length;
+      const limitStr = es.characterLimit ? `${len}/${es.characterLimit}字` : `${len}字`;
+      const statusBadge = es.status === 'submitted'
+        ? `<span style="color:var(--green);font-size:10px;font-weight:700">● 提出済</span>`
+        : `<span style="color:var(--gold-2);font-size:10px;font-weight:700">● 下書き</span>`;
+
+      return `
+        <div class="comp-es-card" onclick="openEsModal('${es.id}')">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <b style="font-size:13px;color:var(--ink)">${es.title}</b>
+            <div style="display:flex;align-items:center;gap:6px">
+              ${statusBadge}
+              <span class="badge-due-normal">${limitStr}</span>
+              <button class="action-icon-btn" onclick="event.stopPropagation();openEsModal('${es.id}')" title="編集">✏️</button>
+            </div>
+          </div>
+          <div style="font-size:11.5px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+            ${es.question || es.answer || '（内容未入力）'}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // =========================================================================
+  // ES DATABASE (VIEW 3) CRUD & UI (Two-Layer, Compact List, Grouping, Clone)
+  // =========================================================================
+  let esViewMode = localStorage.getItem('shukatsu_es_view_mode') || 'list'; // 'list' | 'card'
+  let esSearchQuery = '';
+  let esFilterType = 'all';
+  let esFilterIndustry = 'all';
+  let esFilterStatus = 'all';
+  let esFilterCompany = 'all';
+  let esGroupBy = 'none'; // 'none' | 'industry' | 'company' | 'type'
+  let currentEsEditId = null;
+  let currentCloneTargetCompId = null;
+
+  // Question Type detector
+  function detectEsType(es) {
+    if (es.questionType) return es.questionType;
+    const title = (es.title || '').toLowerCase();
+    const tags = (es.tags || []).join(' ').toLowerCase();
+    if (title.includes('志望動機') || title.includes('志望理由') || tags.includes('志望動機')) return '志望動機';
+    if (title.includes('ガクチカ') || title.includes('学生時代') || tags.includes('ガクチカ')) return 'ガクチカ';
+    if (title.includes('自己pr') || title.includes('自己アピール') || tags.includes('自己pr') || title.includes('強み')) return '自己PR';
+    if (title.includes('学業') || title.includes('研究') || tags.includes('研究')) return '学業・研究';
+    if (title.includes('長所') || title.includes('短所') || title.includes('挫折')) return '長所・短所';
+
+    const str = ((es.question || '') + ' ' + tags).toLowerCase();
+    if (str.includes('志望動機') || str.includes('志望理由') || str.includes('志望する理由') || str.includes('なぜ当社')) return '志望動機';
+    if (str.includes('自己pr') || str.includes('自己アピール') || str.includes('強み')) return '自己PR';
+    if (str.includes('ガクチカ') || str.includes('学生時代') || str.includes('力を入れ') || str.includes('最も熱中') || str.includes('情熱を持っ')) return 'ガクチカ';
+    if (str.includes('学業') || str.includes('研究') || str.includes('ゼミ') || str.includes('卒論')) return '学業・研究';
+    if (str.includes('短所') || str.includes('挫折') || str.includes('困難を乗り越え')) return '長所・短所';
+    return 'その他';
+  }
+
+  // Industry detector
+  function getEsIndustry(es) {
+    if (!es.companyId) return '汎用・共通';
+    const c = catalog.find(x => x.id === es.companyId);
+    if (!c) return '汎用・共通';
+    return catOf(c) || c.cat || 'その他';
+  }
+
+  // Type badge helper
+  function getEsTypeBadge(type) {
+    let cls = 'type-other';
+    if (type === '自己PR') cls = 'type-pr';
+    else if (type === 'ガクチカ') cls = 'type-gakuchika';
+    else if (type === '志望動機') cls = 'type-motiv';
+    else if (type === '学業・研究') cls = 'type-study';
+    return `<span class="es-type-badge ${cls}">${type}</span>`;
+  }
+
+  // One-click copy helper
+  function copyEsAnswer(esId, e) {
+    if (e) e.stopPropagation();
+    const es = esList.find(x => x.id === esId);
+    if (!es || !es.answer) {
+      showToast('コピーする本文がありません');
+      return;
+    }
+    const textToCopy = es.answer;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        showToast(`📋 「${es.title}」の本文をコピーしました`);
+      }).catch(() => {
+        fallbackCopyText(textToCopy, es.title);
+      });
+    } else {
+      fallbackCopyText(textToCopy, es.title);
+    }
+  }
+
+  function fallbackCopyText(text, title) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    showToast(`📋 「${title}」の本文をコピーしました`);
+  }
+
+  // View Mode switcher
+  function setEsViewMode(mode) {
+    esViewMode = mode;
+    localStorage.setItem('shukatsu_es_view_mode', mode);
+    document.getElementById('btnEsViewList')?.classList.toggle('active', mode === 'list');
+    document.getElementById('btnEsViewCard')?.classList.toggle('active', mode === 'card');
+    renderESDatabase();
+  }
+
+  // Filter handlers
+  function onEsSearchInput(val) {
+    esSearchQuery = (val || '').trim().toLowerCase();
+    const clearBtn = document.getElementById('esSearchClear');
+    if (clearBtn) clearBtn.style.display = esSearchQuery ? 'block' : 'none';
+    renderESDatabase();
+  }
+
+  function clearEsSearch() {
+    const inp = document.getElementById('esSearchInput');
+    if (inp) inp.value = '';
+    esSearchQuery = '';
+    document.getElementById('esSearchClear').style.display = 'none';
+    renderESDatabase();
+  }
+
+  function onEsTypeFilterClick(type) {
+    esFilterType = type;
+    document.querySelectorAll('#esTypeFilters .chip-sm').forEach(c => {
+      c.classList.toggle('on', c.dataset.type === type);
+    });
+    renderESDatabase();
+  }
+
+  function onEsIndustryFilterChange(val) {
+    esFilterIndustry = val;
+    renderESDatabase();
+  }
+
+  function onEsStatusFilterClick(status) {
+    esFilterStatus = status;
+    document.querySelectorAll('#esStatusFilters .chip-sm').forEach(c => {
+      c.classList.toggle('on', c.dataset.status === status);
+    });
+    renderESDatabase();
+  }
+
+  function onEsCompanyFilterChange(val) {
+    esFilterCompany = val;
+    renderESDatabase();
+  }
+
+  function onEsGroupByChange(val) {
+    esGroupBy = val;
+    renderESDatabase();
+  }
+
+  // Main ES Database Renderer
+  function renderESDatabase() {
+    // Sync filter chip counts
+    const typeCounts = { all: esList.length, '自己PR': 0, 'ガクチカ': 0, '志望動機': 0, '学業・研究': 0, 'その他': 0 };
+    const statusCounts = { all: esList.length, draft: 0, submitted: 0 };
+    esList.forEach(es => {
+      const t = detectEsType(es);
+      if (typeCounts[t] !== undefined) typeCounts[t]++;
+      else typeCounts['その他']++;
+      if (es.status === 'submitted') statusCounts.submitted++;
+      else statusCounts.draft++;
+    });
+
+    document.querySelectorAll('#esTypeFilters .chip-sm').forEach(c => {
+      const dt = c.dataset.type;
+      if (dt === 'all') c.textContent = `全設問 (${typeCounts.all})`;
+      else if (typeCounts[dt] !== undefined) c.textContent = `${dt} (${typeCounts[dt]})`;
+    });
+
+    document.querySelectorAll('#esStatusFilters .chip-sm').forEach(c => {
+      const st = c.dataset.status;
+      if (st === 'all') c.textContent = `全状態 (${statusCounts.all})`;
+      else if (st === 'draft') c.textContent = `下書き (${statusCounts.draft})`;
+      else if (st === 'submitted') c.textContent = `提出済み (${statusCounts.submitted})`;
+    });
+
+    // Populate company selector if needed
+    const select = document.getElementById('esCompanyFilter');
+    if (select && select.options.length <= 2) {
+      const comps = catalog.filter(c => c.added || esList.some(e => e.companyId === c.id));
+      comps.sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+      comps.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.name;
+        select.appendChild(opt);
+      });
+    }
+
+    // Sync active view toggle buttons
+    document.getElementById('btnEsViewList')?.classList.toggle('active', esViewMode === 'list');
+    document.getElementById('btnEsViewCard')?.classList.toggle('active', esViewMode === 'card');
+
+    // Filter list
+    let filtered = esList.filter(es => {
+      // Status filter
+      if (esFilterStatus !== 'all' && es.status !== esFilterStatus) return false;
+
+      // Question Type filter
+      if (esFilterType !== 'all') {
+        const t = detectEsType(es);
+        if (t !== esFilterType) return false;
+      }
+
+      // Industry filter
+      if (esFilterIndustry !== 'all') {
+        const ind = getEsIndustry(es);
+        if (ind !== esFilterIndustry) return false;
+      }
+
+      // Company filter
+      if (esFilterCompany === 'general' && es.companyId) return false;
+      if (esFilterCompany !== 'all' && esFilterCompany !== 'general' && es.companyId !== esFilterCompany) return false;
+
+      // Search Query filter (fulltext in title, question, answer, companyName, tags, stories)
+      if (esSearchQuery) {
+        const comp = catalog.find(x => x.id === es.companyId);
+        const compName = comp ? comp.name.toLowerCase() : '汎用テンプレート';
+        const ind = getEsIndustry(es).toLowerCase();
+        const title = (es.title || '').toLowerCase();
+        const question = (es.question || '').toLowerCase();
+        const answer = (es.answer || '').toLowerCase();
+        const tags = (es.tags || []).join(' ').toLowerCase();
+        const stories = (es.linkedStoryIds || []).map(sid => {
+          const s = storyBank.find(x => x.id === sid);
+          return s ? s.title.toLowerCase() : '';
+        }).join(' ');
+
+        if (!compName.includes(esSearchQuery) &&
+            !ind.includes(esSearchQuery) &&
+            !title.includes(esSearchQuery) &&
+            !question.includes(esSearchQuery) &&
+            !answer.includes(esSearchQuery) &&
+            !tags.includes(esSearchQuery) &&
+            !stories.includes(esSearchQuery)) {
+          return false;
+        }
+      }
+      return true;
+    });
+
+    // Default sort by updatedAt desc
+    filtered.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+
+    const countEl = document.getElementById('esShownCount');
+    if (countEl) countEl.textContent = filtered.length;
+
+    const tableWrap = document.getElementById('esTableViewWrap');
+    const tableBody = document.getElementById('esTableBody');
+    const cardGrid = document.getElementById('esGrid');
+    const groupView = document.getElementById('esGroupView');
+
+    if (!filtered.length) {
+      if (tableWrap) tableWrap.style.display = 'none';
+      if (cardGrid) {
+        cardGrid.style.display = 'block';
+        cardGrid.innerHTML = `
+          <div style="text-align:center;padding:60px 16px;color:var(--sub);font-size:13px;background:rgba(18,24,38,0.4);border:1px solid var(--glass-brd);border-radius:12px;">
+            🔍 条件に一致するESは見つかりませんでした。「＋ 新規ES作成」またはフィルターをリセットしてください。
+          </div>
+        `;
+      }
+      if (groupView) groupView.style.display = 'none';
+      return;
+    }
+
+    // Handle Group By
+    if (esGroupBy !== 'none') {
+      if (tableWrap) tableWrap.style.display = 'none';
+      if (cardGrid) cardGrid.style.display = 'none';
+      if (groupView) {
+        groupView.style.display = 'block';
+        renderEsGrouped(filtered, groupView);
+      }
+      return;
+    }
+
+    // Flat display
+    if (groupView) groupView.style.display = 'none';
+
+    if (esViewMode === 'list') {
+      if (cardGrid) cardGrid.style.display = 'none';
+      if (tableWrap && tableBody) {
+        tableWrap.style.display = 'block';
+        tableBody.innerHTML = filtered.map(es => renderEsTableRow(es)).join('');
+      }
+    } else {
+      if (tableWrap) tableWrap.style.display = 'none';
+      if (cardGrid) {
+        cardGrid.style.display = 'grid';
+        cardGrid.innerHTML = filtered.map(es => renderEsCard(es)).join('');
+      }
+    }
+  }
+
+  // Render Table Row
+  function renderEsTableRow(es) {
+    const comp = catalog.find(x => x.id === es.companyId);
+    const compName = comp ? comp.name : '汎用ストック';
+    const ind = getEsIndustry(es);
+    const type = detectEsType(es);
+    const charLen = (es.answer || '').length;
+    const limit = es.characterLimit;
+    let charBadge = '';
+    if (limit) {
+      let badgeClass = 'warn';
+      let titleHint = `8割目安(${Math.ceil(limit*0.8)}字)まであと${Math.ceil(limit*0.8)-charLen}字`;
+      if (charLen > limit) {
+        badgeClass = 'over';
+        titleHint = `${charLen - limit}字超過`;
+      } else if (charLen >= Math.ceil(limit * 0.8)) {
+        badgeClass = 'ok';
+        titleHint = `適正文字数 (${Math.round(charLen/limit*100)}%)`;
+      }
+      charBadge = `<span class="es-char-badge ${badgeClass}" title="${titleHint}">${charLen} / ${limit}字</span>`;
+    } else {
+      charBadge = `<span class="es-char-badge">${charLen}字</span>`;
+    }
+
+    const statusBadge = es.status === 'submitted'
+      ? `<span class="badge-due-normal" style="color:var(--green);border-color:rgba(78,227,154,.4);font-size:11px">● 提出済</span>`
+      : `<span class="badge-due-normal" style="color:var(--gold-2);border-color:rgba(217,178,95,.4);font-size:11px">下書き</span>`;
+
+    const storiesHtml = (es.linkedStoryIds || []).map(sid => {
+      const s = storyBank.find(x => x.id === sid);
+      return s ? `<span class="story-ref-badge" onclick="event.stopPropagation();openStoryModal('${s.id}')" title="${s.title}">🔗 ${s.title.slice(0, 10)}…</span>` : '';
+    }).join(' ');
+
+    const compAnchor = comp 
+      ? `<span class="es-comp-anchor" onclick="event.stopPropagation();openDetailModal('${comp.id}')" title="企業詳細・選考Timelineを開く">🏢 ${compName}</span>`
+      : `<span style="color:var(--sub);font-size:11.5px;font-weight:700">📁 汎用ストック</span>`;
+
+    return `
+      <tr class="es-table-row" onclick="openEsModal('${es.id}')">
+        <td>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            ${compAnchor}
+            <span class="es-industry-tag" style="width:fit-content">${ind}</span>
+          </div>
+        </td>
+        <td>${getEsTypeBadge(type)}</td>
+        <td>
+          <div style="font-weight:700;color:var(--ink);margin-bottom:2px;max-width:320px;overflow:hidden;text-overflow:ellipsis;" title="${es.title}">${es.title}</div>
+          <div style="font-size:11.5px;color:var(--sub);max-width:320px;overflow:hidden;text-overflow:ellipsis;" title="${es.question || ''}">${es.question || es.answer || '（設問未入力）'}</div>
+        </td>
+        <td>${charBadge}</td>
+        <td>${statusBadge}</td>
+        <td><div style="display:flex;flex-wrap:wrap;gap:3px">${storiesHtml || '<span style="color:var(--muted);font-size:11px">—</span>'}</div></td>
+        <td style="font-size:11px;color:var(--sub)">${(es.updatedAt || '').slice(0, 10)}</td>
+        <td style="text-align:right" onclick="event.stopPropagation()">
+          <div style="display:inline-flex;gap:5px;align-items:center">
+            <button class="action-icon-btn" onclick="copyEsAnswer('${es.id}', event)" title="回答本文をコピー">📋</button>
+            <button class="action-icon-btn" onclick="openEsModal('${es.id}')" title="編集">✏️</button>
+            <button class="action-icon-btn delete" onclick="deleteEs('${es.id}', event)" title="削除">✕</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }
+
+  // Render Card
+  function renderEsCard(es) {
+    const comp = catalog.find(x => x.id === es.companyId);
+    const compName = comp ? comp.name : '汎用ストック';
+    const ind = getEsIndustry(es);
+    const type = detectEsType(es);
+    const charLen = (es.answer || '').length;
+    const limit = es.characterLimit;
+    let charBadge = '';
+    if (limit) {
+      let badgeClass = 'warn';
+      let titleHint = `8割目安(${Math.ceil(limit*0.8)}字)まであと${Math.ceil(limit*0.8)-charLen}字`;
+      if (charLen > limit) {
+        badgeClass = 'over';
+        titleHint = `${charLen - limit}字超過`;
+      } else if (charLen >= Math.ceil(limit * 0.8)) {
+        badgeClass = 'ok';
+        titleHint = `適正文字数 (${Math.round(charLen/limit*100)}%)`;
+      }
+      charBadge = `<span class="es-char-badge ${badgeClass}" title="${titleHint}">${charLen} / ${limit}字</span>`;
+    } else {
+      charBadge = `<span class="es-char-badge">${charLen}字</span>`;
+    }
+
+    const statusBadge = es.status === 'submitted'
+      ? `<span class="badge-due-normal" style="color:var(--green);border-color:rgba(78,227,154,.4)">提出済</span>`
+      : `<span class="badge-due-normal" style="color:var(--gold-2);border-color:rgba(217,178,95,.4)">下書き</span>`;
+
+    const storiesHtml = (es.linkedStoryIds || []).map(sid => {
+      const s = storyBank.find(x => x.id === sid);
+      return s ? `<span class="story-ref-badge" onclick="event.stopPropagation();openStoryModal('${s.id}')">🔗 ${s.title}</span>` : '';
+    }).join(' ');
+
+    const compAnchor = comp 
+      ? `<span class="es-comp-anchor" onclick="event.stopPropagation();openDetailModal('${comp.id}')" title="企業詳細・選考Timelineを開く">🏢 ${compName}</span>`
+      : `<span style="color:var(--sub);font-size:11.5px;font-weight:700">📁 汎用ストック</span>`;
+
+    return `
+      <div class="es-card" onclick="openEsModal('${es.id}')">
+        <div class="es-card-head">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            ${compAnchor}
+            <span class="es-industry-tag">${ind}</span>
+            ${getEsTypeBadge(type)}
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+            ${statusBadge}
+            <button class="action-icon-btn" onclick="copyEsAnswer('${es.id}', event)" title="回答本文をコピー">📋</button>
+            <button class="action-icon-btn delete" onclick="deleteEs('${es.id}', event)" title="削除">✕</button>
+          </div>
+        </div>
+        <div class="es-card-title">${es.title}</div>
+        <div class="es-question-box">${es.question || '（設問未入力）'}</div>
+        <div class="es-answer-preview">${(es.answer || '（本文未入力）').replace(/\n/g, ' ')}</div>
+        ${storiesHtml ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:2px">${storiesHtml}</div>` : ''}
+        <div class="es-meta-bar">
+          ${charBadge}
+          ${(es.tags || []).slice(0, 3).map(t => `<span class="tag free" style="font-size:10px">${t}</span>`).join('')}
+          <span style="margin-left:auto;font-size:11px;color:var(--muted)">${(es.updatedAt || '').slice(0, 10)}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // Render Grouped Mode
+  function renderEsGrouped(items, container) {
+    // Group mapping
+    const groups = {};
+    items.forEach(es => {
+      let key = 'その他';
+      if (esGroupBy === 'industry') {
+        key = getEsIndustry(es);
+      } else if (esGroupBy === 'company') {
+        const c = catalog.find(x => x.id === es.companyId);
+        key = c ? c.name : '📁 汎用テンプレート';
+      } else if (esGroupBy === 'type') {
+        key = detectEsType(es);
+      }
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(es);
+    });
+
+    const keys = Object.keys(groups).sort((a, b) => b.length - a.length);
+
+    container.innerHTML = keys.map((key, idx) => {
+      const list = groups[key];
+      let innerHtml = '';
+      if (esViewMode === 'list') {
+        innerHtml = `
+          <div class="es-table-container">
+            <table class="es-table">
+              <thead>
+                <tr>
+                  <th style="width:190px">企業・業界</th>
+                  <th style="width:95px">タイプ</th>
+                  <th>設問・タイトル要約</th>
+                  <th style="width:110px">文字数</th>
+                  <th style="width:85px">状態</th>
+                  <th style="width:140px">参照Story</th>
+                  <th style="width:90px">更新日</th>
+                  <th style="width:115px;text-align:right">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${list.map(es => renderEsTableRow(es)).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      } else {
+        innerHtml = `
+          <div class="es-grid">
+            ${list.map(es => renderEsCard(es)).join('')}
+          </div>
+        `;
+      }
+
+      return `
+        <div class="es-group-card" id="groupCard_${idx}">
+          <div class="es-group-header" onclick="document.getElementById('groupCard_${idx}').classList.toggle('collapsed')">
+            <div class="es-group-title">
+              <span>${key}</span>
+              <span class="badge-count">${list.length}件</span>
+            </div>
+            <span class="es-group-arrow">▼</span>
+          </div>
+          <div class="es-group-body">
+            ${innerHtml}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // =========================================================================
+  // ES CLONE PICKER MODAL (Cross-Company Duplication)
+  // =========================================================================
+  function openEsClonePickerModal(targetCompanyId) {
+    currentCloneTargetCompId = targetCompanyId;
+    const c = catalog.find(x => x.id === targetCompanyId);
+    const headTitle = document.getElementById('clonePickerHeadTitle');
+    const subTitle = document.getElementById('clonePickerSubTitle');
+    if (headTitle && c) {
+      headTitle.textContent = `📥 既存ESから複製（${c.name} 向け）`;
+    }
+    if (subTitle && c) {
+      subTitle.textContent = `過去の優秀なES・他社向け回答を元に、${c.name} のエントリーシートを作成します`;
+    }
+    const searchInp = document.getElementById('clonePickerSearch');
+    if (searchInp) searchInp.value = '';
+    renderClonePickerList();
+    openModal('esClonePickerModal');
+  }
+
+  function renderClonePickerList() {
+    const listEl = document.getElementById('clonePickerList');
+    if (!listEl) return;
+    const kw = (document.getElementById('clonePickerSearch')?.value || '').trim().toLowerCase();
+    const typeFilter = document.getElementById('clonePickerTypeFilter')?.value || 'all';
+    const indFilter = document.getElementById('clonePickerIndustryFilter')?.value || 'all';
+
+    let candidates = esList.filter(es => {
+      // Don't show ES already explicitly written for current company
+      if (currentCloneTargetCompId && es.companyId === currentCloneTargetCompId) return false;
+      if (typeFilter !== 'all' && detectEsType(es) !== typeFilter) return false;
+      if (indFilter !== 'all' && getEsIndustry(es) !== indFilter) return false;
+      if (kw) {
+        const title = (es.title || '').toLowerCase();
+        const question = (es.question || '').toLowerCase();
+        const answer = (es.answer || '').toLowerCase();
+        const c = catalog.find(x => x.id === es.companyId);
+        const compName = c ? c.name.toLowerCase() : '';
+        if (!title.includes(kw) && !question.includes(kw) && !answer.includes(kw) && !compName.includes(kw)) {
+          return false;
+        }
+      }
+      return true;
+    });
+
+    const countEl = document.getElementById('clonePickerCount');
+    if (countEl) countEl.textContent = `${candidates.length}件の候補`;
+
+    if (!candidates.length) {
+      listEl.innerHTML = `
+        <div style="text-align:center;padding:40px 12px;color:var(--sub);font-size:12px">
+          複製可能な既存ESが見つかりませんでした。
+        </div>
+      `;
+      return;
+    }
+
+    listEl.innerHTML = candidates.map(es => {
+      const c = catalog.find(x => x.id === es.companyId);
+      const compName = c ? c.name : '汎用ストック';
+      const ind = getEsIndustry(es);
+      const type = detectEsType(es);
+      const charLen = (es.answer || '').length;
+
+      return `
+        <div class="clone-picker-item">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+              <span class="tag ${c ? 'ind' : 'free'}" style="font-size:11px">${compName}</span>
+              <span class="es-industry-tag">${ind}</span>
+              ${getEsTypeBadge(type)}
+              <span style="font-weight:700;color:var(--ink);font-size:13px">${es.title}</span>
+            </div>
+            <button class="top-btn primary" onclick="cloneEsToCompany('${es.id}', '${currentCloneTargetCompId}')" style="padding:4px 12px;font-size:11.5px;border-radius:8px">
+              この内容で複製 ➔
+            </button>
+          </div>
+          <div style="font-size:11.5px;color:var(--sub);background:rgba(0,0,0,.2);padding:6px 8px;border-radius:6px;border-left:2px solid var(--violet)">
+            ${es.question || '（設問未入力）'}
+          </div>
+          <div style="font-size:11.5px;color:rgba(240,243,246,.75);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">
+            ${(es.answer || '').replace(/\n/g, ' ')}
+          </div>
+          <div style="font-size:11px;color:var(--muted);display:flex;gap:10px;align-items:center">
+            <span>文字数: ${charLen}字</span>
+            <span>更新: ${(es.updatedAt || '').slice(0, 10)}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function cloneEsToCompany(sourceEsId, targetCompId) {
+    const sourceEs = esList.find(x => x.id === sourceEsId);
+    if (!sourceEs) return;
+    const targetComp = catalog.find(x => x.id === targetCompId);
+    const targetCompName = targetComp ? targetComp.name : '新規企業';
+
+    // Build title (strip old company prefix if any)
+    let baseTitle = sourceEs.title;
+    const sourceComp = catalog.find(x => x.id === sourceEs.companyId);
+    if (sourceComp && baseTitle.startsWith(sourceComp.name)) {
+      baseTitle = baseTitle.replace(sourceComp.name, '').trim();
+    }
+
+    const newEs = {
+      id: 'es_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+      companyId: targetCompId,
+      status: 'draft',
+      questionType: sourceEs.questionType || detectEsType(sourceEs),
+      title: `${targetCompName} ${baseTitle}`.trim(),
+      question: sourceEs.question || '',
+      answer: sourceEs.answer || '',
+      characterLimit: sourceEs.characterLimit || 400,
+      linkedStoryIds: [...(sourceEs.linkedStoryIds || [])],
+      tags: [...(sourceEs.tags || []), '複製'],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    esList.unshift(newEs);
+    saveAllV3();
+    renderAll();
+    closeModal('esClonePickerModal');
+    if (targetCompId) {
+      renderCompanyEsList(targetCompId);
+    }
+    showToast(`「${newEs.title}」を複製しました`);
+    openEsModal(newEs.id);
+  }
+
+  // =========================================================================
+  // ES MODAL (Edit & Create)
+  // =========================================================================
+  function openEsModal(esId = null, prefillCompanyId = null) {
+    currentEsEditId = esId;
+    const titleHead = document.getElementById('esModalTitle');
+    const compSelect = document.getElementById('esModalCompany');
+    const delBtn = document.getElementById('esModalDeleteBtn');
+    const typeSelect = document.getElementById('esModalTypeSelect');
+
+    // Populate company selector
+    compSelect.innerHTML = '<option value="">（未指定・汎用テンプレート）</option>';
+    const comps = catalog.filter(c => c.added || (prefillCompanyId && c.id === prefillCompanyId));
+    comps.sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+    comps.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = `${c.name} (${catOf(c) || c.cat || 'その他'})`;
+      compSelect.appendChild(opt);
+    });
+
+    let activeStoryIds = [];
+
+    if (esId) {
+      const es = esList.find(x => x.id === esId);
+      if (!es) return;
+      titleHead.textContent = '📝 ES エントリーシート編集';
+      document.getElementById('esId').value = es.id;
+      compSelect.value = es.companyId || '';
+      document.getElementById('esModalStatus').value = es.status || 'draft';
+      if (typeSelect) typeSelect.value = es.questionType || detectEsType(es);
+      document.getElementById('esModalTitleInput').value = es.title || '';
+      document.getElementById('esModalQuestion').value = es.question || '';
+      document.getElementById('esModalAnswer').value = es.answer || '';
+      document.getElementById('esModalTags').value = (es.tags || []).join(', ');
+
+      const limit = es.characterLimit;
+      if (limit === null || limit === undefined || limit === 0) {
+        document.getElementById('esModalLimit').value = '0';
+      } else if ([200, 300, 400, 500].includes(limit)) {
+        document.getElementById('esModalLimit').value = String(limit);
+      } else {
+        document.getElementById('esModalLimit').value = 'custom';
+        document.getElementById('esCustomLimitInput').value = limit;
+      }
+      activeStoryIds = es.linkedStoryIds || [];
+      if (delBtn) delBtn.style.display = 'inline-block';
+    } else {
+      titleHead.textContent = '📝 新規ES作成';
+      document.getElementById('esId').value = '';
+      if (prefillCompanyId) compSelect.value = prefillCompanyId;
+      document.getElementById('esModalStatus').value = 'draft';
+      if (typeSelect) typeSelect.value = '自己PR';
+      document.getElementById('esModalTitleInput').value = '';
+      document.getElementById('esModalLimit').value = '400';
+      document.getElementById('esModalQuestion').value = '';
+      document.getElementById('esModalAnswer').value = '';
+      document.getElementById('esModalTags').value = '';
+      if (delBtn) delBtn.style.display = 'none';
+    }
+
+    onEsModalLimitChange(document.getElementById('esModalLimit').value);
+    updateEsModalCharCount();
+
+    // Render Story Picker Checkboxes
+    const picker = document.getElementById('esModalStoriesPicker');
+    if (picker) {
+      if (!storyBank.length) {
+        picker.innerHTML = '<span style="color:var(--muted);font-size:11.5px">Story Bankに登録されたエピソードがありません</span>';
+      } else {
+        picker.innerHTML = storyBank.map(s => {
+          const checked = activeStoryIds.includes(s.id) ? 'checked' : '';
+          return `
+            <label style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.05);cursor:pointer;">
+              <input type="checkbox" name="esLinkedStory" value="${s.id}" ${checked} />
+              <span>${s.title}</span>
+            </label>
+          `;
+        }).join('');
+      }
+    }
+
+    openModal('esModal');
+  }
+
+  function onEsModalLimitChange(val) {
+    const customGroup = document.getElementById('esCustomLimitGroup');
+    if (val === 'custom') {
+      customGroup.style.display = 'block';
+    } else {
+      customGroup.style.display = 'none';
+    }
+    updateEsModalCharCount();
+  }
+
+  function updateEsModalCharCount() {
+    const ans = document.getElementById('esModalAnswer')?.value || '';
+    const len = ans.length;
+    const limitSelect = document.getElementById('esModalLimit')?.value;
+    let limit = null;
+    if (limitSelect === 'custom') {
+      limit = parseInt(document.getElementById('esCustomLimitInput')?.value) || null;
+    } else if (limitSelect && limitSelect !== '0') {
+      limit = parseInt(limitSelect) || null;
+    }
+
+    const counter = document.getElementById('esModalCharCounter');
+    if (!counter) return;
+
+    if (limit) {
+      const minRecommended = Math.ceil(limit * 0.8);
+      if (len > limit) {
+        const over = len - limit;
+        counter.innerHTML = `<span style="color:var(--red);font-weight:800">${len}</span> / ${limit} 字 <span style="color:var(--red);font-size:11px;font-weight:700">⚠️ ${over}字超過</span>`;
+      } else if (len >= minRecommended) {
+        const pct = Math.round((len / limit) * 100);
+        counter.innerHTML = `<span style="color:var(--green);font-weight:800">${len}</span> / ${limit} 字 <span style="color:var(--green);font-size:11px;font-weight:700">✓ 適正 (${pct}%)・残り${limit - len}字</span>`;
+      } else {
+        const diff = minRecommended - len;
+        counter.innerHTML = `<span style="color:var(--gold-2);font-weight:800">${len}</span> / ${limit} 字 <span style="color:var(--sub);font-size:11px">(8割目安まであと${diff}字)</span>`;
+      }
+    } else {
+      counter.textContent = `${len} 文字`;
+    }
+  }
+
+  function saveCurrentEs() {
+    const companyId = document.getElementById('esModalCompany').value || null;
+    const status = document.getElementById('esModalStatus').value;
+    const questionType = document.getElementById('esModalTypeSelect')?.value || 'その他';
+    const title = document.getElementById('esModalTitleInput').value.trim();
+    const question = document.getElementById('esModalQuestion').value.trim();
+    const answer = document.getElementById('esModalAnswer').value;
+    const tagsStr = document.getElementById('esModalTags').value;
+    const tags = tagsStr.split(/[,、]/).map(t => t.trim()).filter(Boolean);
+
+    const limitSelect = document.getElementById('esModalLimit').value;
+    let characterLimit = null;
+    if (limitSelect === 'custom') {
+      characterLimit = parseInt(document.getElementById('esCustomLimitInput').value) || null;
+    } else if (limitSelect && limitSelect !== '0') {
+      characterLimit = parseInt(limitSelect) || null;
+    }
+
+    // Selected Stories
+    const selectedStories = [];
+    document.querySelectorAll('input[name="esLinkedStory"]:checked').forEach(cb => {
+      selectedStories.push(cb.value);
+    });
+
+    if (!title) {
+      alert('タイトルを入力してください');
+      return;
+    }
+
+    const now = new Date().toISOString();
+
+    if (currentEsEditId) {
+      const es = esList.find(x => x.id === currentEsEditId);
+      if (es) {
+        es.companyId = companyId;
+        es.status = status;
+        es.questionType = questionType;
+        es.title = title;
+        es.question = question;
+        es.answer = answer;
+        es.characterLimit = characterLimit;
+        es.linkedStoryIds = selectedStories;
+        es.tags = tags;
+        es.updatedAt = now;
+        if (status === 'submitted' && !es.submittedAt) es.submittedAt = now;
+      }
+    } else {
+      esList.unshift({
+        id: 'es_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        companyId,
+        status,
+        questionType,
+        title,
+        question,
+        answer,
+        characterLimit,
+        linkedStoryIds: selectedStories,
+        tags,
+        submittedAt: status === 'submitted' ? now : null,
+        createdAt: now,
+        updatedAt: now
+      });
+    }
+
+    saveAllV3();
+    renderAll();
+    if (companyId && currentModalComp && currentModalComp.id === companyId) {
+      renderCompanyEsList(companyId);
+    }
+    closeModal('esModal');
+    showToast('ESを保存しました');
+  }
+
+  function deleteCurrentEs() {
+    if (!currentEsEditId) return;
+    if (!confirm('このESを削除しますか？')) return;
+    const es = esList.find(x => x.id === currentEsEditId);
+    const compId = es ? es.companyId : null;
+    esList = esList.filter(x => x.id !== currentEsEditId);
+    saveAllV3();
+    renderAll();
+    if (compId && currentModalComp && currentModalComp.id === compId) {
+      renderCompanyEsList(compId);
+    }
+    closeModal('esModal');
+    showToast('ESを削除しました');
+  }
+
+  function deleteEs(esId, e) {
+    if (e) e.stopPropagation();
+    if (!confirm('このESを削除しますか？')) return;
+    const es = esList.find(x => x.id === esId);
+    const compId = es ? es.companyId : null;
+    esList = esList.filter(x => x.id !== esId);
+    saveAllV3();
+    renderAll();
+    if (compId && currentModalComp && currentModalComp.id === compId) {
+      renderCompanyEsList(compId);
+    }
+    showToast('ESを削除しました');
+  }
+
+  function copyEsToClipboard(esId, e) {
+    copyEsAnswer(esId, e);
+  }
+
+  
+  // =========================================================================
+  // STORY BANK (VIEW 4) CRUD & STAR MODEL
+  // =========================================================================
+  let storyFilterCat = 'all';
+  let currentStoryEditId = null;
+
+  function renderStoryBank() {
+    const grid = document.getElementById('storyGrid');
+    if (!grid) return;
+
+    let filtered = storyBank.filter(s => {
+      if (storyFilterCat !== 'all' && s.category !== storyFilterCat) return false;
+      if (keyword) {
+        const kw = keyword.toLowerCase();
+        const matchTitle = (s.title || '').toLowerCase().includes(kw);
+        const matchSummary = (s.summary || '').toLowerCase().includes(kw);
+        const matchAction = (s.action || '').toLowerCase().includes(kw);
+        const matchStrengths = (s.strengths || []).some(t => t.toLowerCase().includes(kw));
+        const matchTags = (s.tags || []).some(t => t.toLowerCase().includes(kw));
+        if (!matchTitle && !matchSummary && !matchAction && !matchStrengths && !matchTags) return false;
+      }
+      return true;
+    });
+
+    const countEl = document.getElementById('storyShownCount');
+    if (countEl) countEl.textContent = filtered.length;
+
+    if (!filtered.length) {
+      grid.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:60px 16px;color:var(--sub);font-size:13px">
+          Storyが登録されていません。「＋ 新規Story作成」からあなたの経験エピソードを資産化しましょう。
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = filtered.map(story => {
+      const refEsList = esList.filter(es => es.linkedStoryIds && es.linkedStoryIds.includes(story.id));
+      const refCount = refEsList.length;
+
+      let refBadge = '';
+      if (refCount > 0) {
+        const previewNames = refEsList.slice(0, 2).map(e => e.title).join(', ');
+        refBadge = `<div style="font-size:11.5px;color:var(--violet);display:flex;align-items:center;gap:5px;font-weight:700">
+          <span>📝 <b>${refCount}件</b>のESで使用中</span>
+          <small style="color:var(--sub)">(${previewNames}${refCount > 2 ? '等' : ''})</small>
+        </div>`;
+      } else {
+        refBadge = `<div style="font-size:11.5px;color:var(--muted)">まだ参照中のESはありません</div>`;
+      }
+
+      const catBadgeMap = {
+        'Internship': { cls: 'size', icon: '💼', name: 'Internship' },
+        'Work': { cls: 'ind', icon: '☕', name: 'Work / バイト' },
+        'Academic': { cls: 'free', icon: '🎓', name: 'Academic / 学業' },
+        'Extracurricular': { cls: 'pop-elite', icon: '🏆', name: '課外活動' },
+        'Other': { cls: 'custom', icon: '🌍', name: 'Other' }
+      };
+      const catInfo = catBadgeMap[story.category] || catBadgeMap['Other'];
+
+      return `
+        <div class="story-card" onclick="openStoryModal('${story.id}')">
+          <div class="story-card-head">
+            <span class="tag ${catInfo.cls}" style="display:inline-flex;align-items:center;gap:4px">
+              <span>${catInfo.icon}</span> <span>${catInfo.name}</span>
+            </span>
+            <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+              <button class="action-icon-btn delete" onclick="event.stopPropagation();deleteStory('${story.id}')" title="削除">✕</button>
+            </div>
+          </div>
+          <div class="story-card-title">${story.title}</div>
+          <div style="font-size:12.5px;color:rgba(240,243,246,0.85);line-height:1.5;">${story.summary || story.action || '（要約未入力）'}</div>
+          ${refBadge}
+          <div class="es-meta-bar">
+            ${(story.strengths || []).slice(0, 3).map(st => `<span class="tag size" style="font-size:10px">${st}</span>`).join('')}
+            <span style="margin-left:auto;font-size:11px;color:var(--muted)">${(story.updatedAt || '').slice(0, 10)}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  document.querySelectorAll('#storyFilters .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#storyFilters .chip').forEach(c => c.classList.remove('on'));
+      chip.classList.add('on');
+      storyFilterCat = chip.dataset.cat || 'all';
+      renderStoryBank();
+    });
+  });
+
+  function openStoryModal(storyId = null) {
+    currentStoryEditId = storyId;
+    const headTitle = document.getElementById('storyModalHeadTitle');
+    const delBtn = document.getElementById('storyDeleteBtn');
+
+    if (storyId) {
+      const s = storyBank.find(x => x.id === storyId);
+      if (!s) return;
+      headTitle.textContent = '💡 Story Bank 経験エピソード編集';
+      document.getElementById('storyId').value = s.id;
+      document.getElementById('storyTitle').value = s.title || '';
+      document.getElementById('storyCategory').value = s.category || 'Internship';
+      document.getElementById('storySummary').value = s.summary || '';
+      document.getElementById('storySituation').value = s.situation || '';
+      document.getElementById('storyTask').value = s.task || '';
+      document.getElementById('storyAction').value = s.action || '';
+      document.getElementById('storyResult').value = s.result || '';
+      document.getElementById('storyLearning').value = s.learning || '';
+      document.getElementById('storyStrengths').value = (s.strengths || []).join(', ');
+      document.getElementById('storyTags').value = (s.tags || []).join(', ');
+
+      // Dynamically compute referenced ES
+      const refEsList = esList.filter(es => es.linkedStoryIds && es.linkedStoryIds.includes(s.id));
+      document.getElementById('storyRefEsCount').textContent = `${refEsList.length}件`;
+      const refListEl = document.getElementById('storyRefEsList');
+      if (!refEsList.length) {
+        refListEl.innerHTML = `
+          <div style="font-size:12px;color:var(--sub);padding:6px 0;">
+            現在このStoryを参照しているESはありません。ES作成時に引用Storyとして選択すると自動集計されます。
+          </div>
+        `;
+      } else {
+        refListEl.innerHTML = refEsList.map(es => {
+          const comp = catalog.find(x => x.id === es.companyId);
+          const compName = comp ? comp.name : '汎用テンプレート';
+          return `
+            <div class="ref-es-item" onclick="closeModal('storyModal');openEsModal('${es.id}')">
+              <span class="tag ind" style="font-size:10px">${compName}</span>
+              <b style="font-size:12.5px;color:var(--ink)">${es.title}</b>
+              <span style="margin-left:auto;font-size:11px;color:var(--sub)">${es.status === 'submitted' ? '提出済' : '下書き'}</span>
+              <span style="color:var(--violet);font-size:12px">↗ 開く</span>
+            </div>
+          `;
+        }).join('');
+      }
+
+      if (delBtn) delBtn.style.display = 'inline-block';
+    } else {
+      headTitle.textContent = '💡 新規Story作成';
+      document.getElementById('storyId').value = '';
+      document.getElementById('storyTitle').value = '';
+      document.getElementById('storyCategory').value = 'Internship';
+      document.getElementById('storySummary').value = '';
+      document.getElementById('storySituation').value = '';
+      document.getElementById('storyTask').value = '';
+      document.getElementById('storyAction').value = '';
+      document.getElementById('storyResult').value = '';
+      document.getElementById('storyLearning').value = '';
+      document.getElementById('storyStrengths').value = '';
+      document.getElementById('storyTags').value = '';
+      document.getElementById('storyRefEsCount').textContent = '0件';
+      document.getElementById('storyRefEsList').innerHTML = '<div style="font-size:12px;color:var(--sub);padding:6px 0;">Story保存後、ES作成画面で引用できるようになります。</div>';
+      if (delBtn) delBtn.style.display = 'none';
+    }
+
+    openModal('storyModal');
+  }
+
+  function addStoryStrengthChip(val) {
+    const input = document.getElementById('storyStrengths');
+    if (!input) return;
+    const current = input.value.split(/[,、]/).map(t => t.trim()).filter(Boolean);
+    if (!current.includes(val)) {
+      current.push(val);
+      input.value = current.join(', ');
+    }
+  }
+
+  function saveCurrentStory() {
+    const title = document.getElementById('storyTitle').value.trim();
+    const category = document.getElementById('storyCategory').value;
+    const summary = document.getElementById('storySummary').value.trim();
+    const situation = document.getElementById('storySituation').value.trim();
+    const task = document.getElementById('storyTask').value.trim();
+    const action = document.getElementById('storyAction').value.trim();
+    const result = document.getElementById('storyResult').value.trim();
+    const learning = document.getElementById('storyLearning').value.trim();
+    const strengthsStr = document.getElementById('storyStrengths').value;
+    const strengths = strengthsStr.split(/[,、]/).map(t => t.trim()).filter(Boolean);
+    const tagsStr = document.getElementById('storyTags').value;
+    const tags = tagsStr.split(/[,、]/).map(t => t.trim()).filter(Boolean);
+
+    if (!title) {
+      alert('エピソードタイトルを入力してください');
+      return;
+    }
+
+    const now = new Date().toISOString();
+
+    if (currentStoryEditId) {
+      const s = storyBank.find(x => x.id === currentStoryEditId);
+      if (s) {
+        s.title = title;
+        s.category = category;
+        s.summary = summary;
+        s.situation = situation;
+        s.task = task;
+        s.action = action;
+        s.result = result;
+        s.learning = learning;
+        s.strengths = strengths;
+        s.tags = tags;
+        s.updatedAt = now;
+      }
+    } else {
+      storyBank.push({
+        id: 'story_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        title,
+        category,
+        summary,
+        situation,
+        task,
+        action,
+        result,
+        learning,
+        strengths,
+        tags,
+        createdAt: now,
+        updatedAt: now
+      });
+    }
+
+    saveAllV3();
+    renderAll();
+    closeModal('storyModal');
+    showToast('Storyを保存しました');
+  }
+
+  function deleteCurrentStory() {
+    if (!currentStoryEditId) return;
+    if (!confirm('このStoryを削除しますか？')) return;
+    storyBank = storyBank.filter(x => x.id !== currentStoryEditId);
+    // Also remove from any ES referencing it
+    esList.forEach(es => {
+      if (es.linkedStoryIds) {
+        es.linkedStoryIds = es.linkedStoryIds.filter(id => id !== currentStoryEditId);
+      }
+    });
+    saveAllV3();
+    renderAll();
+    closeModal('storyModal');
+    showToast('Storyを削除しました');
+  }
+
+  function deleteStory(storyId) {
+    if (!confirm('このStoryを削除しますか？')) return;
+    storyBank = storyBank.filter(x => x.id !== storyId);
+    esList.forEach(es => {
+      if (es.linkedStoryIds) {
+        es.linkedStoryIds = es.linkedStoryIds.filter(id => id !== storyId);
+      }
+    });
+    saveAllV3();
+    renderAll();
+    showToast('Storyを削除しました');
+  }
+
   // ===================== MODAL: 企業詳細・編集 =====================
   let currentModalComp = null;
   let modalTags = [];
@@ -3564,6 +7045,8 @@
     updateCharCount('mNoteInterview', 'mNoteInterviewCount');
 
     renderModalTags();
+    renderTimeline(c.id);
+    renderCompanyEsList(c.id);
     openModal('companyModal');
   }
 
@@ -3820,10 +7303,13 @@
   function exportJSON() {
     if (!requireAuth('JSONバックアップのエクスポート')) return;
     const data = {
-      version: '2.0',
+      version: '3.0',
       exportDate: new Date().toISOString(),
       settings: currentSettings,
       tasks: currentTasks,
+      selectionEvents,
+      esList,
+      storyBank,
       catalog
     };
     const jsonStr = JSON.stringify(data, null, 2);
@@ -3859,6 +7345,9 @@
         catalog = data.catalog;
         if (data.settings) currentSettings = Object.assign(currentSettings, data.settings);
         if (Array.isArray(data.tasks)) currentTasks = data.tasks;
+        if (Array.isArray(data.selectionEvents)) selectionEvents = data.selectionEvents;
+        if (Array.isArray(data.esList)) esList = data.esList;
+        if (Array.isArray(data.storyBank)) storyBank = data.storyBank;
         saveAll();
         applySettings();
         renderAll();
@@ -3880,7 +7369,7 @@
       alert('選考リストに登録された企業がありません');
       return;
     }
-    const headers = ['企業名','就職人気順位','人気格付','証券コード','業界大分類','細分業種','選考ステージ','直近締切日','締切種別','初任給(大卒・円)','初任給(院卒・円)','平均年収(万円)','従業員数','マイページURL','マイページID','タグ','志望動機','ES内容','面接ログ'];
+    const headers = ['企業名','就職人気順位','人気格付','証券コード','業界大分類','細分業種','選考ステージ','次のアクション','直近締切日','初任給(大卒・円)','初任給(院卒・円)','平均年収(万円)','従業員数','マイページURL','マイページID','タグ','志望動機','ES内容','面接ログ'];
     const rows = added.map(c => [
       `"${(c.name || '').replace(/"/g, '""')}"`,
       c.popRank || '',
@@ -3889,8 +7378,8 @@
       `"${(catOf(c) || '').replace(/"/g, '""')}"`,
       `"${(c.sub || '').replace(/"/g, '""')}"`,
       `"${stageMap[c.stage]?.label || c.stage}"`,
-      `"${c.due || ''}"`,
-      `"${(c.dueLabel || '').replace(/"/g, '""')}"`,
+      `"${(getCompanyNextAction(c.id).title || '').replace(/"/g, '""')}"`,
+      `"${getCompanyNextAction(c.id).datetime || c.due || ''}"`,
       c.payBachelor || '',
       c.payMaster || '',
       c.avgAnnual || '',
@@ -3954,8 +7443,9 @@
   // ===================== 共通 & 初期化 =====================
   function renderAll() {
     if (currentView === 'db') renderDB();
-    else if (currentView === 'kanban') renderKanban();
     else if (currentView === 'list') renderList();
+    else if (currentView === 'es') renderESDatabase();
+    else if (currentView === 'story') renderStoryBank();
     else if (currentView === 'dash') renderDash();
   }
 
@@ -3997,7 +7487,42 @@
   loadAll();
   applySettings();
   updateAuthUI();
-  renderAll();
+
+  // Hash routing support for direct view and modal links
+  const rawHash = (window.location.hash || '').replace('#', '');
+  const hashSearchParams = new URLSearchParams(rawHash.includes('&') ? rawHash.split('&').slice(1).join('&') : '');
+  const initHash = rawHash.split('&')[0];
+
+  if (['db', 'list', 'es', 'story', 'dash'].includes(initHash)) {
+    switchView(initHash);
+    if (initHash === 'es') {
+      if (hashSearchParams.get('view')) {
+        setEsViewMode(hashSearchParams.get('view'));
+      }
+      if (hashSearchParams.get('group')) {
+        esGroupBy = hashSearchParams.get('group');
+        const sel = document.getElementById('esGroupBySelect');
+        if (sel) sel.value = esGroupBy;
+      }
+      if (hashSearchParams.get('clone_for')) {
+        setTimeout(() => openEsClonePickerModal(hashSearchParams.get('clone_for')), 100);
+      }
+      if (hashSearchParams.get('edit')) {
+        setTimeout(() => openEsModal(hashSearchParams.get('edit')), 100);
+      }
+      renderESDatabase();
+    }
+  } else if (initHash.startsWith('company=')) {
+    const cid = initHash.replace('company=', '');
+    switchView('list');
+    openDetailModal(cid);
+  } else if (initHash.startsWith('story=')) {
+    const sid = initHash.replace('story=', '');
+    switchView('story');
+    openStoryModal(sid);
+  } else {
+    renderAll();
+  }
 
   // URL OAuth エラー・パラメータ自動検知 & 診断ログ
   (function checkUrlAuthStatus() {
