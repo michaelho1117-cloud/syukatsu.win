@@ -1,0 +1,13 @@
+﻿# Secrets & Environment Variables
+.env
+.env.*
+!.env.example
+secrets/
+*.key
+*.pem
+
+# OS / Temporary files
+.DS_Store
+Thumbs.db
+*.log
+scratch/
