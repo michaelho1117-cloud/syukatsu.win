@@ -801,16 +801,63 @@
   .stat-strip b { color: var(--ink); font-size: 16px; font-weight: 800; margin-right: 3px; }
   .stat-strip .hot b { color: var(--pink); }
 
+  /* ===== Kanban Full-Height Integrated Viewport ===== */
+  body:has(#view-kanban.active),
+  body.view-kanban-active {
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+
+  #view-kanban.active {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 60px - var(--safe-top));
+    height: calc(100dvh - 60px - var(--safe-top));
+    overflow: hidden;
+    box-sizing: border-box;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+  }
+  #view-kanban .demo-seed-banner {
+    flex-shrink: 0;
+    margin: 8px 26px 4px;
+  }
+  #view-kanban .hero {
+    flex-shrink: 0;
+    padding: 8px 26px 6px;
+  }
+
   .board-wrap {
-    padding: 10px 26px 36px;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 6px 26px 6px;
     overflow-x: auto;
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
   }
+  .board-wrap::-webkit-scrollbar {
+    height: 10px;
+  }
+  .board-wrap::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin: 0 26px;
+  }
+  .board-wrap::-webkit-scrollbar-thumb {
+    background: rgba(217, 178, 95, 0.45);
+    border-radius: 10px;
+    border: 2px solid rgba(12, 16, 30, 0.6);
+    background-clip: padding-box;
+  }
+  .board-wrap::-webkit-scrollbar-thumb:hover {
+    background: rgba(217, 178, 95, 0.85);
+  }
+
   .board {
     display: flex;
     gap: 16px;
     min-width: max-content;
-    align-items: flex-start;
+    height: 100%;
+    align-items: stretch;
   }
   .col {
     width: 295px;
@@ -819,18 +866,21 @@
     padding: 12px;
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 250px);
-    max-height: calc(100vh - 180px);
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
     background: var(--glass);
     border: 1px solid var(--glass-brd);
     backdrop-filter: blur(10px);
     transition: border-color .15s, background .15s;
+    box-sizing: border-box;
   }
   .col.drag-over {
     border-color: var(--cyan);
     background: rgba(79, 216, 232, 0.08);
   }
   .col-head {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -867,8 +917,22 @@
     flex-direction: column;
     gap: 10px;
     overflow-y: auto;
-    padding: 4px 2px;
-    flex: 1;
+    padding: 4px 4px 6px 2px;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  .col-body::-webkit-scrollbar {
+    width: 6px;
+  }
+  .col-body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .col-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.16);
+    border-radius: 10px;
+  }
+  .col-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.32);
   }
 
   .kcard {
@@ -1615,9 +1679,20 @@
       font-size: 12.5px;
     }
     /* Kanban Mobile touch snap */
+    #view-kanban.active {
+      height: calc(100vh - 60px - var(--safe-top) - 56px - var(--safe-bottom));
+      height: calc(100dvh - 60px - var(--safe-top) - 56px - var(--safe-bottom));
+    }
+    #view-kanban .hero {
+      padding: 6px 14px 4px;
+    }
+    #view-kanban .demo-seed-banner {
+      margin: 4px 14px 4px;
+    }
     .board-wrap {
-      padding: 10px 14px 32px;
+      padding: 4px 14px 12px;
       overflow-x: auto;
+      overflow-y: hidden;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
     }
@@ -1625,7 +1700,9 @@
       width: 82vw;
       flex-basis: 82vw;
       max-width: 320px;
-      min-height: 55vh;
+      height: 100%;
+      min-height: 0;
+      max-height: 100%;
       scroll-snap-align: center;
     }
     /* Table List */
@@ -5247,7 +5324,7 @@
 
 
   const NO_LOGO_SET = new Set([
-    'c_9843','c_jfe_shoji','c_9042','c_dir','c_4543','c_3099','c_323A','c_5384','c_unlisted_iqvia','c_4733',
+    'c_jfe_shoji','c_9042','c_dir','c_4543','c_3099','c_323A','c_5384','c_unlisted_iqvia','c_4733',
     'c_unlisted_mercer','c_unlisted_vision_con','c_5831','c_8088','c_7167','c_4401','c_unlisted_nttdatakeieiken','c_9830','c_7984','c_8154',
     'c_7729','c_4208','c_dentsu_digital','c_9508','c_3844','c_9644','c_7864','c_4694','c_2810','c_9519',
     'c_543A','c_2292','c_5805','c_2585','c_6250','c_7345','c_4044','c_6523','c_6516','c_5851',
@@ -5313,6 +5390,7 @@
     document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('active', b.dataset.view === v));
     document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === v));
     document.querySelectorAll('.view').forEach(s => s.classList.toggle('active', s.id === 'view-' + v));
+    document.body.classList.toggle('view-kanban-active', v === 'kanban');
     renderAll();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
