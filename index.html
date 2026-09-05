@@ -173,23 +173,24 @@
 
   nav.tabs {
     display: flex;
-    gap: 3px;
-    margin-left: 4px;
+    gap: clamp(4px, 0.6vw, 8px);
+    margin-left: clamp(6px, 1vw, 14px);
   }
   nav.tabs button {
     border: 0;
     background: transparent;
     color: var(--sub);
-    padding: 6px 10px;
-    border-radius: 8px;
+    padding: 7px clamp(10px, 1vw, 16px);
+    border-radius: 9px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: clamp(12px, 0.85vw, 13.5px);
     font-weight: 700;
     transition: .18s;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     white-space: nowrap;
+    user-select: none;
   }
   nav.tabs button.active {
     color: var(--ink);
@@ -201,20 +202,23 @@
     background: var(--glass);
   }
 
-  .spacer { flex: 1; }
+  .spacer {
+    flex: 1 1 20px;
+    min-width: 10px;
+  }
 
   .searchbox {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     background: var(--glass);
     border: 1px solid var(--glass-brd);
     border-radius: 10px;
-    padding: 6px 10px;
+    padding: 6px 12px;
     color: var(--sub);
-    min-width: 140px;
-    max-width: 200px;
-    flex: 1 1 150px;
+    min-width: 235px;
+    max-width: 320px;
+    flex: 0 1 280px;
     transition: .2s;
   }
   .searchbox:focus-within {
@@ -226,7 +230,7 @@
     background: transparent;
     outline: none;
     width: 100%;
-    font-size: 13px;
+    font-size: 12.5px;
     color: var(--ink);
   }
   .searchbox input::placeholder { color: var(--sub); }
@@ -1449,6 +1453,30 @@
   }
 
   /* ===== Responsive ===== */
+  @media (max-width: 1360px) {
+    nav.tabs {
+      gap: 5px;
+      margin-left: 6px;
+    }
+    nav.tabs button {
+      padding: 6.5px 12px;
+      font-size: 12.5px;
+    }
+    .searchbox {
+      min-width: 215px;
+      flex: 0 1 230px;
+    }
+    header.topbar .top-btn.secondary-action .btn-text {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1180px) {
+    header.topbar .top-btn .btn-text {
+      display: none;
+    }
+  }
+
   @media (max-width: 960px) {
     .kpis { grid-template-columns: repeat(3, 1fr); }
     .grid2 { grid-template-columns: 1fr; }
@@ -2570,10 +2598,10 @@
     <div class="searchbox">
       🔍<input id="search" placeholder="企業名・キーワードで検索…" autocomplete="off" />
     </div>
-    <button class="top-btn primary" onclick="openNewCompanyModal()" title="データベースにない企業を手動登録">
+    <button class="top-btn primary secondary-action" onclick="openNewCompanyModal()" title="データベースにない企業を手動登録">
       ＋<span class="btn-text"> 企業を追加</span>
     </button>
-    <button class="top-btn" onclick="openSettingsModal()" title="データ設定・バックアップ">
+    <button class="top-btn secondary-action" onclick="openSettingsModal()" title="データ設定・バックアップ">
       ⚙️<span class="btn-text"> データ管理</span>
     </button>
     <div id="authArea" style="display:inline-flex;align-items:center;">
