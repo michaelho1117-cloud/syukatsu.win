@@ -1517,8 +1517,8 @@
     </div>
     <nav class="tabs" id="tabs">
       <button data-view="db" class="active">🏢 企業DB</button>
-      <button data-view="kanban">📋 カンバン <span class="tab-lock" style="font-size:11px;opacity:0.75" title="要ログイン">🔒</span></button>
       <button data-view="list">📑 選考リスト <span class="tab-lock" style="font-size:11px;opacity:0.75" title="要ログイン">🔒</span></button>
+      <button data-view="kanban">📋 カンバン <span class="tab-lock" style="font-size:11px;opacity:0.75" title="要ログイン">🔒</span></button>
       <button data-view="dash">📊 ダッシュボード <span class="tab-lock" style="font-size:11px;opacity:0.75" title="要ログイン">🔒</span></button>
     </nav>
     <div class="spacer"></div>
@@ -1559,7 +1559,7 @@
     <div class="hero">
       <div class="hero-title">
         <h1>企業<span class="g">データベース</span></h1>
-        <p>厳選企業カタログから志望先を「＋管理に追加」すると、カンバンや選考リスト・分析に即座に同期されます。</p>
+        <p>厳選企業カタログから志望先を「＋管理に追加」すると、選考リストやカンバン・分析に即座に同期されます。</p>
       </div>
       <div style="display: flex; gap: 8px;">
         <select class="toolbar-select" id="dbSortSelect" onchange="onDbSortChange(this.value)">
@@ -1596,25 +1596,7 @@
     </div>
   </section>
 
-  <!-- ===================== VIEW 2: カンバン ===================== -->
-  <section class="view" id="view-kanban">
-    <div class="hero">
-      <div class="hero-title">
-        <h1>選考<span class="g">カンバンボード</span></h1>
-        <p>カードをドラッグ＆ドロップして選考ステージを進められます。クリックで選考詳細・面接記録を編集できます。</p>
-      </div>
-      <div class="stat-strip">
-        <span>選考中 <b id="kActive" style="color:var(--cyan)">0</b> 社</span>
-        <span>内々定 <b id="kOffer" style="color:var(--green)">0</b> 社</span>
-        <span class="hot">直近締切 <b id="kDue">0</b> 件</span>
-      </div>
-    </div>
-    <div class="board-wrap">
-      <div class="board" id="board"></div>
-    </div>
-  </section>
-
-  <!-- ===================== VIEW 3: 選考リスト ===================== -->
+  <!-- ===================== VIEW 2: 選考リスト ===================== -->
   <section class="view" id="view-list">
     <div class="hero">
       <div class="hero-title">
@@ -1659,6 +1641,24 @@
           <tbody id="tbody"></tbody>
         </table>
       </div>
+    </div>
+  </section>
+
+  <!-- ===================== VIEW 3: カンバン ===================== -->
+  <section class="view" id="view-kanban">
+    <div class="hero">
+      <div class="hero-title">
+        <h1>選考<span class="g">カンバンボード</span></h1>
+        <p>カードをドラッグ＆ドロップして選考ステージを進められます。クリックで選考詳細・面接記録を編集できます。</p>
+      </div>
+      <div class="stat-strip">
+        <span>選考中 <b id="kActive" style="color:var(--cyan)">0</b> 社</span>
+        <span>内々定 <b id="kOffer" style="color:var(--green)">0</b> 社</span>
+        <span class="hot">直近締切 <b id="kDue">0</b> 件</span>
+      </div>
+    </div>
+    <div class="board-wrap">
+      <div class="board" id="board"></div>
     </div>
   </section>
 
@@ -1710,13 +1710,13 @@
       <span class="icon">🏢</span>
       <span>企業DB</span>
     </button>
-    <button class="mobile-nav-btn" data-view="kanban" onclick="switchView('kanban')">
-      <span class="icon">📋</span>
-      <span>カンバン <span class="tab-lock" style="font-size:9px">🔒</span></span>
-    </button>
     <button class="mobile-nav-btn" data-view="list" onclick="switchView('list')">
       <span class="icon">📑</span>
       <span>選考リスト <span class="tab-lock" style="font-size:9px">🔒</span></span>
+    </button>
+    <button class="mobile-nav-btn" data-view="kanban" onclick="switchView('kanban')">
+      <span class="icon">📋</span>
+      <span>カンバン <span class="tab-lock" style="font-size:9px">🔒</span></span>
     </button>
     <button class="mobile-nav-btn" data-view="dash" onclick="switchView('dash')">
       <span class="icon">📊</span>
@@ -2642,7 +2642,7 @@
   let currentView = 'db';
   function switchView(v) {
     if (!currentAuthUser && v !== 'db') {
-      requireAuth('カンバンや選考リスト・分析ダッシュボードを利用');
+      requireAuth('選考リストやカンバン・分析ダッシュボードを利用');
       return;
     }
     currentView = v;
