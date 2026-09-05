@@ -335,71 +335,96 @@
   .ud-item.danger { color: #ff6b81; }
   .ud-item.danger:hover { background: rgba(255,107,129,0.12); }
 
-  /* Auth Modal Tabs */
+  /* Auth Modal (Linear Minimalist - Option C) */
   .auth-tabs {
     display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    padding-bottom: 8px;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+    border: none;
   }
   .auth-tab {
     background: transparent;
     border: none;
-    color: var(--sub);
+    border-bottom: 2px solid transparent;
+    color: #94a3b8;
     font-size: 13.5px;
     font-weight: 700;
-    padding: 6px 14px;
-    border-radius: 6px;
+    padding: 0 0 10px 0;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+  .auth-tab:hover {
+    color: #f1f5f9;
   }
   .auth-tab.active {
-    color: var(--ink);
-    background: rgba(139,123,255,0.18);
+    color: #ffffff;
+    border-bottom-color: #38bdf8;
   }
-
-  /* Google OAuth Button & Divider */
-  .auth-divider {
+  .auth-notice-pill {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin: 16px 0 14px;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.22);
+    border-radius: 8px;
+    font-size: 11.5px;
+    color: #7dd3fc;
+    line-height: 1.4;
   }
-  .auth-divider::before,
-  .auth-divider::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: var(--glass-brd);
+  .auth-notice-icon {
+    font-size: 12px;
+    flex-shrink: 0;
   }
-  .auth-divider span {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.5px;
-  }
-  .btn-google {
+  .auth-btn-primary {
     width: 100%;
-    height: 42px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--ink);
-    font-size: 13.5px;
+    height: 38px;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #090d16;
+    font-size: 13px;
     font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 6px;
+    user-select: none;
+  }
+  .auth-btn-primary:hover {
+    background: #f1f5f9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.18);
+  }
+  .auth-btn-primary:active {
+    transform: translateY(0);
+  }
+  .btn-google {
+    width: 100%;
+    height: 38px;
+    border-radius: 9px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.035);
+    color: #cbd5e1;
+    font-size: 12.5px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     cursor: pointer;
-    transition: all .2s ease;
+    transition: all .15s ease;
     user-select: none;
   }
   .btn-google:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
   }
   .btn-google svg {
     flex-shrink: 0;
@@ -3296,57 +3321,59 @@
     </div>
   </div>
 
-  <!-- ===================== MODAL: ログイン・新規登録 ===================== -->
+  <!-- ===================== MODAL: ログイン・新規登録 (Linear Minimalist) ===================== -->
   <div class="modal-overlay" id="authModal" onclick="onModalOverlayClick(event, 'authModal')">
-    <div class="modal" style="max-width:400px">
-      <div class="modal-head">
-        <h3 id="authModalTitle">☁️ クラウド同期ログイン</h3>
-        <button class="modal-close" onclick="closeModal('authModal')">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="auth-tabs">
+    <div class="modal" style="max-width:380px; border-radius:16px; background:rgba(13, 19, 33, 0.95); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.08); box-shadow:0 20px 50px rgba(0,0,0,0.6);">
+      <div class="modal-head" style="padding:16px 20px 0; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:flex-end; justify-content:space-between;">
+        <h3 id="authModalTitle" style="display:none">☁️ クラウド同期ログイン</h3>
+        <div class="auth-tabs" style="display:flex; gap:24px; margin:0; padding:0; border:none;">
           <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">ログイン</button>
-          <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">新規登録</button>
+          <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">アカウント登録</button>
+        </div>
+        <button class="modal-close" onclick="closeModal('authModal')" style="margin-bottom:8px;">✕</button>
+      </div>
+      <div class="modal-body" style="padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px;">
+        <div id="authNotice" class="auth-notice-pill">
+          <span class="auth-notice-icon">⚡</span>
+          <span id="authNoticeText">登録済みのアカウントに保存された選考データを同期します</span>
         </div>
 
-        <div id="authNotice" style="font-size:12px;color:var(--sub);margin-bottom:14px;line-height:1.5;">
-          ログインすると、別のスマホやPCからでも同じ選考進捗・面接ノートがリアルタイムに自動同期されます。
-        </div>
-
-        <form id="authForm" onsubmit="handleAuthSubmit(event)">
-          <div class="form-group">
-            <label class="form-label">メールアドレス</label>
-            <input type="email" class="form-input" id="authEmail" placeholder="name@example.com" required autocomplete="email" />
+        <form id="authForm" onsubmit="handleAuthSubmit(event)" style="display:flex; flex-direction:column; gap:12px; margin:0;">
+          <div class="form-group" style="gap:5px;">
+            <label class="form-label" style="font-size:11.5px; font-weight:600; color:#94a3b8;">メールアドレス</label>
+            <input type="email" class="form-input" id="authEmail" placeholder="student@univ.ac.jp" required autocomplete="email" style="height:38px; font-size:12.5px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff;" />
           </div>
 
-          <div class="form-group">
-            <label class="form-label">パスワード (6文字以上)</label>
-            <input type="password" class="form-input" id="authPassword" placeholder="••••••••" required minlength="6" autocomplete="current-password" />
+          <div class="form-group" style="gap:5px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <label class="form-label" style="font-size:11.5px; font-weight:600; color:#94a3b8;">パスワード</label>
+              <span style="font-size:10.5px; color:#64748b;">6文字以上</span>
+            </div>
+            <input type="password" class="form-input" id="authPassword" placeholder="••••••••" required minlength="6" autocomplete="current-password" style="height:38px; font-size:12.5px; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff;" />
           </div>
 
-          <div id="authErrorMsg" style="display:none;color:#ff6b81;font-size:12px;margin-bottom:12px;padding:8px 10px;background:rgba(255,107,129,0.1);border-radius:6px;border:1px solid rgba(255,107,129,0.3)"></div>
+          <div id="authErrorMsg" style="display:none; color:#ff6b81; font-size:12px; padding:8px 10px; background:rgba(255,107,129,0.1); border-radius:6px; border:1px solid rgba(255,107,129,0.3)"></div>
 
-          <button type="submit" class="top-btn primary" id="authSubmitBtn" style="width:100%;height:40px;font-size:13.5px;justify-content:center;">
-            ログイン
-          </button>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
+            <button type="submit" class="auth-btn-primary" id="authSubmitBtn">
+              ログイン
+            </button>
+
+            <button type="button" class="btn-google" id="googleLoginBtn" onclick="handleGoogleLogin()">
+              <svg width="15" height="15" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+              </svg>
+              <span>Google で続ける</span>
+            </button>
+          </div>
         </form>
 
-        <div class="auth-divider">
-          <span>または</span>
+        <div style="text-align:center; font-size:10.5px; color:#64748b; line-height:1.4; margin-top:2px;">
+          <span>🔒 PostgreSQL RLS暗号化通信・学生完全無料</span>
         </div>
-
-        <button type="button" class="btn-google" id="googleLoginBtn" onclick="handleGoogleLogin()">
-          <svg width="18" height="18" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-          </svg>
-          <span>Google でログイン</span>
-        </button>
-      </div>
-      <div class="modal-foot" style="justify-content:center;">
-        <span style="font-size:11px;color:var(--muted)">🔒 Supabase PostgreSQL による行単位暗号化通信</span>
       </div>
     </div>
   </div>
@@ -4840,6 +4867,7 @@
     const title = document.getElementById('authModalTitle');
     const btn = document.getElementById('authSubmitBtn');
     const passInput = document.getElementById('authPassword');
+    const noticeText = document.getElementById('authNoticeText');
 
     if (mode === 'login') {
       if (tabLogin) tabLogin.classList.add('active');
@@ -4847,12 +4875,14 @@
       if (title) title.textContent = '☁️ クラウド同期ログイン';
       if (btn) btn.textContent = 'ログイン';
       if (passInput) passInput.setAttribute('autocomplete', 'current-password');
+      if (noticeText) noticeText.textContent = '登録済みのアカウントに保存された選考データを同期します';
     } else {
       if (tabReg) tabReg.classList.add('active');
       if (tabLogin) tabLogin.classList.remove('active');
       if (title) title.textContent = '☁️ 新規アカウント作成';
-      if (btn) btn.textContent = 'アカウントを作成して同期開始';
+      if (btn) btn.textContent = 'アカウントを作成';
       if (passInput) passInput.setAttribute('autocomplete', 'new-password');
+      if (noticeText) noticeText.textContent = '登録するとブラウザを閉じても選考データがクラウド保存されます';
     }
   }
 
