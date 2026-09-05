@@ -2353,10 +2353,11 @@
   .cal-grid-wrap {
     flex: 1;
     min-width: 0;
+    overflow: hidden;
   }
   .cal-weekdays {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 4px;
     margin-bottom: 6px;
     text-align: center;
@@ -2371,11 +2372,13 @@
   .cal-weekdays .weekday.sat { color: var(--cyan); }
   .cal-days {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 4px;
   }
   .cal-day-cell {
     min-height: 82px;
+    min-width: 0;
+    overflow: hidden;
     background: rgba(255,255,255, 0.02);
     border: 1px solid rgba(255,255,255, 0.04);
     border-radius: 8px;
@@ -2460,14 +2463,17 @@
   /* Calendar Sidebar */
   .cal-sidebar {
     width: 290px;
-    background: rgba(0,0,0,.25);
+    flex-shrink: 0;
+    background: #0f1527;
     border: 1px solid var(--glass-brd);
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 12px 14px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     min-height: 380px;
+    position: relative;
+    z-index: 2;
   }
   .cal-sidebar-head {
     display: flex;
@@ -2503,7 +2509,7 @@
     background: rgba(255,255,255,.06);
     border-color: var(--violet);
   }
-  @media (max-width: 960px) {
+  @media (max-width: 1040px) {
     .cal-layout {
       flex-direction: column;
     }
