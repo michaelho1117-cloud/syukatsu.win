@@ -2546,16 +2546,26 @@
       btn.style.opacity = '0.7';
       btn.innerHTML = '<span>Google に接続中...</span>';
     }
+
+    const targetRedirect = window.location.protocol.startsWith('http') 
+      ? window.location.origin 
+      : 'https://syukatsu.win';
+
+    console.log('[Google Auth Start]', { targetRedirect, supabaseUrl: SUPABASE_URL });
+
     try {
       const { data, error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin
+          redirectTo: targetRedirect
         }
       });
       if (error) throw error;
+      if (data && data.url) {
+        console.log('[Google Auth Redirecting to]', data.url);
+      }
     } catch (err) {
-      console.error('Google login error:', err);
+      console.error('[Google Auth Error]', err);
       const errorEl = document.getElementById('authErrorMsg');
       if (errorEl) {
         errorEl.textContent = 'Googleログインに失敗しました: ' + (err.message || err);
@@ -3988,6 +3998,49 @@
   applySettings();
   updateAuthUI();
   renderAll();
+
+  // URL OAuth エラー・パラメータ自動検知 & 診断ログ
+  (function checkUrlAuthStatus() {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const hashStr = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : window.location.hash;
+      const hashParams = new URLSearchParams(hashStr);
+
+      const err = urlParams.get('error') || hashParams.get('error');
+      const errCode = urlParams.get('error_code') || hashParams.get('error_code');
+      const errDesc = urlParams.get('error_description') || hashParams.get('error_description');
+
+      if (err || errDesc) {
+        const fullDesc = decodeURIComponent(errDesc || err || '未知のエラー');
+        console.error('[OAuth Debug Error Detected]', { error: err, code: errCode, description: fullDesc, url: window.location.href });
+
+        let diagAdvice = '';
+        if (fullDesc.includes('Unable to exchange external code')) {
+          diagAdvice = '<strong>排查建议：</strong><br>1. 检查 Supabase 控制台的 Client Secret 密钥是否多复制了空格或换行；<br>2. 检查 Google Cloud 凭据中的「已获授权的重定向 URI」是否严格匹配。';
+        } else if (fullDesc.includes('redirect_uri_mismatch')) {
+          diagAdvice = '<strong>排查建议：</strong>Google Cloud 中的重定向 URI 与当前发起请求的地址不一致。';
+        }
+
+        setTimeout(() => {
+          openAuthModal('login');
+          const errorEl = document.getElementById('authErrorMsg');
+          if (errorEl) {
+            errorEl.innerHTML = `
+              <div style="font-weight:700;margin-bottom:4px">⚠️ Google 登录验证失败</div>
+              <div style="font-size:11px;opacity:0.9;word-break:break-all">${fullDesc}</div>
+              ${diagAdvice ? `<div style="margin-top:8px;padding:6px 8px;background:rgba(252,211,77,0.1);border-radius:4px;color:#fcd34d;font-size:11px">${diagAdvice}</div>` : ''}
+              <div style="margin-top:8px;display:flex;gap:6px">
+                <button type="button" onclick="navigator.clipboard.writeText(location.href);alert('已复制当前错误URL日志')" style="font-size:10.5px;padding:3px 8px;border-radius:4px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;cursor:pointer;">📋 复制错误URL日志</button>
+              </div>
+            `;
+            errorEl.style.display = 'block';
+          }
+        }, 400);
+      }
+    } catch (e) {
+      console.warn('checkUrlAuthStatus error:', e);
+    }
+  })();
 
   // Supabase 起動時セッション復元 & 認証状態監視
   if (supabaseClient) {
