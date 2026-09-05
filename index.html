@@ -173,22 +173,23 @@
 
   nav.tabs {
     display: flex;
-    gap: clamp(4px, 0.6vw, 8px);
-    margin-left: clamp(6px, 1vw, 14px);
+    gap: clamp(3px, 0.45vw, 6px);
+    margin-left: clamp(4px, 0.8vw, 10px);
+    flex-shrink: 0;
   }
   nav.tabs button {
     border: 0;
     background: transparent;
     color: var(--sub);
-    padding: 7px clamp(10px, 1vw, 16px);
+    padding: 6.5px clamp(8px, 0.7vw, 13px);
     border-radius: 9px;
     cursor: pointer;
-    font-size: clamp(12px, 0.85vw, 13.5px);
+    font-size: clamp(11.5px, 0.8vw, 13px);
     font-weight: 700;
     transition: .18s;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     white-space: nowrap;
     user-select: none;
   }
@@ -203,8 +204,8 @@
   }
 
   .spacer {
-    flex: 1 1 20px;
-    min-width: 10px;
+    flex: 0 1 12px;
+    min-width: 4px;
   }
 
   .searchbox {
@@ -216,9 +217,9 @@
     border-radius: 10px;
     padding: 6px 12px;
     color: var(--sub);
-    min-width: 235px;
-    max-width: 320px;
-    flex: 0 1 280px;
+    min-width: 145px;
+    max-width: 260px;
+    flex: 1 1 190px;
     transition: .2s;
   }
   .searchbox:focus-within {
@@ -281,6 +282,15 @@
     gap: 6px;
     border-color: rgba(78, 227, 154, 0.4);
     background: rgba(78, 227, 154, 0.08);
+    max-width: 138px;
+    flex-shrink: 0;
+  }
+  #userEmailText {
+    max-width: 76px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
   }
   .user-avatar {
     width: 20px;
@@ -1517,27 +1527,42 @@
   }
 
   /* ===== Responsive ===== */
-  @media (max-width: 1360px) {
-    nav.tabs {
-      gap: 5px;
-      margin-left: 6px;
-    }
-    nav.tabs button {
-      padding: 6.5px 12px;
-      font-size: 12.5px;
-    }
-    .searchbox {
-      min-width: 215px;
-      flex: 0 1 230px;
-    }
+  @media (max-width: 1450px) {
     header.topbar .top-btn.secondary-action .btn-text {
       display: none;
+    }
+  }
+
+  @media (max-width: 1320px) {
+    nav.tabs {
+      gap: 3px;
+      margin-left: 4px;
+    }
+    nav.tabs button {
+      padding: 6px 8px;
+      font-size: 11.5px;
+    }
+    .searchbox {
+      min-width: 130px;
+      flex: 0 1 170px;
     }
   }
 
   @media (max-width: 1180px) {
     header.topbar .top-btn .btn-text {
       display: none;
+    }
+    #userEmailText {
+      max-width: 58px;
+    }
+  }
+
+  @media (max-width: 1080px) {
+    #userBtn #userEmailText {
+      display: none;
+    }
+    .user-btn {
+      padding: 6px 8px;
     }
   }
 
@@ -2688,7 +2713,7 @@
       <div id="userProfileWrap" style="display:none;position:relative;">
         <button class="top-btn user-btn" id="userBtn" onclick="toggleUserDropdown(event)" title="アカウント設定・同期状態">
           <span class="user-avatar" id="userAvatar">U</span>
-          <span class="btn-text" id="userEmailText" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">user</span>
+          <span class="btn-text" id="userEmailText">user</span>
           <span class="cloud-dot" title="クラウド同期有効"></span>
         </button>
         <div class="user-dropdown" id="userDropdown" onclick="event.stopPropagation()">
