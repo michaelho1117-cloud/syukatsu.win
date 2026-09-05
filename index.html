@@ -7804,12 +7804,14 @@
       let refBadge = '';
       if (refCount > 0) {
         const previewNames = refEsList.slice(0, 2).map(e => e.title).join(', ');
-        refBadge = `<div style="font-size:11.5px;color:var(--violet);display:flex;align-items:center;gap:5px;font-weight:700">
-          <span>📝 <b>${refCount}件</b>のESで使用中</span>
-          <small style="color:var(--sub)">(${previewNames}${refCount > 2 ? '等' : ''})</small>
+        refBadge = `<div style="font-size:11.5px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;margin:2px 0;">
+          <span style="display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--violet);background:rgba(139,123,255,0.12);border:1px solid rgba(139,123,255,0.25);padding:2px 8px;border-radius:6px;font-size:11px;white-space:nowrap;flex-shrink:0;">
+            📝 <b>${refCount}件</b>のESで使用中
+          </span>
+          <span style="color:var(--sub);font-size:11px;line-height:1.4;">(${previewNames}${refCount > 2 ? '等' : ''})</span>
         </div>`;
       } else {
-        refBadge = `<div style="font-size:11.5px;color:var(--muted)">まだ参照中のESはありません</div>`;
+        refBadge = `<div style="font-size:11px;color:var(--muted);padding:2px 0;">まだ参照中のESはありません</div>`;
       }
 
       const catBadgeMap = {
