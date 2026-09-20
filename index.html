@@ -4121,7 +4121,7 @@
   <div class="toast" id="toast"></div>
   
 
-<script src="data/companies_catalog.js"></script>
+<script src="data/companies_catalog.js?v=20260920_v4"></script>
 <script>
   /* =========================================================================
      単一マスターデータ定義 & 初期カタログ（48社）
@@ -4206,7 +4206,48 @@
     { id:'c_sansan', name:'Sansan', code:'4443', domain:'sansan.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SaaS', emp:1600, empNote:'単体', payBachelor:330000, payMaster:350000, avgAnnual:750, color:'#e60012', added:false, stage:'watch', loc:'東京/全国', tags:["名刺管理", "Bill One", "営業DX", "SaaS"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_moneyforward', name:'マネーフォワード', code:'3994', domain:'moneyforward.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SaaS/FinTech', emp:2400, empNote:'単体', payBachelor:320000, payMaster:340000, avgAnnual:720, color:'#2f80ed', added:false, stage:'watch', loc:'東京/全国', tags:["マネーフォワードME", "クラウド会計", "FinTech", "SaaS"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_lycorp', name:'LINEヤフー', code:'4689', domain:'lycorp.co.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'Webサービス', emp:11500, empNote:'単体(連結2.8万)', payBachelor:300000, payMaster:325000, avgAnnual:820, color:'#06c755', added:false, stage:'watch', loc:'東京/全国', tags:["LINE", "Yahoo! JAPAN", "PayPay", "国内最大トラフィック"], due:'', dueLabel:'', dueLv:'' },
+,
+    // ── マイページ連携・追加公式企業（22社） ──
+    {"id":"c_unlisted_bdx","name":"B&DX株式会社","code":null,"domain":"bdx.co.jp","cat":"コンサル・シンクタンク","ind17":"情報・通信業","sub":"総合・DX・ビジネストランスフォーメーションコンサルティング","emp":130,"empNote":"単体","payBachelor":350000,"payMaster":375000,"avgAnnual":1050,"color":"#0a2540","added":false,"stage":"watch","stars":3,"scale":"新進気鋭ブティック","market":"非上場","tags":["DXコンサル","事業変革","ブティック","高年収"],"loc":"東京","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_nttdocomo","name":"株式会社NTTドコモ","code":null,"domain":"docomo.ne.jp","cat":"IT・通信","ind17":"情報・通信業","sub":"移動通信・モバイルサービス・スマートライフ事業","emp":8500,"empNote":"単体(連結2.7万)","payBachelor":265000,"payMaster":285000,"avgAnnual":875,"color":"#cc0033","added":false,"stage":"watch","stars":4,"scale":"大手インフラ","market":"非上場","tags":["5G/通信","スマートライフ","NTTグループ","インフラ"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_jera","name":"株式会社JERA","code":null,"domain":"jera.co.jp","cat":"インフラ・運輸","ind17":"電気・ガス業","sub":"グローバルエネルギー・国内最大手発電(東電×中電合弁)","emp":4800,"empNote":"連結","payBachelor":260000,"payMaster":280000,"avgAnnual":920,"color":"#004f9f","added":false,"stage":"watch","stars":4,"scale":"大手インフラ","market":"非上場","tags":["国内最大発電","グローバルLNG","脱炭素","インフラ"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_nippon_steel_eng","name":"日鉄エンジニアリング株式会社","code":null,"domain":"eng.nipponsteel.com","cat":"メーカー","ind17":"機械","sub":"製鉄・環境エネルギー・海洋・総合エンジニアリング","emp":3200,"empNote":"単体","payBachelor":255000,"payMaster":275000,"avgAnnual":950,"color":"#002d62","added":false,"stage":"watch","stars":3,"scale":"非上場名門","market":"非上場","tags":["総合エンジ","日本製鉄グループ","プラント","グローバル"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_2130","name":"株式会社メンバーズ","code":"2130","domain":"members.co.jp","cat":"IT・通信","ind17":"サービス業","sub":"デジタルビジネス運用・Web総合支援・ソーシャルDX","emp":2500,"empNote":"単体","payBachelor":245000,"payMaster":260000,"avgAnnual":580,"color":"#009688","added":false,"stage":"watch","stars":3,"scale":"プライム上場","market":"プライム上場","tags":["デジタルマーケ","DXクリエイター","フルリモート推進"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_5036","name":"日本ビジネスシステムズ株式会社","code":"5036","domain":"jbs.co.jp","cat":"IT・通信","ind17":"情報・通信業","sub":"クラウドインテグレーション(Microsoft最上位パートナー)","emp":2600,"empNote":"単体","payBachelor":260000,"payMaster":280000,"avgAnnual":710,"color":"#0078d4","added":false,"stage":"watch","stars":3,"scale":"スタンダード上場","market":"スタンダード上場","tags":["Microsoft最上位","クラウドSIer","DX推進"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_aflac","name":"アフラック生命保険株式会社","code":null,"domain":"aflac.co.jp","cat":"金融","ind17":"保険業","sub":"生命保険(がん保険・医療保険国内最大手)","emp":5200,"empNote":"日本単体","payBachelor":260000,"payMaster":280000,"avgAnnual":850,"color":"#00a3e0","added":false,"stage":"watch","stars":4,"scale":"外資系","market":"外資系","tags":["がん保険首位","外資系生保","ホワイト企業","DX生保"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_jsol","name":"株式会社JSOL","code":null,"domain":"jsol.co.jp","cat":"IT・通信","ind17":"情報・通信業","sub":"ITコンサルティング・ERP・CAE(NTTデータ×日本総研)","emp":1400,"empNote":"単体","payBachelor":260000,"payMaster":280000,"avgAnnual":820,"color":"#d9232e","added":false,"stage":"watch","stars":3,"scale":"非上場名門","market":"非上場","tags":["NTTデータ系列","日本総研系列","ERP/製造CAE","ITコンサル"],"loc":"東京/大阪","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_nestle_jp","name":"ネスレ日本株式会社","code":null,"domain":"nestle.co.jp","cat":"メーカー","ind17":"食料品","sub":"世界最大手食品飲料メーカー日本法人(ネスカフェ・キットカット)","emp":2300,"empNote":"日本単体","payBachelor":255000,"payMaster":275000,"avgAnnual":840,"color":"#1e5b97","added":false,"stage":"watch","stars":4,"scale":"外資系","market":"外資系","tags":["スイス外資","世界最大食品","キットカット","高待遇"],"loc":"神戸/東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_kpmg_azsa","name":"有限責任 あずさ監査法人","code":null,"domain":"kpmg.com/jp","cat":"コンサル・シンクタンク","ind17":"サービス業","sub":"BIG4監査法人最大手(監査・保証業務・財務アドバイザリー)","emp":6500,"empNote":"全体","payBachelor":335000,"payMaster":350000,"avgAnnual":920,"color":"#00338d","added":false,"stage":"watch","stars":4,"scale":"BIG4名門","market":"非上場","tags":["BIG4","監査法人首位","KPMG","会計・ガバナンス"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_mumss","name":"三菱UFJモルガン・スタンレー証券株式会社","code":null,"domain":"sc.mufg.jp","cat":"金融","ind17":"証券、商品先物取引業","sub":"総合証券(MUFG×モルガン・スタンレー合弁大手)","emp":5100,"empNote":"単体","payBachelor":285000,"payMaster":305000,"avgAnnual":1020,"color":"#e60012","added":false,"stage":"watch","stars":4,"scale":"大手証券","market":"非上場","tags":["5大証券","MUFG系列","投資銀行","高年収"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_mufg_it","name":"三菱UFJインフォメーションテクノロジー株式会社","code":null,"domain":"it.mufg.jp","cat":"IT・通信","ind17":"情報・通信業","sub":"メガバンク中核金融IT・フィンテック(MUFGグループ)","emp":3300,"empNote":"単体","payBachelor":260000,"payMaster":280000,"avgAnnual":810,"color":"#e60012","added":false,"stage":"watch","stars":3,"scale":"大手金融IT","market":"非上場","tags":["ユーザー系SIer首位","MUFG中核","金融基幹IT","高安定"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_deloitte_cyber","name":"デロイト トーマツ サイバー合同会社","code":null,"domain":"deloitte.com/jp","cat":"コンサル・シンクタンク","ind17":"サービス業","sub":"サイバーセキュリティ戦略・インシデント対応・リスクコンサル","emp":350,"empNote":"単体","payBachelor":365000,"payMaster":385000,"avgAnnual":980,"color":"#86bc25","added":false,"stage":"watch","stars":4,"scale":"BIG4名門","market":"非上場","tags":["デロイト系列","サイバーセキュリティ","BIG4","高年収"],"loc":"東京","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_deloitte_ra","name":"合同会社デロイト トーマツ (リスクアドバイザリー)","code":null,"domain":"deloitte.com/jp","cat":"コンサル・シンクタンク","ind17":"サービス業","sub":"企業統治・規制対応・内部統制・ESGリスクコンサルティング","emp":1800,"empNote":"単体","payBachelor":365000,"payMaster":385000,"avgAnnual":980,"color":"#86bc25","added":false,"stage":"watch","stars":4,"scale":"BIG4名門","market":"非上場","tags":["デロイト系列","リスクアドバイザリー","内部統制","BIG4"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_nttdata_ft","name":"株式会社NTTデータ フィナンシャルテクノロジー","code":null,"domain":"nttdata-ft.com","cat":"IT・通信","ind17":"情報・通信業","sub":"金融系ミッションクリティカル基幹システム・先端フィンテック","emp":1900,"empNote":"単体","payBachelor":255000,"payMaster":275000,"avgAnnual":780,"color":"#004098","added":false,"stage":"watch","stars":3,"scale":"NTT系列","market":"非上場","tags":["NTTデータ金融中核","決済インフラ","FinTech"],"loc":"東京","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_abeam_sys","name":"アビームシステムズ株式会社","code":null,"domain":"abeam-s.com","cat":"IT・通信","ind17":"情報・通信業","sub":"エンタープライズIT・SAP・業務改革(アビーム×ブラザー)","emp":1200,"empNote":"単体","payBachelor":245000,"payMaster":265000,"avgAnnual":720,"color":"#ed1a3b","added":false,"stage":"watch","stars":3,"scale":"大手IT","market":"非上場","tags":["アビーム系列","ブラザー工業系列","SAP導入","安定性"],"loc":"名古屋/東京","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_persol_ct","name":"パーソルクロステクノロジー株式会社","code":null,"domain":"persol-xtech.co.jp","cat":"IT・通信","ind17":"サービス業","sub":"機電・IT・先端テクノロジー受託開発＆エンジニアリング","emp":5800,"empNote":"単体","payBachelor":240000,"payMaster":255000,"avgAnnual":620,"color":"#f39800","added":false,"stage":"watch","stars":3,"scale":"パーソル系列","market":"非上場","tags":["パーソル技術中核","メカ・エレ・IT","モビリティ開発"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_persol_bpd","name":"パーソルビジネスプロセスデザイン株式会社","code":null,"domain":"persol-bd.co.jp","cat":"小売・サービス","ind17":"サービス業","sub":"BPO・セールスマーケティング・DX業務オペレーション設計","emp":2800,"empNote":"単体","payBachelor":235000,"payMaster":250000,"avgAnnual":560,"color":"#f39800","added":false,"stage":"watch","stars":3,"scale":"パーソル系列","market":"非上場","tags":["BPO大手","パーソル系列","業務プロセス設計","DX推進"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_nihon_keiei","name":"株式会社日本経営","code":null,"domain":"nkgr.co.jp","cat":"コンサル・シンクタンク","ind17":"サービス業","sub":"医療機関・病院経営・福祉・ヘルスケア総合コンサル国内首位","emp":600,"empNote":"グループ全体","payBachelor":270000,"payMaster":290000,"avgAnnual":750,"color":"#005bac","added":false,"stage":"watch","stars":3,"scale":"業界特化首位","market":"非上場","tags":["医療経営コンサル","ヘルスケア首位","地域医療DX"],"loc":"大阪/東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_louisvuitton_jp","name":"ルイ・ヴィトン ジャパン株式会社","code":null,"domain":"louisvuitton.com","cat":"小売・サービス","ind17":"商業（卸売業、小売業）","sub":"世界的ラグジュアリーブランド日本法人(LVMHグループ首位)","emp":2000,"empNote":"日本単体","payBachelor":260000,"payMaster":275000,"avgAnnual":780,"color":"#6f523b","added":false,"stage":"watch","stars":4,"scale":"外資トップ","market":"外資系","tags":["LVMHグループ","最高峰ラグジュアリー","外資名門","ホスピタリティ"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_unlisted_bebit","name":"株式会社ビービット","code":null,"domain":"bebit.co.jp","cat":"コンサル・シンクタンク","ind17":"サービス業","sub":"UXデザインコンサルティング・SaaS(USERGRAM)パイオニア","emp":180,"empNote":"単体","payBachelor":300000,"payMaster":320000,"avgAnnual":780,"color":"#e4002b","added":false,"stage":"watch","stars":3,"scale":"UX名門ブティック","market":"非上場","tags":["UXコンサル","顧客体験デザイン","東大生人気ブティック","SaaS"],"loc":"東京","due":"","dueLabel":"","dueLv":"","hasLogo":true},
+    {"id":"c_rakuten_bu","name":"楽天グループ (ビジネス職・サマーインターン)","code":"4755","domain":"rakuten.co.jp","cat":"IT・通信","ind17":"情報・通信業","sub":"Eコマース・フィンテック・通信(ビジネス職総合選考)","emp":17000,"empNote":"単体(連結3.2万)","payBachelor":310000,"payMaster":330000,"avgAnnual":797,"color":"#bf0000","added":false,"stage":"watch","stars":4,"scale":"TOPIX100","market":"プライム上場","tags":["メガベンチャー","英語公用語","サマーインターン","総合職"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true}
   ];
+
+  function getFullCatalog() {
+    let full = (window.OFFICIAL_CATALOG_1500 && window.OFFICIAL_CATALOG_1500.length)
+      ? window.OFFICIAL_CATALOG_1500
+      : DEFAULT_CATALOG;
+    if (window.OFFICIAL_CATALOG_1500 && window.OFFICIAL_CATALOG_1500.length) {
+      const idSet = new Set(window.OFFICIAL_CATALOG_1500.map(x => x.id));
+      DEFAULT_CATALOG.forEach(dc => {
+        if (!idSet.has(dc.id)) {
+          window.OFFICIAL_CATALOG_1500.push(dc);
+          idSet.add(dc.id);
+        }
+      });
+      full = window.OFFICIAL_CATALOG_1500;
+    }
+    return full;
+  }
 
   const DEFAULT_TASKS = [
     { id: 't_spi', text: 'SPI・玉手箱のWEBテスト問題集を1周解く', done: false, tag: 'テスト対策' },
@@ -5126,9 +5167,7 @@
 
   function loadAll() {
     try {
-      const fullCatalog = (window.OFFICIAL_CATALOG_1500 && window.OFFICIAL_CATALOG_1500.length)
-        ? window.OFFICIAL_CATALOG_1500
-        : DEFAULT_CATALOG;
+      const fullCatalog = getFullCatalog();
 
       if (!currentAuthUser) {
         // ==================== 未ログイン: 展示用デモモード ====================
@@ -5170,6 +5209,9 @@
       if (savedCatalogStr) {
         let savedCatalog = JSON.parse(savedCatalogStr);
         const userStateMap = new Map();
+        const masterMap = new Map();
+        fullCatalog.forEach(c => masterMap.set(c.id, c));
+
         savedCatalog.forEach(c => {
           if (c.added || (c.stage && c.stage !== 'watch') || c.due || c.dueLabel || c.myPageUrl || c.myPageId || c.myPagePass || c.noteMotiv || c.noteEs || c.noteInterview || c.isCustom) {
             userStateMap.set(c.id, c);
@@ -5179,8 +5221,8 @@
           if (userStateMap.has(c.id)) {
             const u = userStateMap.get(c.id);
             return Object.assign({}, c, {
-              added: u.added,
-              stage: u.stage || c.stage,
+              added: u.added !== undefined ? u.added : true,
+              stage: u.stage || c.stage || 'watch',
               due: u.due !== undefined ? u.due : c.due,
               dueLabel: u.dueLabel !== undefined ? u.dueLabel : c.dueLabel,
               dueLv: u.dueLv !== undefined ? u.dueLv : c.dueLv,
@@ -5190,19 +5232,20 @@
               noteMotiv: u.noteMotiv || '',
               noteEs: u.noteEs || '',
               noteInterview: u.noteInterview || '',
-              tags: (u.tags && u.tags.length) ? u.tags : c.tags,
+              tags: (u.tags && u.tags.length && !u.tags.includes('手動登録')) ? u.tags : c.tags,
+              isCustom: false
             });
           }
-          return Object.assign({}, c, { added: false, stage: 'watch', due: '', dueLabel: '' });
+          return Object.assign({}, c, { added: false, stage: 'watch', due: '', dueLabel: '', isCustom: false });
         });
         savedCatalog.forEach(c => {
-          if (c.isCustom && !catalog.find(x => x.id === c.id)) {
+          if (c.isCustom && !masterMap.has(c.id) && !catalog.find(x => x.id === c.id)) {
             catalog.unshift(c);
           }
         });
       } else {
         // 新規ログインユーザー: デフォルトはクリーンな白紙選考リスト
-        catalog = fullCatalog.map(c => Object.assign({}, c, { added: false, stage: 'watch', due: '', dueLabel: '' }));
+        catalog = fullCatalog.map(c => Object.assign({}, c, { added: false, stage: 'watch', due: '', dueLabel: '', isCustom: false }));
       }
 
       // Private Selection Events
@@ -5725,7 +5768,8 @@
     if (c.myPageUrl) baseTags.push('__mp_url:' + encodeURIComponent(c.myPageUrl));
     if (c.myPageId) baseTags.push('__mp_id:' + encodeURIComponent(c.myPageId));
     if (c.myPagePass) baseTags.push('__mp_pass:' + encodeURIComponent(c.myPagePass));
-    if (c.name && (c.isCustom || !fullCatalog.find(x => x.id === c.id))) {
+    const full = getFullCatalog();
+    if (c.name && (c.isCustom || !full.find(x => x.id === c.id))) {
       baseTags.push('__cn:' + encodeURIComponent(c.name));
     }
     return baseTags;
@@ -5778,39 +5822,86 @@
       }
 
       // 2. 云端已有数据合并入本地 catalog
+      const fullCatalog = getFullCatalog();
+      const masterMap = new Map();
+      fullCatalog.forEach(c => masterMap.set(c.id, c));
+
       if (cloudItems && cloudItems.length) {
         cloudItems.forEach(item => {
           const parsed = parseCloudItemTags(item.tags);
           let c = catalog.find(x => x.id === item.company_id);
+          const master = masterMap.get(item.company_id);
+
           if (!c) {
-            // カタログ外・手動登録企業を生成
-            c = {
-              id: item.company_id,
-              name: parsed.compName || item.company_id,
-              cat: 'その他',
-              ind17: 'その他',
-              sub: 'その他',
-              emp: null,
-              payBachelor: null,
-              payMaster: null,
-              avgAnnual: null,
-              color: '#6366f1',
-              added: true,
-              stage: item.stage || 'entry',
-              due: item.due || '',
-              dueLabel: item.due_label || '',
-              dueLv: item.due_lv || '',
-              noteMotiv: item.note_motiv || '',
-              noteEs: item.note_es || '',
-              noteInterview: item.note_interview || '',
-              tags: parsed.cleanTags.length ? parsed.cleanTags : ['手動登録'],
-              isCustom: true,
-              myPageUrl: parsed.myPageUrl || '',
-              myPageId: parsed.myPageId || '',
-              myPagePass: parsed.myPagePass || ''
-            };
-            catalog.unshift(c);
+            if (master) {
+              c = Object.assign({}, master, {
+                added: true,
+                stage: item.stage || master.stage || 'watch',
+                due: item.due || '',
+                dueLabel: item.due_label || '',
+                dueLv: item.due_lv || '',
+                noteMotiv: item.note_motiv || '',
+                noteEs: item.note_es || '',
+                noteInterview: item.note_interview || '',
+                tags: (parsed.cleanTags.length && !parsed.cleanTags.includes('手動登録')) ? parsed.cleanTags : (master.tags || []),
+                isCustom: false,
+                myPageUrl: parsed.myPageUrl || '',
+                myPageId: parsed.myPageId || '',
+                myPagePass: parsed.myPagePass || ''
+              });
+              catalog.unshift(c);
+            } else {
+              // カタログ外・手動登録企業を生成
+              c = {
+                id: item.company_id,
+                name: parsed.compName || item.company_id,
+                cat: 'その他',
+                ind17: 'その他',
+                sub: 'その他',
+                emp: null,
+                payBachelor: null,
+                payMaster: null,
+                avgAnnual: null,
+                color: '#6366f1',
+                added: true,
+                stage: item.stage || 'entry',
+                due: item.due || '',
+                dueLabel: item.due_label || '',
+                dueLv: item.due_lv || '',
+                noteMotiv: item.note_motiv || '',
+                noteEs: item.note_es || '',
+                noteInterview: item.note_interview || '',
+                tags: parsed.cleanTags.length ? parsed.cleanTags : ['手動登録'],
+                isCustom: true,
+                myPageUrl: parsed.myPageUrl || '',
+                myPageId: parsed.myPageId || '',
+                myPagePass: parsed.myPagePass || ''
+              };
+              catalog.unshift(c);
+            }
           } else {
+            if (master) {
+              c.name = master.name;
+              c.code = master.code;
+              c.domain = master.domain;
+              c.ind17 = master.ind17;
+              c.cat = master.cat;
+              c.sub = master.sub;
+              c.emp = master.emp;
+              c.empNote = master.empNote;
+              c.payBachelor = master.payBachelor;
+              c.payMaster = master.payMaster;
+              c.avgAnnual = master.avgAnnual;
+              c.color = master.color;
+              c.scale = master.scale;
+              c.market = master.market;
+              c.hasLogo = master.hasLogo;
+              c.loc = master.loc;
+              c.isCustom = false;
+              if (!c.tags || c.tags.includes('手動登録') || !c.tags.length) {
+                c.tags = master.tags || [];
+              }
+            }
             c.added = true;
             c.stage = item.stage || c.stage || 'watch';
             if (item.due !== undefined && item.due !== null) c.due = item.due;
@@ -5819,7 +5910,7 @@
             if (item.note_motiv) c.noteMotiv = item.note_motiv;
             if (item.note_es) c.noteEs = item.note_es;
             if (item.note_interview) c.noteInterview = item.note_interview;
-            if (parsed.cleanTags.length) c.tags = parsed.cleanTags;
+            if (parsed.cleanTags.length && !parsed.cleanTags.includes('手動登録')) c.tags = parsed.cleanTags;
             if (parsed.myPageUrl) c.myPageUrl = parsed.myPageUrl;
             if (parsed.myPageId) c.myPageId = parsed.myPageId;
             if (parsed.myPagePass) c.myPagePass = parsed.myPagePass;
@@ -5931,7 +6022,7 @@
   function logoHtml(c) {
     const initial = (c.name || '企').slice(0, 1);
     const bg = c.color || '#8b7bff';
-    if (NO_LOGO_SET.has(c.id) || c.isCustom) {
+    if (NO_LOGO_SET.has(c.id)) {
       return `<div class="ico" style="background:${bg};color:#fff"><span>${initial}</span></div>`;
     }
     return `<div class="ico" style="background:${bg};color:#fff"><img src="assets/logos/${c.id}.png" alt="${c.name}" loading="lazy" decoding="async" width="44" height="44" onerror="this.remove()"><span>${initial}</span></div>`;
@@ -9064,7 +9155,7 @@
     const mIco = document.getElementById('mIco');
     const initial = (c.name || '企').slice(0, 1);
     mIco.style.background = c.color || '#8b7bff';
-    if (NO_LOGO_SET.has(c.id) || c.isCustom) {
+    if (NO_LOGO_SET.has(c.id)) {
       mIco.innerHTML = `<span>${initial}</span>`;
     } else {
       mIco.innerHTML = `<img src="assets/logos/${c.id}.png" alt="${c.name}" decoding="async" onerror="this.remove()"><span>${initial}</span>`;
@@ -9483,9 +9574,7 @@
 
   function resetToDefaultCatalog() {
     if (!confirm('初期カタログに戻しますか？\n追加・編集したメモやカスタム企業はすべてリセットされます。')) return;
-    const fullCatalog = (window.OFFICIAL_CATALOG_1500 && window.OFFICIAL_CATALOG_1500.length)
-      ? window.OFFICIAL_CATALOG_1500
-      : DEFAULT_CATALOG;
+    const fullCatalog = getFullCatalog();
     catalog = JSON.parse(JSON.stringify(fullCatalog));
     currentTasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
     saveAll();
