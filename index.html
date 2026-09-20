@@ -5687,6 +5687,42 @@
     showToast('ログアウトしました');
   }
 
+  function parseCloudItemTags(tags) {
+    let myPageUrl = '';
+    let myPageId = '';
+    let myPagePass = '';
+    let compName = '';
+    const cleanTags = [];
+    if (Array.isArray(tags)) {
+      tags.forEach(t => {
+        if (typeof t !== 'string') return;
+        if (t.startsWith('__mp_url:')) {
+          try { myPageUrl = decodeURIComponent(t.slice(9)); } catch(e) { myPageUrl = t.slice(9); }
+        } else if (t.startsWith('__mp_id:')) {
+          try { myPageId = decodeURIComponent(t.slice(8)); } catch(e) { myPageId = t.slice(8); }
+        } else if (t.startsWith('__mp_pass:')) {
+          try { myPagePass = decodeURIComponent(t.slice(10)); } catch(e) { myPagePass = t.slice(10); }
+        } else if (t.startsWith('__cn:')) {
+          try { compName = decodeURIComponent(t.slice(5)); } catch(e) { compName = t.slice(5); }
+        } else {
+          cleanTags.push(t);
+        }
+      });
+    }
+    return { myPageUrl, myPageId, myPagePass, compName, cleanTags };
+  }
+
+  function packCompanyCloudTags(c) {
+    const baseTags = (c.tags || []).filter(t => typeof t === 'string' && !t.startsWith('__mp_') && !t.startsWith('__cn:'));
+    if (c.myPageUrl) baseTags.push('__mp_url:' + encodeURIComponent(c.myPageUrl));
+    if (c.myPageId) baseTags.push('__mp_id:' + encodeURIComponent(c.myPageId));
+    if (c.myPagePass) baseTags.push('__mp_pass:' + encodeURIComponent(c.myPagePass));
+    if (c.name && (c.isCustom || !fullCatalog.find(x => x.id === c.id))) {
+      baseTags.push('__cn:' + encodeURIComponent(c.name));
+    }
+    return baseTags;
+  }
+
   async function syncAfterLogin() {
     if (!supabaseClient || !currentAuthUser) return;
     try {
@@ -5709,22 +5745,24 @@
       }
 
       // 1. 本地已追加但云端没有的，自动迁移上云 (Migration)
-      const localAdded = catalog.filter(c => c.added);
+      const localAdded = catalog.filter(c => c.added || c.myPageUrl || c.myPageId || c.myPagePass);
       const toUpsert = [];
       localAdded.forEach(c => {
-        toUpsert.push({
-          user_id: currentAuthUser.id,
-          company_id: c.id,
-          stage: c.stage || 'watch',
-          due: c.due || null,
-          due_label: c.dueLabel || null,
-          due_lv: c.dueLv || null,
-          note_motiv: c.noteMotiv || null,
-          note_es: c.noteEs || null,
-          note_interview: c.noteInterview || null,
-          tags: c.tags || [],
-          updated_at: new Date().toISOString()
-        });
+        if (!cloudMap.has(c.id)) {
+          toUpsert.push({
+            user_id: currentAuthUser.id,
+            company_id: c.id,
+            stage: c.stage || 'watch',
+            due: c.due || null,
+            due_label: c.dueLabel || null,
+            due_lv: c.dueLv || null,
+            note_motiv: c.noteMotiv || null,
+            note_es: c.noteEs || null,
+            note_interview: c.noteInterview || null,
+            tags: packCompanyCloudTags(c),
+            updated_at: new Date().toISOString()
+          });
+        }
       });
 
       if (toUpsert.length > 0) {
@@ -5733,24 +5771,57 @@
 
       // 2. 云端已有数据合并入本地 catalog
       if (cloudItems && cloudItems.length) {
-        catalog.forEach(c => {
-          if (cloudMap.has(c.id)) {
-            const item = cloudMap.get(c.id);
+        cloudItems.forEach(item => {
+          const parsed = parseCloudItemTags(item.tags);
+          let c = catalog.find(x => x.id === item.company_id);
+          if (!c) {
+            // カタログ外・手動登録企業を生成
+            c = {
+              id: item.company_id,
+              name: parsed.compName || item.company_id,
+              cat: 'その他',
+              ind17: 'その他',
+              sub: 'その他',
+              emp: null,
+              payBachelor: null,
+              payMaster: null,
+              avgAnnual: null,
+              color: '#6366f1',
+              added: true,
+              stage: item.stage || 'entry',
+              due: item.due || '',
+              dueLabel: item.due_label || '',
+              dueLv: item.due_lv || '',
+              noteMotiv: item.note_motiv || '',
+              noteEs: item.note_es || '',
+              noteInterview: item.note_interview || '',
+              tags: parsed.cleanTags.length ? parsed.cleanTags : ['手動登録'],
+              isCustom: true,
+              myPageUrl: parsed.myPageUrl || '',
+              myPageId: parsed.myPageId || '',
+              myPagePass: parsed.myPagePass || ''
+            };
+            catalog.unshift(c);
+          } else {
             c.added = true;
-            c.stage = item.stage || 'watch';
-            c.due = item.due || '';
-            c.dueLabel = item.due_label || '';
-            c.dueLv = item.due_lv || '';
-            c.noteMotiv = item.note_motiv || '';
-            c.noteEs = item.note_es || '';
-            c.noteInterview = item.note_interview || '';
-            if (item.tags && item.tags.length) c.tags = item.tags;
+            c.stage = item.stage || c.stage || 'watch';
+            if (item.due !== undefined && item.due !== null) c.due = item.due;
+            if (item.due_label !== undefined && item.due_label !== null) c.dueLabel = item.due_label;
+            if (item.due_lv !== undefined && item.due_lv !== null) c.dueLv = item.due_lv;
+            if (item.note_motiv) c.noteMotiv = item.note_motiv;
+            if (item.note_es) c.noteEs = item.note_es;
+            if (item.note_interview) c.noteInterview = item.note_interview;
+            if (parsed.cleanTags.length) c.tags = parsed.cleanTags;
+            if (parsed.myPageUrl) c.myPageUrl = parsed.myPageUrl;
+            if (parsed.myPageId) c.myPageId = parsed.myPageId;
+            if (parsed.myPagePass) c.myPagePass = parsed.myPagePass;
           }
         });
       }
 
       saveAll();
       renderAll();
+      if (currentView === 'mypage') renderMyPageTable();
       showToast('クラウド同期が完了しました');
     } catch (err) {
       console.warn('Sync error:', err);
@@ -5762,7 +5833,7 @@
     clearTimeout(cloudSyncTimer);
     cloudSyncTimer = setTimeout(async () => {
       try {
-        const localAdded = catalog.filter(c => c.added);
+        const localAdded = catalog.filter(c => c.added || c.myPageUrl || c.myPageId || c.myPagePass);
         const toUpsert = localAdded.map(c => ({
           user_id: currentAuthUser.id,
           company_id: c.id,
@@ -5773,7 +5844,7 @@
           note_motiv: c.noteMotiv || null,
           note_es: c.noteEs || null,
           note_interview: c.noteInterview || null,
-          tags: c.tags || [],
+          tags: packCompanyCloudTags(c),
           updated_at: new Date().toISOString()
         }));
 
@@ -7315,6 +7386,21 @@
     document.body.removeChild(ta);
   }
 
+  function copyCompanyUrl(compId) {
+    const c = catalog.find(x => x.id === compId);
+    if (c && c.myPageUrl) copyMyPageText(c.myPageUrl, 'ログインURLをコピーしました');
+  }
+
+  function copyCompanyId(compId) {
+    const c = catalog.find(x => x.id === compId);
+    if (c && c.myPageId) copyMyPageText(c.myPageId, 'ログインIDをコピーしました');
+  }
+
+  function copyCompanyPass(compId) {
+    const c = catalog.find(x => x.id === compId);
+    if (c && c.myPagePass) copyMyPageText(c.myPagePass, 'パスワードをコピーしました');
+  }
+
   function renderMyPageTable() {
     const tbody = document.getElementById('mypageTbody');
     const emptyState = document.getElementById('mypageEmptyState');
@@ -7377,7 +7463,7 @@
         urlCell = `
           <div style="display:flex;align-items:center;gap:6px;max-width:280px;">
             <a href="${escapedUrl}" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);font-weight:700;font-size:12.5px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title="${escapedUrl}">${displayUrl} ↗</a>
-            <button class="btn-icon" onclick="copyMyPageText('${c.myPageUrl.replace(/'/g, "\\'")}', 'ログインURLをコピーしました')" title="URLをコピー">📋</button>
+            <button class="btn-icon" onclick="copyCompanyUrl('${c.id}')" title="URLをコピー">📋</button>
           </div>
         `;
       }
@@ -7388,7 +7474,7 @@
         idCell = `
           <div style="display:flex;align-items:center;gap:6px;">
             <span style="font-family:monospace;font-weight:800;font-size:13px;color:var(--ink);letter-spacing:0.5px;">${escapedId}</span>
-            <button class="btn-icon" onclick="copyMyPageText('${c.myPageId.replace(/'/g, "\\'")}', 'ログインIDをコピーしました')" title="IDをコピー">📋</button>
+            <button class="btn-icon" onclick="copyCompanyId('${c.id}')" title="IDをコピー">📋</button>
           </div>
         `;
       }
@@ -7400,7 +7486,7 @@
           <div style="display:flex;align-items:center;gap:6px;">
             <span id="pass-val-${c.id}" class="masked-pass" data-val="${escapedPass}">••••••••</span>
             <button class="btn-icon" onclick="togglePassVisibility('${c.id}', this)" title="表示/非表示">👁</button>
-            <button class="btn-icon" onclick="copyMyPageText('${c.myPagePass.replace(/'/g, "\\'")}', 'パスワードをコピーしました')" title="パスワードをコピー">📋</button>
+            <button class="btn-icon" onclick="copyCompanyPass('${c.id}')" title="パスワードをコピー">📋</button>
           </div>
         `;
       }
@@ -9171,7 +9257,11 @@
     if (!requireAuth('企業の削除')) return;
     if (!currentModalComp) return;
     if (!confirm(`手動登録企業「${currentModalComp.name}」を完全に削除しますか？`)) return;
-    catalog = catalog.filter(x => x.id !== currentModalComp.id);
+    const targetId = currentModalComp.id;
+    catalog = catalog.filter(x => x.id !== targetId);
+    if (supabaseClient && currentAuthUser) {
+      supabaseClient.from('user_selections').delete().eq('user_id', currentAuthUser.id).eq('company_id', targetId).then();
+    }
     saveAll();
     renderAll();
     closeModal('companyModal');
