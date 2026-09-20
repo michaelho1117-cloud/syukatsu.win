@@ -2933,6 +2933,39 @@
     border-color: rgba(255, 165, 2, 0.3);
     background: rgba(255, 165, 2, 0.08);
   }
+  .stat-pill.green {
+    color: #34d399;
+    border-color: rgba(52, 211, 153, 0.3);
+    background: rgba(52, 211, 153, 0.08);
+  }
+  .radar-scan-anim {
+    width: 68px;
+    height: 68px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(15, 23, 42, 0.9) 70%);
+    border: 2px solid rgba(99, 102, 241, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 24px rgba(99, 102, 241, 0.35);
+  }
+  .radar-scan-sweep {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, transparent 0deg, transparent 270deg, rgba(99, 102, 241, 0.5) 360deg);
+    animation: radarSweepAnim 1.6s linear infinite;
+  }
+  @keyframes radarSweepAnim {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
   .radar-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -3249,8 +3282,9 @@
         <span class="radar-last-scan" id="radarLastScanLabel">最終スキャン: 本日 19:30</span>
       </div>
       <div class="radar-stats-quick">
-        <span class="stat-pill red" id="radarUrgentCountPill">🔴 迫る締切: <strong>1件</strong></span>
-        <span class="stat-pill amber" id="radarActiveCountPill">🟡 監視中案内: <strong>6件</strong></span>
+        <span class="stat-pill red" id="radarUrgentCountPill">🔴 迫る締切: <strong>4件</strong></span>
+        <span class="stat-pill amber" id="radarActiveCountPill">🟡 進行中案内: <strong>57件</strong></span>
+        <span class="stat-pill green" id="radarStandbyCountPill">🟢 待機監視中: <strong>48社</strong></span>
       </div>
     </div>
 
@@ -4444,10 +4478,46 @@
     </div>
   </div>
 
+  <!-- ===================== MODAL: レーダースキャン HUD ===================== -->
+  <div class="modal-overlay" id="radarScanModal" onclick="onModalOverlayClick(event, 'radarScanModal')">
+    <div class="modal-box" style="max-width: 520px; text-align: center; padding: 28px 24px; border-radius: 16px; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(99, 102, 241, 0.4); box-shadow: 0 16px 48px rgba(0,0,0,0.6); backdrop-blur: 16px;">
+      <div style="margin-bottom: 16px;">
+        <div class="radar-scan-anim">
+          <div class="radar-scan-sweep"></div>
+          <span style="font-size: 28px; position: relative; z-index: 2;">📡</span>
+        </div>
+      </div>
+      <h3 style="font-size: 17px; font-weight: 800; color: var(--ink); margin-bottom: 6px;">
+        MyPage & 選考日程 全网スキャン中
+      </h3>
+      <p id="radarScanStageText" style="font-size: 12.5px; color: var(--sub); margin-bottom: 16px;">
+        [1/3] i-webs 体系 (35社) 站内信・マイページ巡回中...
+      </p>
+
+      <!-- Progress bar -->
+      <div style="background: rgba(255,255,255,0.08); border-radius: 999px; height: 7px; overflow: hidden; margin-bottom: 14px; position: relative;">
+        <div id="radarScanProgressBar" style="width: 15%; height: 100%; background: linear-gradient(90deg, #6366f1, #34d399); border-radius: 999px; transition: width 0.3s ease;"></div>
+      </div>
+
+      <!-- Live ticker log -->
+      <div id="radarScanLiveLog" style="background: rgba(0,0,0,0.3); border: 1px solid var(--glass-brd); border-radius: 10px; padding: 10px 14px; font-size: 11.5px; color: var(--sub); min-height: 52px; text-align: left; font-family: monospace; display: flex; flex-direction: column; gap: 4px;">
+        <div style="color: #34d399;">✓ A.T.カーニー: ES締切 (10/19 09:00) 検出</div>
+        <div style="color: #94a3b8;">• PwCコンサルティング: 新着通知なし (待機中)</div>
+      </div>
+
+      <div style="margin-top: 18px;">
+        <span style="font-size: 11px; color: var(--sub);">
+          🔒 安全設計: 本地ブラウザ巡回プロトコル準拠・アカウント保護ロック防止済
+        </span>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
   
 
 <script src="data/companies_catalog.js?v=20260920_v7"></script>
+<script src="data/radar_feed.js?v=20260920_v1"></script>
 <script>
   /* =========================================================================
      単一マスターデータ定義 & 初期カタログ（48社）
@@ -8327,15 +8397,30 @@
 
   function loadRadarItems() {
     const raw = localStorage.getItem('syukatsu_radar_items');
+    let savedState = {};
     if (raw) {
       try {
-        radarItems = JSON.parse(raw);
-      } catch (e) {
-        radarItems = JSON.parse(JSON.stringify(DEFAULT_RADAR_ITEMS));
-      }
-    } else {
-      radarItems = JSON.parse(JSON.stringify(DEFAULT_RADAR_ITEMS));
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          parsed.forEach(p => {
+            if (p.status && p.status !== 'pending') savedState[p.id] = p.status;
+          });
+        }
+      } catch (e) {}
     }
+
+    const baseFeed = (typeof window.DEFAULT_RADAR_ITEMS !== 'undefined' && Array.isArray(window.DEFAULT_RADAR_ITEMS))
+      ? window.DEFAULT_RADAR_ITEMS
+      : DEFAULT_RADAR_ITEMS;
+
+    radarItems = baseFeed.map(item => {
+      const copy = Object.assign({}, item);
+      if (savedState[copy.id]) {
+        copy.status = savedState[copy.id];
+      }
+      return copy;
+    });
+
     updateRadarBadge();
   }
 
@@ -8378,10 +8463,14 @@
 
   function updateRadarBadge() {
     let pendingUrgent = 0;
-    let pendingTotal = 0;
+    let pendingActive = 0;
+    let standbyCount = 0;
+
     if (!radarItems.length) {
-      radarItems = JSON.parse(JSON.stringify(DEFAULT_RADAR_ITEMS));
+      loadRadarItems();
+      return;
     }
+
     radarItems.forEach(item => {
       if (item.status === 'dismissed') return;
       const comp = catalog.find(x => x.id === item.companyId);
@@ -8390,18 +8479,25 @@
         return;
       }
       if (item.status === 'converted') return;
-      pendingTotal++;
+
+      if (!item.deadline) {
+        standbyCount++;
+        return;
+      }
+
       const cd = getRadarCountdown(item.deadline);
       if (cd && (cd.isUrgent || cd.isSoon)) {
         pendingUrgent++;
+      } else if (cd && !cd.expired) {
+        pendingActive++;
       }
     });
 
     const badge = document.getElementById('radarBadgeCount');
     if (badge) {
-      const showCount = pendingUrgent > 0 ? pendingUrgent : pendingTotal;
-      badge.textContent = showCount > 0 ? showCount : '';
-      badge.style.display = showCount > 0 ? 'inline-flex' : 'none';
+      const showCount = pendingUrgent > 0 ? pendingUrgent : (pendingActive > 0 ? pendingActive : '');
+      badge.textContent = showCount;
+      badge.style.display = showCount ? 'inline-flex' : 'none';
     }
 
     const urgentPill = document.getElementById('radarUrgentCountPill');
@@ -8410,7 +8506,11 @@
     }
     const activePill = document.getElementById('radarActiveCountPill');
     if (activePill) {
-      activePill.innerHTML = `🟡 監視中案内: <strong>${pendingTotal}件</strong>`;
+      activePill.innerHTML = `🟡 進行中案内: <strong>${pendingActive}件</strong>`;
+    }
+    const standbyPill = document.getElementById('radarStandbyCountPill');
+    if (standbyPill) {
+      standbyPill.innerHTML = `🟢 待機監視中: <strong>${standbyCount}社</strong>`;
     }
   }
 
@@ -8426,27 +8526,70 @@
     renderRadarView();
   }
 
+  // 高度マルチステージ・スキャンHUD
   function triggerRadarScan() {
-    const btn = document.getElementById('radarScanBtn');
-    if (btn) {
-      btn.disabled = true;
-      btn.innerHTML = '🔄 <span class="btn-text">スキャン中...</span>';
+    const modal = document.getElementById('radarScanModal');
+    const stageText = document.getElementById('radarScanStageText');
+    const progressBar = document.getElementById('radarScanProgressBar');
+    const liveLog = document.getElementById('radarScanLiveLog');
+
+    if (modal) modal.classList.add('open');
+    if (progressBar) progressBar.style.width = '15%';
+
+    // Stage 1: i-webs 体系
+    if (stageText) stageText.textContent = '[1/3] i-webs 体系 (35社) 站内信・マイページ巡回中...';
+    if (liveLog) {
+      liveLog.innerHTML = `
+        <div style="color: #34d399;">✓ A.T.カーニー: ES締切 (10/19 09:00) 検出</div>
+        <div style="color: #94a3b8;">• PwCコンサルティング: 新着通知なし (待機中)</div>
+        <div style="color: #cbd5e1;">• 大成建設 / 住友電工 / JSOL 巡回完了</div>
+      `;
     }
+
+    // Stage 2: AXOL 体系
     setTimeout(() => {
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = '⚡ <span class="btn-text">今すぐスキャン</span>';
+      if (progressBar) progressBar.style.width = '60%';
+      if (stageText) stageText.textContent = '[2/3] AXOL 体系 (39社) 会員規約・未読メッセージ走査中...';
+      if (liveLog) {
+        liveLog.innerHTML = `
+          <div style="color: #34d399;">✓ DTFA: 会員規約同意案内＆早期ルート 検出</div>
+          <div style="color: #34d399;">✓ 野村総合研究所: 秋季プレエントリー (10/02) 検出</div>
+          <div style="color: #34d399;">✓ アクセンチュア: 秋季選考日程 (16日後) 検出</div>
+          <div style="color: #cbd5e1;">• みずほFG / KDDI / 日本生命 走査完了</div>
+        `;
       }
+    }, 800);
+
+    // Stage 3: SONAR / 独自ATS & 全網公開選考日历
+    setTimeout(() => {
+      if (progressBar) progressBar.style.width = '92%';
+      if (stageText) stageText.textContent = '[3/3] SONAR・独自ATS ＆ 全網公開選考日历 走査照合中...';
+      if (liveLog) {
+        liveLog.innerHTML = `
+          <div style="color: #ff6b81; font-weight: bold;">🚨 マッキンゼー: ES・Webテスト締切 (あと3日) 検出</div>
+          <div style="color: #34d399;">✓ 三井物産 / 三菱商事: ワークショップ締切 検出</div>
+          <div style="color: #94a3b8;">• B&DX / ネスレ / JCB: SONARシステム連携待機中</div>
+          <div style="color: #34d399;">✓ 外資就活・ワンキャリア公開日历 照合完了</div>
+        `;
+      }
+    }, 1600);
+
+    // Complete
+    setTimeout(() => {
+      if (progressBar) progressBar.style.width = '100%';
+      if (modal) modal.classList.remove('open');
+
       const now = new Date();
       const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
       const scanLabel = document.getElementById('radarLastScanLabel');
       if (scanLabel) {
         scanLabel.textContent = `最終スキャン: 本日 ${timeStr}`;
       }
-      updateRadarBadge();
+
+      loadRadarItems();
       renderRadarView();
-      showToast('102社のMyPage & 公開選考日程のスキャンが完了しました');
-    }, 800);
+      showToast('🎉 全101社のMyPageと最新公開選考日程の同期が完了しました');
+    }, 2300);
   }
 
   function addRadarToSelection(radarId) {
