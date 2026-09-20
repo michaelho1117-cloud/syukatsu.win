@@ -4121,7 +4121,7 @@
   <div class="toast" id="toast"></div>
   
 
-<script src="data/companies_catalog.js?v=20260920_v5"></script>
+<script src="data/companies_catalog.js?v=20260920_v6"></script>
 <script>
   /* =========================================================================
      単一マスターデータ定義 & 初期カタログ（48社）
@@ -4231,6 +4231,8 @@
     {"id":"c_unlisted_bebit","name":"株式会社ビービット","code":null,"domain":"bebit.co.jp","cat":"コンサル・シンクタンク","ind17":"サービス業","sub":"UXデザインコンサルティング・SaaS(USERGRAM)パイオニア","emp":180,"empNote":"単体","payBachelor":300000,"payMaster":320000,"avgAnnual":780,"color":"#e4002b","added":false,"stage":"watch","stars":3,"scale":"UX名門ブティック","market":"非上場","tags":["UXコンサル","顧客体験デザイン","東大生人気ブティック","SaaS"],"loc":"東京","due":"","dueLabel":"","dueLv":"","hasLogo":true},
     {"id":"c_rakuten_bu","name":"楽天グループ (ビジネス職・サマーインターン)","code":"4755","domain":"rakuten.co.jp","cat":"IT・通信","ind17":"情報・通信業","sub":"Eコマース・フィンテック・通信(ビジネス職総合選考)","emp":17000,"empNote":"単体(連結3.2万)","payBachelor":310000,"payMaster":330000,"avgAnnual":797,"color":"#bf0000","added":false,"stage":"watch","stars":4,"scale":"TOPIX100","market":"プライム上場","tags":["メガベンチャー","英語公用語","サマーインターン","総合職"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true}
   ];
+
+  const UNWANTED_MYPAGE_ACC_IDS = new Set(['c_6562', 'c_387A', 'c_441A']);
 
   const ALIAS_TO_MASTER_MAP = {
     'c_custom_acc_87': 'c_meiji_yasuda',
@@ -5278,19 +5280,23 @@
           }
         });
 
-        // 2. カタログ構築
+        // 2. カタログ構築（マイページ所持≠本選考エントリー）
         catalog = fullCatalog.map(c => {
           if (userStateMap.has(c.id)) {
             const u = userStateMap.get(c.id);
+            // 重要な仕様: mypage情報があるだけでは勝手に選考管理中(added=true)にしない
+            // 正式選考として追加(u.added === true かつ stage !== 'watch')されている企業のみを選考管理対象とする
+            const isAdded = Boolean(u.added === true && u.stage && u.stage !== 'watch');
+            const isUnwanted = UNWANTED_MYPAGE_ACC_IDS.has(c.id);
             return Object.assign({}, c, {
-              added: u.added !== undefined ? u.added : true,
-              stage: u.stage || c.stage || 'watch',
+              added: isUnwanted ? false : isAdded,
+              stage: isAdded ? u.stage : 'watch',
               due: u.due !== undefined ? u.due : c.due,
               dueLabel: u.dueLabel !== undefined ? u.dueLabel : c.dueLabel,
               dueLv: u.dueLv !== undefined ? u.dueLv : c.dueLv,
-              myPageUrl: u.myPageUrl || '',
-              myPageId: u.myPageId || '',
-              myPagePass: u.myPagePass || '',
+              myPageUrl: isUnwanted ? '' : (u.myPageUrl || ''),
+              myPageId: isUnwanted ? '' : (u.myPageId || ''),
+              myPagePass: isUnwanted ? '' : (u.myPagePass || ''),
               noteMotiv: u.noteMotiv || '',
               noteEs: u.noteEs || '',
               noteInterview: u.noteInterview || '',
@@ -5912,11 +5918,17 @@
           let c = catalog.find(x => x.id === item.company_id);
           const master = masterMap.get(item.company_id);
 
+          if (UNWANTED_MYPAGE_ACC_IDS.has(item.company_id)) {
+            return; // 誤マッチのジーニー・フラー・NEをスキップ
+          }
+
+          const isItemAdded = Boolean(item.stage && item.stage !== 'watch');
+
           if (!c) {
             if (master) {
               c = Object.assign({}, master, {
-                added: true,
-                stage: item.stage || master.stage || 'watch',
+                added: isItemAdded,
+                stage: item.stage || 'watch',
                 due: item.due || '',
                 dueLabel: item.due_label || '',
                 dueLv: item.due_lv || '',
@@ -5943,8 +5955,8 @@
                 payMaster: null,
                 avgAnnual: null,
                 color: '#6366f1',
-                added: true,
-                stage: item.stage || 'entry',
+                added: isItemAdded,
+                stage: item.stage || 'watch',
                 due: item.due || '',
                 dueLabel: item.due_label || '',
                 dueLv: item.due_lv || '',
@@ -5982,8 +5994,8 @@
                 c.tags = master.tags || [];
               }
             }
-            c.added = true;
-            c.stage = item.stage || c.stage || 'watch';
+            c.added = isItemAdded;
+            c.stage = item.stage || 'watch';
             if (item.due !== undefined && item.due !== null) c.due = item.due;
             if (item.due_label !== undefined && item.due_label !== null) c.dueLabel = item.due_label;
             if (item.due_lv !== undefined && item.due_lv !== null) c.dueLv = item.due_lv;
@@ -6460,15 +6472,13 @@
     if (!c) return;
     c.added = !c.added;
     if (c.added) {
-      if (!c.stage) c.stage = 'watch';
-            if (!c.loc) c.loc = '—';
+      if (!c.stage || c.stage === 'watch') c.stage = 'entry';
+      if (!c.loc) c.loc = '—';
       if (!c.tags) c.tags = [];
       showToast(`「${c.name}」を選考リストに追加しました`);
     } else {
+      c.stage = 'watch';
       showToast(`「${c.name}」を選考リストから外しました`);
-      if (supabaseClient && currentAuthUser) {
-        supabaseClient.from('user_selections').delete().eq('user_id', currentAuthUser.id).eq('company_id', c.id).then();
-      }
     }
     saveAll();
     renderAll();
