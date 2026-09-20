@@ -4121,7 +4121,7 @@
   <div class="toast" id="toast"></div>
   
 
-<script src="data/companies_catalog.js?v=20260920_v4"></script>
+<script src="data/companies_catalog.js?v=20260920_v5"></script>
 <script>
   /* =========================================================================
      単一マスターデータ定義 & 初期カタログ（48社）
@@ -4231,6 +4231,34 @@
     {"id":"c_unlisted_bebit","name":"株式会社ビービット","code":null,"domain":"bebit.co.jp","cat":"コンサル・シンクタンク","ind17":"サービス業","sub":"UXデザインコンサルティング・SaaS(USERGRAM)パイオニア","emp":180,"empNote":"単体","payBachelor":300000,"payMaster":320000,"avgAnnual":780,"color":"#e4002b","added":false,"stage":"watch","stars":3,"scale":"UX名門ブティック","market":"非上場","tags":["UXコンサル","顧客体験デザイン","東大生人気ブティック","SaaS"],"loc":"東京","due":"","dueLabel":"","dueLv":"","hasLogo":true},
     {"id":"c_rakuten_bu","name":"楽天グループ (ビジネス職・サマーインターン)","code":"4755","domain":"rakuten.co.jp","cat":"IT・通信","ind17":"情報・通信業","sub":"Eコマース・フィンテック・通信(ビジネス職総合選考)","emp":17000,"empNote":"単体(連結3.2万)","payBachelor":310000,"payMaster":330000,"avgAnnual":797,"color":"#bf0000","added":false,"stage":"watch","stars":4,"scale":"TOPIX100","market":"プライム上場","tags":["メガベンチャー","英語公用語","サマーインターン","総合職"],"loc":"東京/全国","due":"","dueLabel":"","dueLv":"","hasLogo":true}
   ];
+
+  const ALIAS_TO_MASTER_MAP = {
+    'c_custom_acc_87': 'c_meiji_yasuda',
+    'c_custom_acc_57': 'c_unlisted_nttdocomo',
+    'c_custom_acc_53': 'c_unlisted_bdx',
+    'c_custom_acc_98': 'c_rakuten_bu',
+    'c_custom_acc_102': 'c_funaisoken',
+    'c_custom_acc_100': 'c_unlisted_bebit',
+    'c_custom_acc_99': 'c_unlisted_louisvuitton_jp',
+    'c_custom_acc_96': 'c_unlisted_deloitte_ra',
+    'c_custom_acc_88': 'c_unlisted_persol_bpd',
+    'c_custom_acc_84': 'c_unlisted_jsol',
+    'c_custom_acc_81': 'c_5036',
+    'c_custom_acc_77': 'c_2130',
+    'c_custom_acc_75': 'c_unlisted_jera',
+    'c_custom_acc_74': 'c_unlisted_nihon_keiei',
+    'c_custom_acc_65': 'c_4901',
+    'c_custom_acc_47': 'c_unlisted_kpmg_azsa',
+    'c_custom_acc_45': 'c_unlisted_nestle_jp',
+    'c_custom_acc_44': 'c_nttdata',
+    'c_custom_acc_28': 'c_unlisted_abeam_sys',
+    'c_custom_acc_25': 'c_unlisted_persol_ct',
+    'c_custom_acc_24': 'c_unlisted_mufg_it',
+    'c_custom_acc_17': 'c_7532',
+    'c_custom_acc_16': 'c_tcs',
+    'c_custom_acc_7': 'c_unlisted_deloitte_cyber',
+    'c_custom_acc_1': 'c_pwc'
+  };
 
   function getFullCatalog() {
     let full = (window.OFFICIAL_CATALOG_1500 && window.OFFICIAL_CATALOG_1500.length)
@@ -5212,11 +5240,45 @@
         const masterMap = new Map();
         fullCatalog.forEach(c => masterMap.set(c.id, c));
 
+        // 1. 名寄せ・エイリアス統合（重複排除）
         savedCatalog.forEach(c => {
-          if (c.added || (c.stage && c.stage !== 'watch') || c.due || c.dueLabel || c.myPageUrl || c.myPageId || c.myPagePass || c.noteMotiv || c.noteEs || c.noteInterview || c.isCustom) {
-            userStateMap.set(c.id, c);
+          let targetMasterId = ALIAS_TO_MASTER_MAP[c.id];
+          if (!targetMasterId && c.isCustom && c.name) {
+            const cleanName = c.name.replace(/株式会社|\(株\)|合同会社|相互会社|Internship.*|インターン.*|202[0-9]/gi, '').trim().toLowerCase();
+            if (cleanName.length >= 2) {
+              const matched = fullCatalog.find(m => {
+                const mClean = m.name.replace(/株式会社|\(株\)|合同会社|相互会社/gi, '').trim().toLowerCase();
+                return mClean === cleanName || mClean.includes(cleanName) || cleanName.includes(mClean);
+              });
+              if (matched) targetMasterId = matched.id;
+            }
+          }
+
+          if (targetMasterId && masterMap.has(targetMasterId)) {
+            const u = userStateMap.get(targetMasterId) || {};
+            userStateMap.set(targetMasterId, {
+              ...u,
+              added: true,
+              stage: u.stage || c.stage || 'entry',
+              myPageUrl: u.myPageUrl || c.myPageUrl || '',
+              myPageId: u.myPageId || c.myPageId || '',
+              myPagePass: u.myPagePass || c.myPagePass || '',
+              noteMotiv: u.noteMotiv || c.noteMotiv || '',
+              noteEs: u.noteEs || c.noteEs || '',
+              noteInterview: u.noteInterview || c.noteInterview || '',
+              due: u.due || c.due || '',
+              dueLabel: u.dueLabel || c.dueLabel || '',
+              dueLv: u.dueLv || c.dueLv || '',
+              tags: (u.tags && u.tags.length) ? u.tags : (c.tags || []).filter(t => t !== '手動登録')
+            });
+          } else if (!c.id.startsWith('c_custom_acc_')) {
+            if (c.added || (c.stage && c.stage !== 'watch') || c.due || c.dueLabel || c.myPageUrl || c.myPageId || c.myPagePass || c.noteMotiv || c.noteEs || c.noteInterview || c.isCustom) {
+              userStateMap.set(c.id, c);
+            }
           }
         });
+
+        // 2. カタログ構築
         catalog = fullCatalog.map(c => {
           if (userStateMap.has(c.id)) {
             const u = userStateMap.get(c.id);
@@ -5238,9 +5300,18 @@
           }
           return Object.assign({}, c, { added: false, stage: 'watch', due: '', dueLabel: '', isCustom: false });
         });
+
+        // 3. 正規手動企業のみを保持（c_custom_acc_ や重複企業は完全排除）
         savedCatalog.forEach(c => {
-          if (c.isCustom && !masterMap.has(c.id) && !catalog.find(x => x.id === c.id)) {
-            catalog.unshift(c);
+          if (c.isCustom && !c.id.startsWith('c_custom_acc_') && !masterMap.has(c.id) && !ALIAS_TO_MASTER_MAP[c.id] && !catalog.find(x => x.id === c.id)) {
+            const cleanName = (c.name || '').replace(/株式会社|\(株\)|合同会社|相互会社/gi, '').trim().toLowerCase();
+            const nameDup = cleanName.length >= 2 && catalog.find(x => {
+              const xClean = (x.name || '').replace(/株式会社|\(株\)|合同会社|相互会社/gi, '').trim().toLowerCase();
+              return xClean === cleanName || xClean.includes(cleanName) || cleanName.includes(xClean);
+            });
+            if (!nameDup) {
+              catalog.unshift(c);
+            }
           }
         });
       } else {
@@ -5278,6 +5349,7 @@
       // 未ログイン状態ではローカル保存や上書きを防止
       return;
     }
+    catalog = catalog.filter(c => !c.id.startsWith('c_custom_acc_'));
     try {
       const privateKey = getScopedKey(STORAGE_KEY);
       const privateSettingsKey = getScopedKey(SETTINGS_KEY);
@@ -5796,8 +5868,15 @@
         cloudItems.forEach(item => cloudMap.set(item.company_id, item));
       }
 
+      // 0. 云端残留的 c_custom_acc_ 临时记录自动清除
+      const staleCustom = (cloudItems || []).filter(item => item.company_id.startsWith('c_custom_acc_'));
+      if (staleCustom.length > 0) {
+        await supabaseClient.from('user_selections').delete().eq('user_id', currentAuthUser.id).like('company_id', 'c_custom_acc_%');
+      }
+
       // 1. 本地已追加但云端没有的，自动迁移上云 (Migration)
-      const localAdded = catalog.filter(c => c.added || c.myPageUrl || c.myPageId || c.myPagePass);
+      // 严格排除任何 c_custom_acc_ 临时账号
+      const localAdded = catalog.filter(c => !c.id.startsWith('c_custom_acc_') && (c.added || c.myPageUrl || c.myPageId || c.myPagePass));
       const toUpsert = [];
       localAdded.forEach(c => {
         if (!cloudMap.has(c.id)) {
@@ -5826,8 +5905,9 @@
       const masterMap = new Map();
       fullCatalog.forEach(c => masterMap.set(c.id, c));
 
-      if (cloudItems && cloudItems.length) {
-        cloudItems.forEach(item => {
+      const validCloudItems = (cloudItems || []).filter(item => !item.company_id.startsWith('c_custom_acc_'));
+      if (validCloudItems && validCloudItems.length) {
+        validCloudItems.forEach(item => {
           const parsed = parseCloudItemTags(item.tags);
           let c = catalog.find(x => x.id === item.company_id);
           const master = masterMap.get(item.company_id);
@@ -5918,6 +5998,7 @@
         });
       }
 
+      catalog = catalog.filter(c => !c.id.startsWith('c_custom_acc_'));
       saveAll();
       renderAll();
       if (currentView === 'mypage') renderMyPageTable();
@@ -6166,6 +6247,9 @@
   }
 
   const KNOWN_ALIASES = {
+    c_meiji_yasuda: ['明治安田', '明治安田生命', 'meiji yasuda', '明治安田 internship', '明治安田生命保険'],
+    c_unlisted_nttdocomo: ['nttドコモ', 'docomo', 'ドコモ', 'nttdocomo'],
+    c_unlisted_bdx: ['bdx', 'b&dx', 'ビーディーエックス', 'b and dx'],
     c_tcs: ['日本tcs', 'tcs', 'tata', 'タタ', 'タタコンサルタンシー', '三菱商事合弁', 'tata consultancy services'],
     c_itochu: ['itochu', '伊藤忠', 'いとうちゅう'],
     c_sony: ['sony', 'ソニー'],
