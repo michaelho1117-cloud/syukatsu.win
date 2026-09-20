@@ -3268,7 +3268,7 @@
           </div>
           <div class="cal-nav">
             <button class="cal-nav-btn" onclick="navCalendar(-1)" title="前月">◀</button>
-            <span class="cal-current-month" id="calCurrentMonthLabel">2026年 5月</span>
+            <span class="cal-current-month" id="calCurrentMonthLabel">今月</span>
             <button class="cal-nav-btn" onclick="navCalendar(1)" title="翌月">▶</button>
             <button class="cal-today-btn" onclick="resetCalendarToCurrent()">今月</button>
           </div>
@@ -4121,7 +4121,7 @@
   <div class="toast" id="toast"></div>
   
 
-<script src="data/companies_catalog.js?v=20260920_v6"></script>
+<script src="data/companies_catalog.js?v=20260920_v7"></script>
 <script>
   /* =========================================================================
      単一マスターデータ定義 & 初期カタログ（48社）
@@ -6769,27 +6769,16 @@
 
   
   // =========================================================================
-  // DASHBOARD BUILT-IN CALENDAR LOGIC
+  // DASHBOARD BUILT-IN CALENDAR LOGIC（デフォルト当月・当日表示）
   // =========================================================================
-  let calYear = 2026;
-  let calMonth = 4; // 0-indexed (4 = May)
-  let selectedCalDate = null;
+  const _calInitNow = new Date();
+  let calYear = _calInitNow.getFullYear();
+  let calMonth = _calInitNow.getMonth(); // 0-indexed (0=1月...8=9月)
+  const _calInitMm = String(calMonth + 1).padStart(2, '0');
+  const _calInitDd = String(_calInitNow.getDate()).padStart(2, '0');
+  let selectedCalDate = `${calYear}-${_calInitMm}-${_calInitDd}`;
 
   function initCalendarState() {
-    // If events exist, default to the month of the first upcoming event
-    if (selectionEvents.length) {
-      const sorted = [...selectionEvents].filter(e => e.due || e.datetime).sort((a,b) => (a.due||a.datetime||'').localeCompare(b.due||b.datetime||''));
-      if (sorted.length) {
-        const dStr = sorted[0].due || sorted[0].datetime;
-        const d = new Date(dStr.replace(' ', 'T'));
-        if (!isNaN(d.getTime())) {
-          calYear = d.getFullYear();
-          calMonth = d.getMonth();
-          selectedCalDate = dStr.slice(0, 10);
-          return;
-        }
-      }
-    }
     const now = new Date();
     calYear = now.getFullYear();
     calMonth = now.getMonth();
@@ -6882,15 +6871,22 @@
       }
     });
 
-    // Auto-select first event date in month if none selected or selection is outside current month
+    // Auto-select date in month: 当月なら今日、他月ならイベント初日または1日
     const curMonthPrefix = `${calYear}-${String(calMonth + 1).padStart(2, '0')}`;
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
     if (!selectedCalDate || !selectedCalDate.startsWith(curMonthPrefix)) {
-      const datesInMonth = Object.keys(eventsByDate).filter(d => d.startsWith(curMonthPrefix));
-      if (datesInMonth.length) {
-        datesInMonth.sort();
-        selectedCalDate = datesInMonth[0];
+      if (todayStr.startsWith(curMonthPrefix)) {
+        selectedCalDate = todayStr;
       } else {
-        selectedCalDate = `${curMonthPrefix}-01`;
+        const datesInMonth = Object.keys(eventsByDate).filter(d => d.startsWith(curMonthPrefix));
+        if (datesInMonth.length) {
+          datesInMonth.sort();
+          selectedCalDate = datesInMonth[0];
+        } else {
+          selectedCalDate = `${curMonthPrefix}-01`;
+        }
       }
     }
 
@@ -6898,10 +6894,6 @@
     const firstDayIndex = new Date(calYear, calMonth, 1).getDay(); // 0 = Sun
     const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
     const daysInPrevMonth = new Date(calYear, calMonth, 0).getDate();
-
-    // Check today string
-    const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
     let cellsHtml = '';
 
