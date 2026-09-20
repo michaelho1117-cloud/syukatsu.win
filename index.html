@@ -2780,6 +2780,73 @@
     }
   }
 
+
+  /* ===== MyPage Subpage & Button Styling ===== */
+  .mypage-entry-btn {
+    padding: 5px 14px;
+    font-size: 13px;
+    border-color: rgba(217, 178, 95, 0.45) !important;
+    background: rgba(217, 178, 95, 0.09) !important;
+    color: var(--gold-2) !important;
+    font-weight: 800 !important;
+    border-radius: 999px !important;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all .2s ease;
+    box-shadow: 0 0 14px rgba(217, 178, 95, 0.12);
+  }
+  .mypage-entry-btn:hover {
+    background: rgba(217, 178, 95, 0.18) !important;
+    border-color: var(--gold) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 0 20px rgba(217, 178, 95, 0.28);
+  }
+  .masked-pass {
+    font-family: monospace;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--sub);
+    user-select: all;
+  }
+  .revealed-pass {
+    font-family: monospace;
+    font-size: 12.5px;
+    letter-spacing: 0px;
+    color: var(--ink);
+    font-weight: 700;
+    background: rgba(139, 123, 255, 0.15);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(139, 123, 255, 0.3);
+    user-select: all;
+  }
+  .btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    border: 1px solid var(--glass-brd);
+    background: var(--glass);
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 12.5px;
+    transition: all .15s ease;
+    padding: 0;
+  }
+  .btn-icon:hover {
+    background: var(--glass-2);
+    border-color: var(--glass-brd-hover);
+    transform: translateY(-1px);
+  }
+  .btn-icon.text-danger:hover {
+    color: var(--red);
+    border-color: rgba(255, 92, 119, 0.4);
+    background: rgba(255, 92, 119, 0.12);
+  }
 </style>
 </head>
 <body>
@@ -2884,8 +2951,13 @@
     </div>
     <div class="hero">
       <div class="hero-title">
-        <h1>選考<span class="g">管理リスト</span></h1>
-        <p>「今、何をするべきか」に集中。直近の締切・アクション・ステータスを一目で把握できます。</p>
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <h1 style="margin: 0;">選考<span class="g">管理リスト</span></h1>
+          <button class="top-btn mypage-entry-btn" type="button" onclick="openMyPageSubpage()">
+            <span>🔑 マイページ管理 ↗</span>
+          </button>
+        </div>
+        <p style="margin-top: 6px;">「今、何をするべきか」に集中。直近の締切・アクション・ステータスを一目で把握できます。</p>
       </div>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
         <button class="top-btn" onclick="exportCSV()">📥 CSV出力</button>
@@ -2918,6 +2990,64 @@
           </thead>
           <tbody id="tbody"></tbody>
         </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== VIEW 2-SUB: マイページ管理 (SUBPAGE) ===================== -->
+  <section class="view" id="view-mypage">
+    <div style="margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+      <button class="btn-sm-ghost" type="button" onclick="switchView('list')" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 15px; font-size: 12.5px; color: var(--sub); border-color: var(--glass-brd); border-radius: 9px; cursor: pointer; background: var(--glass); font-weight: 700;">
+        <span>← 選考管理リストに戻る</span>
+      </button>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="badge-count" id="mypageCountBadge">0 件登録済み</span>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="hero-title">
+        <h1>MyPage <span class="g">アカウント管理 🔑</span></h1>
+        <p>各企業のマイページログイン情報（URL・ID・パスワード）を一元管理します。</p>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="top-btn" onclick="exportMyPageCSV()">📥 CSV出力</button>
+        <button class="top-btn primary" onclick="openMyPageAddModal()">＋ アカウント追加</button>
+      </div>
+    </div>
+
+    <div class="toolbar" style="margin-bottom: 16px;">
+      <div class="searchbox" style="flex: 1; max-width: 360px;">
+        <span>🔍</span>
+        <input id="mypageSearchInput" placeholder="会社名 / ID で検索..." oninput="renderMyPageTable()" />
+      </div>
+      <div class="filters" id="mypageFilters">
+        <span class="chip on" data-filter="all" onclick="setMyPageFilter('all', this)">すべて</span>
+        <span class="chip" data-filter="has_auth" onclick="setMyPageFilter('has_auth', this)">登録済み</span>
+        <span class="chip" data-filter="has_pass" onclick="setMyPageFilter('has_pass', this)">パスワードあり</span>
+        <span class="chip" data-filter="no_auth" onclick="setMyPageFilter('no_auth', this)">未登録</span>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <table id="mypageTable">
+        <thead>
+          <tr>
+            <th style="min-width: 220px;">企業名</th>
+            <th style="min-width: 260px;">ログイン URL</th>
+            <th style="min-width: 170px;">ログイン ID / 受験番号</th>
+            <th style="min-width: 170px;">パスワード</th>
+            <th style="min-width: 110px;">選考状況</th>
+            <th style="text-align: right; min-width: 90px;">操作</th>
+          </tr>
+        </thead>
+        <tbody id="mypageTbody"></tbody>
+      </table>
+      <div id="mypageEmptyState" style="display: none; padding: 48px 20px; text-align: center; color: var(--sub);">
+        <div style="font-size: 32px; margin-bottom: 10px;">🔑</div>
+        <div style="font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 6px;">条件に一致するマイページ情報がありません</div>
+        <div style="font-size: 12.5px; margin-bottom: 16px;">右上の「＋ アカウント追加」または企業詳細からマイページ情報を登録できます。</div>
+        <button class="top-btn primary" onclick="openMyPageAddModal()" style="display: inline-flex;">＋ アカウント追加</button>
       </div>
     </div>
   </section>
@@ -3319,17 +3449,24 @@
           <div id="mCompEsList"></div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">マイページ URL</label>
-            <div style="display:flex;gap:6px">
-              <input type="url" class="form-input" id="mMyPageUrl" placeholder="https://..." style="flex:1" />
-              <button class="btn-sm-ghost" type="button" onclick="openExternalUrl(document.getElementById('mMyPageUrl').value)" title="マイページを開く">↗ 開く</button>
-            </div>
+        <div class="form-group">
+          <label class="form-label">マイページ ログイン URL</label>
+          <div style="display:flex;gap:6px">
+            <input type="url" class="form-input" id="mMyPageUrl" placeholder="https://..." style="flex:1" />
+            <button class="btn-sm-ghost" type="button" onclick="openExternalUrl(document.getElementById('mMyPageUrl').value)" title="マイページを開く">↗ 開く</button>
           </div>
+        </div>
+        <div class="form-row">
           <div class="form-group">
             <label class="form-label">マイページ ログインID / 受験番号</label>
             <input class="form-input" id="mMyPageId" placeholder="IDや管理番号の備忘録" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">マイページ パスワード</label>
+            <div style="display:flex;gap:6px">
+              <input type="password" class="form-input" id="mMyPagePass" placeholder="パスワードの備忘録" style="flex:1" />
+              <button class="btn-sm-ghost" type="button" onclick="togglePassInput('mMyPagePass', this)" title="表示切り替え">👁</button>
+            </div>
           </div>
         </div>
 
@@ -5026,7 +5163,7 @@
         let savedCatalog = JSON.parse(savedCatalogStr);
         const userStateMap = new Map();
         savedCatalog.forEach(c => {
-          if (c.added || (c.stage && c.stage !== 'watch') || c.due || c.dueLabel || c.myPageUrl || c.myPageId || c.noteMotiv || c.noteEs || c.noteInterview || c.isCustom) {
+          if (c.added || (c.stage && c.stage !== 'watch') || c.due || c.dueLabel || c.myPageUrl || c.myPageId || c.myPagePass || c.noteMotiv || c.noteEs || c.noteInterview || c.isCustom) {
             userStateMap.set(c.id, c);
           }
         });
@@ -5041,6 +5178,7 @@
               dueLv: u.dueLv !== undefined ? u.dueLv : c.dueLv,
               myPageUrl: u.myPageUrl || '',
               myPageId: u.myPageId || '',
+              myPagePass: u.myPagePass || '',
               noteMotiv: u.noteMotiv || '',
               noteEs: u.noteEs || '',
               noteInterview: u.noteInterview || '',
@@ -5765,11 +5903,16 @@
   let currentView = 'db';
   function switchView(v) {
     currentView = v;
-    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('active', b.dataset.view === v));
-    document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === v));
+    const tabTarget = v === 'mypage' ? 'list' : v;
+    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('active', b.dataset.view === tabTarget));
+    document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === tabTarget));
     document.querySelectorAll('.view').forEach(s => s.classList.toggle('active', s.id === 'view-' + v));
     document.body.classList.toggle('view-kanban-active', v === 'kanban');
-    renderAll();
+    if (v === 'mypage') {
+      renderMyPageTable();
+    } else {
+      renderAll();
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -7094,6 +7237,327 @@
 
   function saveAllV3() {
     return saveAll();
+  }
+
+  
+  // ===================== MYPAGE SUBPAGE LOGIC =====================
+  let mypageFilter = 'all';
+
+  function openMyPageSubpage() {
+    switchView('mypage');
+  }
+
+  function setMyPageFilter(filter, el) {
+    mypageFilter = filter;
+    document.querySelectorAll('#mypageFilters .chip').forEach(c => c.classList.remove('on'));
+    if (el) el.classList.add('on');
+    renderMyPageTable();
+  }
+
+  function togglePassVisibility(compId, btn) {
+    const el = document.getElementById(`pass-val-${compId}`);
+    if (!el) return;
+    const realVal = decodeURIComponent(el.dataset.val || '');
+    if (el.classList.contains('revealed-pass')) {
+      el.textContent = '••••••••';
+      el.classList.remove('revealed-pass');
+      el.classList.add('masked-pass');
+      if (btn) btn.textContent = '👁';
+    } else {
+      el.textContent = realVal || '（なし）';
+      el.classList.remove('masked-pass');
+      el.classList.add('revealed-pass');
+      if (btn) btn.textContent = '🔒';
+    }
+  }
+
+  function togglePassInput(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    if (input.type === 'password') {
+      input.type = 'text';
+      if (btn) btn.textContent = '🔒';
+    } else {
+      input.type = 'password';
+      if (btn) btn.textContent = '👁';
+    }
+  }
+
+  function copyMyPageText(text, successMsg) {
+    if (!text) {
+      showToast('⚠️ コピーする内容がありません');
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(`📋 ${successMsg}`);
+      }).catch(() => {
+        fallbackCopyMyPage(text, successMsg);
+      });
+    } else {
+      fallbackCopyMyPage(text, successMsg);
+    }
+  }
+
+  function fallbackCopyMyPage(text, msg) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showToast(`📋 ${msg}`);
+    } catch {
+      showToast('⚠️ コピーに失敗しました');
+    }
+    document.body.removeChild(ta);
+  }
+
+  function renderMyPageTable() {
+    const tbody = document.getElementById('mypageTbody');
+    const emptyState = document.getElementById('mypageEmptyState');
+    const countBadge = document.getElementById('mypageCountBadge');
+    if (!tbody) return;
+
+    const kw = (document.getElementById('mypageSearchInput')?.value || '').trim().toLowerCase();
+
+    // Candidates: tracked companies OR companies with any mypage info
+    let candidates = catalog.filter(c => c.added || c.myPageUrl || c.myPageId || c.myPagePass);
+
+    if (kw) {
+      candidates = candidates.filter(c => {
+        const nameMatch = (c.name || '').toLowerCase().includes(kw);
+        const kanaMatch = (c.kana || '').toLowerCase().includes(kw);
+        const idMatch = (c.myPageId || '').toLowerCase().includes(kw);
+        const urlMatch = (c.myPageUrl || '').toLowerCase().includes(kw);
+        return nameMatch || kanaMatch || idMatch || urlMatch;
+      });
+    }
+
+    if (mypageFilter === 'has_auth') {
+      candidates = candidates.filter(c => Boolean(c.myPageUrl || c.myPageId));
+    } else if (mypageFilter === 'has_pass') {
+      candidates = candidates.filter(c => Boolean(c.myPagePass));
+    } else if (mypageFilter === 'no_auth') {
+      candidates = candidates.filter(c => !c.myPageUrl && !c.myPageId);
+    }
+
+    // Sort: entries with MyPage data first, then company name
+    candidates.sort((a, b) => {
+      const aHas = Boolean(a.myPageUrl || a.myPageId || a.myPagePass);
+      const bHas = Boolean(b.myPageUrl || b.myPageId || b.myPagePass);
+      if (aHas !== bHas) return bHas ? 1 : -1;
+      return (a.name || '').localeCompare(b.name || '', 'ja');
+    });
+
+    if (countBadge) {
+      countBadge.textContent = `${candidates.length} 社登録済み`;
+    }
+
+    if (!candidates.length) {
+      tbody.innerHTML = '';
+      if (emptyState) emptyState.style.display = 'block';
+      return;
+    }
+
+    if (emptyState) emptyState.style.display = 'none';
+
+    tbody.innerHTML = candidates.map(c => {
+      const escapedPass = encodeURIComponent(c.myPagePass || '');
+      const escapedUrl = escapeHtml(c.myPageUrl || '');
+      const escapedId = escapeHtml(c.myPageId || '');
+      const stageInfo = stageMap[c.stage] || { label: '気になる', color: 'var(--sub)' };
+
+      // URL cell
+      let urlCell = `<span style="color:var(--muted);font-size:12px;">未登録</span>`;
+      if (c.myPageUrl) {
+        const displayUrl = c.myPageUrl.replace(/^https?:\/\//i, '').replace(/\/.*$/, '');
+        urlCell = `
+          <div style="display:flex;align-items:center;gap:6px;max-width:280px;">
+            <a href="${escapedUrl}" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);font-weight:700;font-size:12.5px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title="${escapedUrl}">${displayUrl} ↗</a>
+            <button class="btn-icon" onclick="copyMyPageText('${c.myPageUrl.replace(/'/g, "\\'")}', 'ログインURLをコピーしました')" title="URLをコピー">📋</button>
+          </div>
+        `;
+      }
+
+      // ID cell
+      let idCell = `<span style="color:var(--muted);font-size:12px;">未登録</span>`;
+      if (c.myPageId) {
+        idCell = `
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-family:monospace;font-weight:800;font-size:13px;color:var(--ink);letter-spacing:0.5px;">${escapedId}</span>
+            <button class="btn-icon" onclick="copyMyPageText('${c.myPageId.replace(/'/g, "\\'")}', 'ログインIDをコピーしました')" title="IDをコピー">📋</button>
+          </div>
+        `;
+      }
+
+      // Password cell
+      let passCell = `<span style="color:var(--muted);font-size:12px;">未登録</span>`;
+      if (c.myPagePass) {
+        passCell = `
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span id="pass-val-${c.id}" class="masked-pass" data-val="${escapedPass}">••••••••</span>
+            <button class="btn-icon" onclick="togglePassVisibility('${c.id}', this)" title="表示/非表示">👁</button>
+            <button class="btn-icon" onclick="copyMyPageText('${c.myPagePass.replace(/'/g, "\\'")}', 'パスワードをコピーしました')" title="パスワードをコピー">📋</button>
+          </div>
+        `;
+      }
+
+      return `
+        <tr>
+          <td>
+            <div class="table-company-cell" style="cursor:pointer;" onclick="openCompanyModal('${c.id}')">
+              ${logoHtml(c)}
+              <div>
+                <div class="name">${escapeHtml(c.name)}</div>
+                <div class="sub-meta">${escapeHtml(c.ind || c.industry || '未分類')}</div>
+              </div>
+            </div>
+          </td>
+          <td>${urlCell}</td>
+          <td>${idCell}</td>
+          <td>${passCell}</td>
+          <td>
+            <span class="tag" style="background:${stageInfo.color}22;color:${stageInfo.color};border:1px solid ${stageInfo.color}44;font-size:11px;font-weight:700;">
+              ${stageInfo.label}
+            </span>
+          </td>
+          <td style="text-align:right;">
+            <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;">
+              <button class="btn-icon" onclick="openMyPageEditModal('${c.id}')" title="マイページ編集">✏️</button>
+              <button class="btn-icon text-danger" onclick="clearCompanyMyPage('${c.id}')" title="マイページ情報クリア">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function openMyPageAddModal(compId = null) {
+    if (!requireAuth('マイページ情報の登録')) return;
+    const modal = document.getElementById('mypageAddModal');
+    const compSelect = document.getElementById('mypageModalCompSelect');
+    const titleEl = document.getElementById('mypageModalTitle');
+
+    // Populate Select options with catalog
+    const tracked = catalog.filter(c => c.added);
+    const unTracked = catalog.filter(c => !c.added);
+
+    let html = '<option value="">企業を選択してください...</option>';
+    if (tracked.length) {
+      html += `<optgroup label="選考管理中の企業 (${tracked.length})">`;
+      html += tracked.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+      html += `</optgroup>`;
+    }
+    html += `<optgroup label="その他の全企業 (${unTracked.length})">`;
+    html += unTracked.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    html += `</optgroup>`;
+
+    compSelect.innerHTML = html;
+
+    if (compId) {
+      compSelect.value = compId;
+      compSelect.disabled = true;
+      if (titleEl) titleEl.textContent = 'MyPage アカウント編集';
+      const c = catalog.find(x => x.id === compId);
+      document.getElementById('mypageModalUrl').value = c?.myPageUrl || '';
+      document.getElementById('mypageModalId').value = c?.myPageId || '';
+      document.getElementById('mypageModalPass').value = c?.myPagePass || '';
+    } else {
+      compSelect.disabled = false;
+      if (titleEl) titleEl.textContent = 'MyPage アカウント登録';
+      document.getElementById('mypageModalUrl').value = '';
+      document.getElementById('mypageModalId').value = '';
+      document.getElementById('mypageModalPass').value = '';
+    }
+
+    openModal('mypageAddModal');
+  }
+
+  function openMyPageEditModal(compId) {
+    openMyPageAddModal(compId);
+  }
+
+  function onMyPageModalCompChange() {
+    const compId = document.getElementById('mypageModalCompSelect').value;
+    if (!compId) return;
+    const c = catalog.find(x => x.id === compId);
+    if (c) {
+      document.getElementById('mypageModalUrl').value = c.myPageUrl || '';
+      document.getElementById('mypageModalId').value = c.myPageId || '';
+      document.getElementById('mypageModalPass').value = c.myPagePass || '';
+    }
+  }
+
+  function saveMyPageAccountModal() {
+    if (!requireAuth('マイページ情報の保存')) return;
+    const compId = document.getElementById('mypageModalCompSelect').value;
+    if (!compId) {
+      showToast('⚠️ 企業を選択してください');
+      return;
+    }
+    const c = catalog.find(x => x.id === compId);
+    if (!c) return;
+
+    c.myPageUrl = (document.getElementById('mypageModalUrl').value || '').trim();
+    c.myPageId = (document.getElementById('mypageModalId').value || '').trim();
+    c.myPagePass = (document.getElementById('mypageModalPass').value || '').trim();
+
+    if (!c.added) {
+      c.added = true;
+    }
+
+    saveAll();
+    renderAll();
+    renderMyPageTable();
+    closeModal('mypageAddModal');
+    showToast(`「${c.name}」のマイページ情報を保存しました`);
+  }
+
+  function clearCompanyMyPage(compId) {
+    if (!requireAuth('マイページ情報のクリア')) return;
+    const c = catalog.find(x => x.id === compId);
+    if (!c) return;
+    if (!confirm(`「${c.name}」のマイページ情報（URL・ID・パスワード）をクリアしますか？`)) return;
+
+    c.myPageUrl = '';
+    c.myPageId = '';
+    c.myPagePass = '';
+
+    saveAll();
+    renderAll();
+    renderMyPageTable();
+    showToast(`「${c.name}」のマイページ情報をクリアしました`);
+  }
+
+  function exportMyPageCSV() {
+    const targets = catalog.filter(c => c.myPageUrl || c.myPageId || c.myPagePass);
+    if (!targets.length) {
+      showToast('⚠️ エクスポート可能なマイページ情報がありません');
+      return;
+    }
+
+    const headers = ['企業名', '業界', '選考ステージ', 'ログインURL', 'ログインID', 'パスワード'];
+    const rows = targets.map(c => [
+      `"${(c.name || '').replace(/"/g, '""')}"`,
+      `"${(c.ind || c.industry || '').replace(/"/g, '""')}"`,
+      `"${stageMap[c.stage]?.label || c.stage || ''}"`,
+      `"${(c.myPageUrl || '').replace(/"/g, '""')}"`,
+      `"${(c.myPageId || '').replace(/"/g, '""')}"`,
+      `"${(c.myPagePass || '').replace(/"/g, '""')}"`
+    ]);
+
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `MyPage_Accounts_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('MyPage アカウント CSV をダウンロードしました');
   }
 
   // Override loadAll & saveAll
@@ -8528,6 +8992,7 @@
     document.getElementById('mDueLabel').value = c.dueLabel || '';
     document.getElementById('mMyPageUrl').value = c.myPageUrl || '';
     document.getElementById('mMyPageId').value = c.myPageId || '';
+    if (document.getElementById('mMyPagePass')) document.getElementById('mMyPagePass').value = c.myPagePass || '';
     document.getElementById('mNoteMotiv').value = c.noteMotiv || '';
     document.getElementById('mNoteEs').value = c.noteEs || '';
     document.getElementById('mNoteInterview').value = c.noteInterview || '';
@@ -8683,6 +9148,7 @@
     c.dueLabel = document.getElementById('mDueLabel').value.trim();
     c.myPageUrl = document.getElementById('mMyPageUrl').value.trim();
     c.myPageId = document.getElementById('mMyPageId').value.trim();
+    c.myPagePass = (document.getElementById('mMyPagePass')?.value || '').trim();
     c.noteMotiv = document.getElementById('mNoteMotiv').value;
     c.noteEs = document.getElementById('mNoteEs').value;
     c.noteInterview = document.getElementById('mNoteInterview').value;
@@ -8956,6 +9422,7 @@
     else if (currentView === 'es') renderESDatabase();
     else if (currentView === 'story') renderStoryBank();
     else if (currentView === 'dash') renderDash();
+    else if (currentView === 'mypage') renderMyPageTable();
   }
 
   document.getElementById('search').addEventListener('input', e => {
@@ -9101,5 +9568,53 @@
     });
   }
 </script>
+
+  <!-- ===================== MODAL: MyPage アカウント追加/編集 ===================== -->
+  <div class="modal-overlay" id="mypageAddModal" onclick="onModalOverlayClick(event, 'mypageAddModal')">
+    <div class="modal" style="max-width: 520px;">
+      <div class="modal-head">
+        <div class="ico" style="background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #1a1406; width: 38px; height: 38px; font-size: 16px; font-weight: 900;">🔑</div>
+        <div>
+          <h3 id="mypageModalTitle">MyPage アカウント登録</h3>
+          <span style="color:var(--sub);font-size:11.5px">企業のマイページログイン情報を保存・更新します</span>
+        </div>
+        <button class="modal-close" onclick="closeModal('mypageAddModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="mypageModalCompId" />
+        <div class="form-group">
+          <label class="form-label">対象企業 <span style="color:var(--red)">*</span></label>
+          <select class="form-select" id="mypageModalCompSelect" onchange="onMyPageModalCompChange()">
+            <option value="">企業を選択してください...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">マイページ ログイン URL</label>
+          <div style="display: flex; gap: 6px;">
+            <input type="url" class="form-input" id="mypageModalUrl" placeholder="https://mypage.xxxx.jp/..." style="flex: 1;" />
+            <button class="btn-sm-ghost" type="button" onclick="openExternalUrl(document.getElementById('mypageModalUrl').value)" title="URLを開いて確認">↗ 開く</button>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">ログイン ID / 受験番号</label>
+            <input class="form-input" id="mypageModalId" placeholder="例: ATK000646" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">パスワード</label>
+            <div style="display: flex; gap: 6px;">
+              <input type="password" class="form-input" id="mypageModalPass" placeholder="パスワード" style="flex: 1;" />
+              <button class="btn-sm-ghost" type="button" onclick="togglePassInput('mypageModalPass', this)" title="表示切り替え">👁</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-sm-ghost" onclick="closeModal('mypageAddModal')">キャンセル</button>
+        <button class="top-btn primary" onclick="saveMyPageAccountModal()">保存する</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
