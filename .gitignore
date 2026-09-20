@@ -1,4 +1,4 @@
-﻿# Secrets & Environment Variables
+# Secrets & Environment Variables
 .env
 .env.*
 !.env.example
@@ -11,3 +11,5 @@ secrets/
 Thumbs.db
 *.log
 scratch/
+node_modules/
+package*.json

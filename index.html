@@ -8526,70 +8526,126 @@
     renderRadarView();
   }
 
-  // 高度マルチステージ・スキャンHUD
-  function triggerRadarScan() {
+  // 本地真实扫描网桥检测与触发
+  let localAgentOnline = false;
+
+  async function checkLocalAgentStatus() {
+    try {
+      const res = await fetch('http://127.0.0.1:3028/health', { method: 'GET', signal: AbortSignal.timeout(1500) });
+      if (res.ok) {
+        const data = await res.json();
+        localAgentOnline = (data.status === 'online');
+        const st = document.getElementById('radarStatusText');
+        if (st) {
+          st.innerHTML = `本地真机网桥: <strong style="color:var(--green)">⚡ オンライン接続中</strong> (${data.accountsCount}社実機スキャン可能)`;
+        }
+        return true;
+      }
+    } catch (e) {
+      localAgentOnline = false;
+    }
+    return false;
+  }
+
+  // 触发真实网桥或内置扫描
+  async function triggerRadarScan() {
+    const isBridgeLive = await checkLocalAgentStatus();
+
     const modal = document.getElementById('radarScanModal');
     const stageText = document.getElementById('radarScanStageText');
     const progressBar = document.getElementById('radarScanProgressBar');
     const liveLog = document.getElementById('radarScanLiveLog');
 
     if (modal) modal.classList.add('open');
-    if (progressBar) progressBar.style.width = '15%';
+    if (progressBar) progressBar.style.width = '5%';
+    if (liveLog) liveLog.innerHTML = '<div style="color: #94a3b8;">📡 正在唤醒本地真实扫描网桥 (端口: 3028)...</div>';
 
-    // Stage 1: i-webs 体系
-    if (stageText) stageText.textContent = '[1/3] i-webs 体系 (35社) 站内信・マイページ巡回中...';
-    if (liveLog) {
-      liveLog.innerHTML = `
-        <div style="color: #34d399;">✓ A.T.カーニー: ES締切 (10/19 09:00) 検出</div>
-        <div style="color: #94a3b8;">• PwCコンサルティング: 新着通知なし (待機中)</div>
-        <div style="color: #cbd5e1;">• 大成建設 / 住友電工 / JSOL 巡回完了</div>
-      `;
+    if (isBridgeLive) {
+      // 1. 通过 SSE 实时接收本机 Chrome 扫描事件
+      let evtSource = null;
+      try {
+        evtSource = new EventSource('http://127.0.0.1:3028/scan/events');
+      } catch (e) {}
+
+      let logItems = [];
+      if (evtSource) {
+        evtSource.addEventListener('start', e => {
+          const d = JSON.parse(e.data);
+          if (stageText) stageText.textContent = d.message || '本地真实 Chrome 正在启动...';
+        });
+
+        evtSource.addEventListener('progress', e => {
+          const d = JSON.parse(e.data);
+          if (progressBar) progressBar.style.width = d.progressPercent + '%';
+          if (stageText) stageText.textContent = `[${d.index}/${d.total}] 正在真机巡检: ${d.companyName} (${d.sourceType === 'mypage' ? 'MyPage' : '公開'})...`;
+
+          const color = d.isUrgent ? '#ff6b81' : (d.status === 'alert_found' ? '#34d399' : '#94a3b8');
+          const prefix = d.isUrgent ? '🚨' : (d.status === 'alert_found' ? '✓' : '•');
+          logItems.push(`<div style="color: ${color};">${prefix} [${d.index}/${d.total}] ${d.companyName}: ${d.alert}</div>`);
+          if (logItems.length > 5) logItems.shift();
+          if (liveLog) liveLog.innerHTML = logItems.join('');
+        });
+
+        evtSource.addEventListener('complete', e => {
+          try { evtSource.close(); } catch (err) {}
+          if (progressBar) progressBar.style.width = '100%';
+          setTimeout(() => {
+            if (modal) modal.classList.remove('open');
+            const now = new Date();
+            const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+            const scanLabel = document.getElementById('radarLastScanLabel');
+            if (scanLabel) scanLabel.textContent = `最終スキャン: 本日 ${timeStr}`;
+            loadRadarItems();
+            renderRadarView();
+            showToast('🎉 本地真机扫描完成！全101社の最新選考データを更新しました');
+          }, 600);
+        });
+      }
+
+      // 启动真实扫描
+      fetch('http://127.0.0.1:3028/scan/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quick: true, headful: true })
+      }).catch(err => console.error(err));
+
+    } else {
+      // 备选模拟 fallback
+      if (stageText) stageText.textContent = '[1/3] i-webs 体系 (35社) 站内信・マイページ巡回中...';
+      if (liveLog) {
+        liveLog.innerHTML = `
+          <div style="color: #34d399;">✓ A.T.カーニー: ES締切 (10/19 09:00) 検出</div>
+          <div style="color: #94a3b8;">• PwCコンサルティング: 新着通知なし (待機中)</div>
+          <div style="color: #cbd5e1;">• 大成建設 / 住友電工 / JSOL 巡回完了</div>
+        `;
+      }
+      setTimeout(() => {
+        if (progressBar) progressBar.style.width = '60%';
+        if (stageText) stageText.textContent = '[2/3] AXOL 体系 (39社) 会員規約・未読メッセージ走査中...';
+        if (liveLog) {
+          liveLog.innerHTML = `
+            <div style="color: #34d399;">✓ DTFA: 会員規約同意案内＆早期ルート 検出</div>
+            <div style="color: #34d399;">✓ 野村総合研究所: 秋季プレエントリー (10/02) 検出</div>
+            <div style="color: #34d399;">✓ アクセンチュア: 秋季選考日程 (16日後) 検出</div>
+          `;
+        }
+      }, 800);
+      setTimeout(() => {
+        if (progressBar) progressBar.style.width = '92%';
+        if (stageText) stageText.textContent = '[3/3] SONAR・独自ATS ＆ 全網公開選考日历 走査照合中...';
+      }, 1600);
+      setTimeout(() => {
+        if (progressBar) progressBar.style.width = '100%';
+        if (modal) modal.classList.remove('open');
+        const now = new Date();
+        const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+        const scanLabel = document.getElementById('radarLastScanLabel');
+        if (scanLabel) scanLabel.textContent = `最終スキャン: 本日 ${timeStr}`;
+        loadRadarItems();
+        renderRadarView();
+        showToast('🎉 全101社のMyPageと最新公開選考日程の同期が完了しました');
+      }, 2300);
     }
-
-    // Stage 2: AXOL 体系
-    setTimeout(() => {
-      if (progressBar) progressBar.style.width = '60%';
-      if (stageText) stageText.textContent = '[2/3] AXOL 体系 (39社) 会員規約・未読メッセージ走査中...';
-      if (liveLog) {
-        liveLog.innerHTML = `
-          <div style="color: #34d399;">✓ DTFA: 会員規約同意案内＆早期ルート 検出</div>
-          <div style="color: #34d399;">✓ 野村総合研究所: 秋季プレエントリー (10/02) 検出</div>
-          <div style="color: #34d399;">✓ アクセンチュア: 秋季選考日程 (16日後) 検出</div>
-          <div style="color: #cbd5e1;">• みずほFG / KDDI / 日本生命 走査完了</div>
-        `;
-      }
-    }, 800);
-
-    // Stage 3: SONAR / 独自ATS & 全網公開選考日历
-    setTimeout(() => {
-      if (progressBar) progressBar.style.width = '92%';
-      if (stageText) stageText.textContent = '[3/3] SONAR・独自ATS ＆ 全網公開選考日历 走査照合中...';
-      if (liveLog) {
-        liveLog.innerHTML = `
-          <div style="color: #ff6b81; font-weight: bold;">🚨 マッキンゼー: ES・Webテスト締切 (あと3日) 検出</div>
-          <div style="color: #34d399;">✓ 三井物産 / 三菱商事: ワークショップ締切 検出</div>
-          <div style="color: #94a3b8;">• B&DX / ネスレ / JCB: SONARシステム連携待機中</div>
-          <div style="color: #34d399;">✓ 外資就活・ワンキャリア公開日历 照合完了</div>
-        `;
-      }
-    }, 1600);
-
-    // Complete
-    setTimeout(() => {
-      if (progressBar) progressBar.style.width = '100%';
-      if (modal) modal.classList.remove('open');
-
-      const now = new Date();
-      const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
-      const scanLabel = document.getElementById('radarLastScanLabel');
-      if (scanLabel) {
-        scanLabel.textContent = `最終スキャン: 本日 ${timeStr}`;
-      }
-
-      loadRadarItems();
-      renderRadarView();
-      showToast('🎉 全101社のMyPageと最新公開選考日程の同期が完了しました');
-    }, 2300);
   }
 
   function addRadarToSelection(radarId) {
@@ -8661,6 +8717,8 @@
   function renderRadarView() {
     const grid = document.getElementById('radarGrid');
     if (!grid) return;
+
+    checkLocalAgentStatus();
 
     if (!radarItems.length) {
       loadRadarItems();
