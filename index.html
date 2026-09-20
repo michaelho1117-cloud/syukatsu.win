@@ -2855,6 +2855,277 @@
     border-color: rgba(255, 92, 119, 0.4);
     background: rgba(255, 92, 119, 0.12);
   }
+
+  /* ===================== RADAR VIEW STYLES ===================== */
+  .radar-badge-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4.5px;
+    border-radius: 999px;
+    background: #ff4757;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+    margin-left: 2px;
+    box-shadow: 0 0 8px rgba(255, 71, 87, 0.6);
+  }
+  .radar-statusbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    margin-bottom: 16px;
+  }
+  .radar-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 10px var(--green);
+    animation: radarPulse 2s infinite ease-in-out;
+  }
+  @keyframes radarPulse {
+    0%, 100% { transform: scale(1); opacity: 0.85; }
+    50% { transform: scale(1.35); opacity: 1; box-shadow: 0 0 14px var(--green); }
+  }
+  .radar-last-scan {
+    font-size: 11.5px;
+    color: var(--sub);
+    padding-left: 8px;
+    border-left: 1px solid var(--glass-brd);
+  }
+  .radar-stats-quick {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    font-size: 11.5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--glass-2);
+    border: 1px solid var(--glass-brd);
+  }
+  .stat-pill.red {
+    color: #ff6b81;
+    border-color: rgba(255, 107, 129, 0.3);
+    background: rgba(255, 107, 129, 0.08);
+  }
+  .stat-pill.amber {
+    color: #ffa502;
+    border-color: rgba(255, 165, 2, 0.3);
+    background: rgba(255, 165, 2, 0.08);
+  }
+  .radar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+  @media (max-width: 600px) {
+    .radar-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .radar-card {
+    position: relative;
+    border-radius: 14px;
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+  .radar-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--glass-brd-hover);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+  .radar-card.is-urgent {
+    border-color: rgba(255, 71, 87, 0.45);
+    background: linear-gradient(145deg, rgba(255, 71, 87, 0.07), var(--glass));
+    box-shadow: 0 4px 20px rgba(255, 71, 87, 0.12);
+  }
+  .radar-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .radar-company-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .radar-company-info .name {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .radar-company-info .meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .radar-tag {
+    font-size: 10.5px;
+    padding: 1.5px 6px;
+    border-radius: 4px;
+    background: var(--glass-2);
+    color: var(--sub);
+    border: 1px solid var(--glass-brd);
+  }
+  .radar-countdown-badge {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+  .radar-countdown-pill {
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .radar-countdown-pill.urgent {
+    background: #ff4757;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+    animation: radarPulse 1.8s infinite;
+  }
+  .radar-countdown-pill.soon {
+    background: rgba(255, 165, 2, 0.18);
+    color: #ffa502;
+    border: 1px solid rgba(255, 165, 2, 0.4);
+  }
+  .radar-countdown-pill.normal {
+    background: var(--glass-2);
+    color: var(--sub);
+    border: 1px solid var(--glass-brd);
+  }
+  .radar-countdown-date {
+    font-size: 10.5px;
+    color: var(--sub);
+    margin-top: 3px;
+  }
+  .radar-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .radar-event-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.35;
+  }
+  .radar-notes {
+    font-size: 11.5px;
+    color: var(--sub);
+    line-height: 1.45;
+    background: rgba(0, 0, 0, 0.15);
+    padding: 6px 9px;
+    border-radius: 7px;
+    border-left: 2px solid var(--accent, #8b7bff);
+  }
+  .radar-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid var(--glass-brd);
+    flex-wrap: wrap;
+  }
+  .radar-source-label {
+    font-size: 10.5px;
+    color: var(--sub);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .radar-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+  }
+  .radar-btn-entry {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 5px 11px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .radar-btn-entry:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(99, 102, 241, 0.4);
+  }
+  .radar-btn-ghost {
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    color: var(--ink);
+    border-radius: 7px;
+    padding: 5px 9px;
+    font-size: 11px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all .15s ease;
+  }
+  .radar-btn-ghost:hover {
+    background: var(--glass-2);
+    border-color: var(--glass-brd-hover);
+  }
+  .radar-btn-dismiss {
+    background: transparent;
+    border: none;
+    color: var(--sub);
+    font-size: 11px;
+    cursor: pointer;
+    padding: 5px 6px;
+    border-radius: 5px;
+    transition: color .15s ease;
+  }
+  .radar-btn-dismiss:hover {
+    color: var(--red);
+    background: rgba(255, 92, 119, 0.08);
+  }
 </style>
 </head>
 <body>
@@ -2871,6 +3142,7 @@
     </div>
     <nav class="tabs" id="tabs">
       <button data-view="db" class="active">🏢 企業DB</button>
+      <button data-view="radar" class="tab-radar">📡 締切レーダー <span class="radar-badge-count" id="radarBadgeCount">1</span></button>
       <button data-view="list">📑 選考管理</button>
       <button data-view="kanban">📌 カンバン</button>
       <button data-view="es">📝 ES</button>
@@ -2950,6 +3222,56 @@
     <div class="grid-wrap">
       <div class="grid-cards" id="grid"></div>
     </div>
+  </section>
+
+  <!-- ===================== VIEW 1.5: 締切レーダー ===================== -->
+  <section class="view" id="view-radar">
+    <div class="hero">
+      <div class="hero-title">
+        <h1>選考締切<span class="g">レーダー 📡</span></h1>
+        <p>102社のMyPage内部站内信・早期優遇選考と全網公開選考日程を自動照合。迫る締切を検知し、ワンクリックで本選考へ追加できます。</p>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+        <button class="top-btn" id="radarScanBtn" onclick="triggerRadarScan()" title="MyPageと最新公開日程を再巡回">
+          ⚡<span class="btn-text"> 今すぐスキャン</span>
+        </button>
+        <button class="top-btn secondary-action" onclick="openMyPageSubpage()" title="MyPageアカウント管理を開く">
+          🔑<span class="btn-text"> MyPage管理 (102社)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Status & Quick Filter Bar -->
+    <div class="radar-statusbar">
+      <div class="radar-status-indicator">
+        <span class="pulse-dot"></span>
+        <span id="radarStatusText">監視中: <strong style="color:var(--green)">102社</strong> のMyPageと連携中</span>
+        <span class="radar-last-scan" id="radarLastScanLabel">最終スキャン: 本日 19:30</span>
+      </div>
+      <div class="radar-stats-quick">
+        <span class="stat-pill red" id="radarUrgentCountPill">🔴 迫る締切: <strong>1件</strong></span>
+        <span class="stat-pill amber" id="radarActiveCountPill">🟡 監視中案内: <strong>6件</strong></span>
+      </div>
+    </div>
+
+    <div class="toolbar" style="margin-bottom: 16px;">
+      <div class="searchbox" style="flex: 1; max-width: 340px;">
+        <span>🔍</span>
+        <input id="radarSearchInput" placeholder="企業名・選考種別で検索..." oninput="onRadarSearchInput(this.value)" />
+      </div>
+      <div class="filters" id="radarFilters">
+        <span class="chip on" data-filter="all" onclick="setRadarFilter('all', this)">すべて</span>
+        <span class="chip" data-filter="urgent" onclick="setRadarFilter('urgent', this)">🔴 迫る締切 (7日以内)</span>
+        <span class="chip" data-filter="hon" onclick="setRadarFilter('hon', this)">👑 本選考・ES締切</span>
+        <span class="chip" data-filter="early" onclick="setRadarFilter('early', this)">🔥 早期選考・優遇</span>
+        <span class="chip" data-filter="intern" onclick="setRadarFilter('intern', this)">🎯 選考型インターン</span>
+        <span class="chip" data-filter="mypage" onclick="setRadarFilter('mypage', this)">🔒 マイページ限定</span>
+        <span class="chip" data-filter="public" onclick="setRadarFilter('public', this)">🌐 公開選考日程</span>
+      </div>
+    </div>
+
+    <!-- Radar Cards Grid -->
+    <div class="radar-grid" id="radarGrid"></div>
   </section>
 
   <!-- ===================== VIEW 2: 選考リスト ===================== -->
@@ -3325,6 +3647,10 @@
     <button class="mobile-nav-btn active" data-view="db" onclick="switchView('db')">
       <span class="icon">🏢</span>
       <span>企業DB</span>
+    </button>
+    <button class="mobile-nav-btn" data-view="radar" onclick="switchView('radar')">
+      <span class="icon">📡</span>
+      <span>レーダー</span>
     </button>
     <button class="mobile-nav-btn" data-view="list" onclick="switchView('list')">
       <span class="icon">📑</span>
@@ -6181,6 +6507,8 @@
 
     if (v === 'mypage') {
       renderMyPageTable();
+    } else if (v === 'radar') {
+      renderRadarView();
     } else {
       renderAll();
     }
@@ -7842,6 +8170,480 @@
   // Override loadAll & saveAll
   window.loadAll = loadAll;
   window.saveAll = saveAll;
+
+  // =========================================================================
+  // VIEW 1.5: 締切レーダー (DEADLINE RADAR)
+  // =========================================================================
+  let radarFilter = 'all';
+  let radarKeyword = '';
+
+  function getDateOffsetStr(days, time = '23:59') {
+    const d = new Date();
+    d.setDate(d.getDate() + days);
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${d.getFullYear()}-${m}-${day} ${time}`;
+  }
+
+  const DEFAULT_RADAR_ITEMS = [
+    {
+      id: 'radar_mckinsey_2026_fall',
+      companyId: 'c_mckinsey',
+      companyName: 'マッキンゼー・アンド・カンパニー',
+      industry: '戦略コンサル',
+      title: '26卒秋季本選考 ビジネスアナリスト職 ES・Webテスト締切',
+      eventType: 'es',
+      category: 'hon',
+      deadline: getDateOffsetStr(3, '23:59'),
+      sourceType: 'public',
+      sourceLabel: '公開選考日程',
+      notes: '一次選考（Problem Solving Game & 英語適性検査）受検必須',
+      mypageUrl: 'https://www.mckinsey.com/jp/careers',
+      status: 'pending'
+    },
+    {
+      id: 'radar_kearney_2026_fall',
+      companyId: 'c_kearney',
+      companyName: 'A.T.カーニー (A.T. Kearney)',
+      industry: '戦略コンサル',
+      title: '26卒秋季本選考 エントリーシート(ES)提出期限',
+      eventType: 'es',
+      category: 'hon',
+      deadline: '2026-10-19 09:00',
+      sourceType: 'mypage',
+      sourceLabel: 'マイページ内部通知',
+      notes: '適性検査受検期間：10月上旬～中旬頃、オンライン面接：10/17、10/24、10/31',
+      mypageUrl: 'https://job.axol.jp/i-webs/st/kearney_26/login/',
+      status: 'pending'
+    },
+    {
+      id: 'radar_bcg_2026_fall',
+      companyId: 'c_bcg',
+      companyName: 'ボストン コンサルティング グループ (BCG)',
+      industry: '戦略コンサル',
+      title: '26卒秋季本選考 ES・WEBテスト提出締切',
+      eventType: 'es',
+      category: 'hon',
+      deadline: '2026-10-08 23:59',
+      sourceType: 'public',
+      sourceLabel: '公開選考日程',
+      notes: 'アソシエイト職 プレエントリー・ES受付中',
+      mypageUrl: 'https://talent.bcg.com/',
+      status: 'pending'
+    },
+    {
+      id: 'radar_nri_2026_fall',
+      companyId: 'c_4307',
+      companyName: '野村総合研究所 (NRI)',
+      industry: 'シンクタンク・IT',
+      title: '26卒 秋季本選考・キャリア採用 プレエントリー締切',
+      eventType: 'es',
+      category: 'hon',
+      deadline: '2026-10-02 12:00',
+      sourceType: 'public',
+      sourceLabel: '公開選考日程',
+      notes: '経営コンサルタント職 / ITソリューション職',
+      mypageUrl: 'https://job.axol.jp/i-webs/st/nri_26/login/',
+      status: 'pending'
+    },
+    {
+      id: 'radar_dtfa_2026_fall',
+      companyId: 'c_unlisted_dtfa',
+      companyName: 'デロイト トーマツ ファイナンシャルアドバイザリー (DTFA)',
+      industry: 'FAS・財務コンサル',
+      title: '最新会員規約 同意手続き（本選考マイページ更新案内）',
+      eventType: 'test',
+      category: 'early',
+      deadline: '2026-10-15 23:59',
+      sourceType: 'mypage',
+      sourceLabel: 'マイページ要対応',
+      notes: '規約同意後、本選考・適性検査案内が順次開示されます',
+      mypageUrl: 'https://job.axol.jp/i-webs/st/deloitte_26/login/',
+      status: 'pending'
+    },
+    {
+      id: 'radar_mitsui_2026_winter',
+      companyId: 'c_8031',
+      companyName: '三井物産',
+      industry: '総合商社',
+      title: '挑戦と創造 3Days ワークショップ選考 ES締切',
+      eventType: 'intern',
+      category: 'intern',
+      deadline: '2026-10-25 12:00',
+      sourceType: 'public',
+      sourceLabel: '公開選考日程',
+      notes: '選考通過者向けに本選考早期優遇ルートあり',
+      mypageUrl: 'https://job.axol.jp/i-webs/st/mitsui_26/login/',
+      status: 'pending'
+    },
+    {
+      id: 'radar_mc_2026_winter',
+      companyId: 'c_8058',
+      companyName: '三菱商事',
+      industry: '総合商社',
+      title: '冬期キャリアワークショップ / プレ選考エントリー受付',
+      eventType: 'intern',
+      category: 'intern',
+      deadline: '2026-11-10 17:00',
+      sourceType: 'public',
+      sourceLabel: '公開選考日程',
+      notes: '総合職 冬期選考型インターンシップ',
+      mypageUrl: 'https://job.axol.jp/i-webs/st/mc_26/login/',
+      status: 'pending'
+    },
+    {
+      id: 'radar_pwc_2026_fall',
+      companyId: 'c_pwc',
+      companyName: 'PwCコンサルティング',
+      industry: '総合コンサル',
+      title: '秋期本選考コース案内（ステータス：意向登録済）',
+      eventType: 'event',
+      category: 'hon',
+      deadline: null,
+      sourceType: 'mypage',
+      sourceLabel: 'マイページ待機中',
+      notes: 'Message Box 0件。選考情報が届き次第、自動検知されます',
+      mypageUrl: 'https://job.axol.jp/i-webs/st/pwc_26/login/',
+      status: 'pending'
+    },
+    {
+      id: 'radar_bdx_2026_fall',
+      companyId: 'c_unlisted_bdx',
+      companyName: 'B&DX株式会社',
+      industry: 'コンサルティング',
+      title: '新卒採用マイページ（SONARシステム連携済・待機中）',
+      eventType: 'event',
+      category: 'hon',
+      deadline: null,
+      sourceType: 'mypage',
+      sourceLabel: 'マイページ待機中',
+      notes: '現在待機中。新規募集情報が届き次第レーダーに検知されます',
+      mypageUrl: 'https://snar.jp/job/bdx_26/',
+      status: 'pending'
+    }
+  ];
+
+  let radarItems = [];
+
+  function loadRadarItems() {
+    const raw = localStorage.getItem('syukatsu_radar_items');
+    if (raw) {
+      try {
+        radarItems = JSON.parse(raw);
+      } catch (e) {
+        radarItems = JSON.parse(JSON.stringify(DEFAULT_RADAR_ITEMS));
+      }
+    } else {
+      radarItems = JSON.parse(JSON.stringify(DEFAULT_RADAR_ITEMS));
+    }
+    updateRadarBadge();
+  }
+
+  function saveRadarItems() {
+    localStorage.setItem('syukatsu_radar_items', JSON.stringify(radarItems));
+    updateRadarBadge();
+  }
+
+  function getRadarCountdown(deadlineStr) {
+    if (!deadlineStr) return null;
+    const now = new Date();
+    const parts = deadlineStr.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:\s+(\d{1,2}):(\d{1,2}))?/);
+    if (!parts) return null;
+    const target = new Date(
+      parseInt(parts[1], 10),
+      parseInt(parts[2], 10) - 1,
+      parseInt(parts[3], 10),
+      parts[4] ? parseInt(parts[4], 10) : 23,
+      parts[5] ? parseInt(parts[5], 10) : 59
+    );
+    const diffMs = target.getTime() - now.getTime();
+    if (diffMs < 0) return { expired: true, text: '締切終了', days: -1, isUrgent: false, isSoon: false };
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const days = Math.floor(diffHours / 24);
+    const hours = diffHours % 24;
+
+    let text = '';
+    const isUrgent = days <= 3;
+    const isSoon = days > 3 && days <= 7;
+
+    if (days === 0) {
+      text = `あと ${hours} 時間`;
+    } else if (days <= 3) {
+      text = `あと ${days} 日 ${hours}h`;
+    } else {
+      text = `あと ${days} 日`;
+    }
+    return { expired: false, text, days, hours, isUrgent, isSoon };
+  }
+
+  function updateRadarBadge() {
+    let pendingUrgent = 0;
+    let pendingTotal = 0;
+    if (!radarItems.length) {
+      radarItems = JSON.parse(JSON.stringify(DEFAULT_RADAR_ITEMS));
+    }
+    radarItems.forEach(item => {
+      if (item.status === 'dismissed') return;
+      const comp = catalog.find(x => x.id === item.companyId);
+      if (comp && comp.added && comp.stage && comp.stage !== 'watch') {
+        item.status = 'converted';
+        return;
+      }
+      if (item.status === 'converted') return;
+      pendingTotal++;
+      const cd = getRadarCountdown(item.deadline);
+      if (cd && (cd.isUrgent || cd.isSoon)) {
+        pendingUrgent++;
+      }
+    });
+
+    const badge = document.getElementById('radarBadgeCount');
+    if (badge) {
+      const showCount = pendingUrgent > 0 ? pendingUrgent : pendingTotal;
+      badge.textContent = showCount > 0 ? showCount : '';
+      badge.style.display = showCount > 0 ? 'inline-flex' : 'none';
+    }
+
+    const urgentPill = document.getElementById('radarUrgentCountPill');
+    if (urgentPill) {
+      urgentPill.innerHTML = `🔴 迫る締切: <strong>${pendingUrgent}件</strong>`;
+    }
+    const activePill = document.getElementById('radarActiveCountPill');
+    if (activePill) {
+      activePill.innerHTML = `🟡 監視中案内: <strong>${pendingTotal}件</strong>`;
+    }
+  }
+
+  function setRadarFilter(filter, el) {
+    radarFilter = filter;
+    document.querySelectorAll('#radarFilters .chip').forEach(c => c.classList.remove('on'));
+    if (el) el.classList.add('on');
+    renderRadarView();
+  }
+
+  function onRadarSearchInput(val) {
+    radarKeyword = (val || '').trim().toLowerCase();
+    renderRadarView();
+  }
+
+  function triggerRadarScan() {
+    const btn = document.getElementById('radarScanBtn');
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '🔄 <span class="btn-text">スキャン中...</span>';
+    }
+    setTimeout(() => {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '⚡ <span class="btn-text">今すぐスキャン</span>';
+      }
+      const now = new Date();
+      const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+      const scanLabel = document.getElementById('radarLastScanLabel');
+      if (scanLabel) {
+        scanLabel.textContent = `最終スキャン: 本日 ${timeStr}`;
+      }
+      updateRadarBadge();
+      renderRadarView();
+      showToast('102社のMyPage & 公開選考日程のスキャンが完了しました');
+    }, 800);
+  }
+
+  function addRadarToSelection(radarId) {
+    if (!requireAuth('選考管理への追加')) return;
+    const item = radarItems.find(r => r.id === radarId);
+    if (!item) return;
+
+    let c = catalog.find(x => x.id === item.companyId);
+    if (!c) {
+      c = {
+        id: item.companyId,
+        name: item.companyName,
+        ind: item.industry,
+        added: true,
+        stage: 'entry',
+        due: item.deadline ? item.deadline.slice(0, 10) : '',
+        dueLabel: item.eventType === 'es' ? 'ES締切' : '選考締切',
+        dueLv: 'soon',
+        myPageUrl: item.mypageUrl || '',
+        isCustom: true
+      };
+      catalog.unshift(c);
+    } else {
+      c.added = true;
+      c.stage = 'entry';
+      if (item.deadline) {
+        c.due = item.deadline.slice(0, 10);
+        c.dueLabel = item.eventType === 'es' ? 'ES締切' : '選考締切';
+        const cd = getRadarCountdown(item.deadline);
+        c.dueLv = cd && cd.isUrgent ? 'urgent' : 'soon';
+      }
+      if (item.mypageUrl && !c.myPageUrl) c.myPageUrl = item.mypageUrl;
+    }
+
+    if (item.deadline) {
+      const dt = item.deadline;
+      const alreadyHas = selectionEvents.some(e => e.companyId === c.id && (e.due || '').startsWith(dt.slice(0, 10)));
+      if (!alreadyHas) {
+        selectionEvents.push({
+          id: 'ev_' + Date.now(),
+          companyId: c.id,
+          title: item.title,
+          due: dt,
+          type: item.eventType || 'es',
+          memo: item.notes || '',
+          status: 'upcoming'
+        });
+      }
+    }
+
+    item.status = 'converted';
+    saveRadarItems();
+    saveAll();
+    renderRadarView();
+    updateRadarBadge();
+    showToast(`🎉 「${item.companyName}」を選考管理(Entry)に追加しました！`);
+  }
+
+  function dismissRadarItem(radarId) {
+    const item = radarItems.find(r => r.id === radarId);
+    if (!item) return;
+    item.status = 'dismissed';
+    saveRadarItems();
+    renderRadarView();
+    updateRadarBadge();
+    showToast(`「${item.companyName}」の案内を見送りにしました`);
+  }
+
+  function renderRadarView() {
+    const grid = document.getElementById('radarGrid');
+    if (!grid) return;
+
+    if (!radarItems.length) {
+      loadRadarItems();
+    }
+    updateRadarBadge();
+
+    let list = radarItems.filter(item => {
+      if (item.status === 'dismissed') return false;
+
+      const cd = getRadarCountdown(item.deadline);
+      if (radarFilter === 'urgent') {
+        if (!cd || (!cd.isUrgent && !cd.isSoon)) return false;
+      } else if (radarFilter === 'hon') {
+        if (item.category !== 'hon') return false;
+      } else if (radarFilter === 'early') {
+        if (item.category !== 'early') return false;
+      } else if (radarFilter === 'intern') {
+        if (item.category !== 'intern') return false;
+      } else if (radarFilter === 'mypage') {
+        if (item.sourceType !== 'mypage') return false;
+      } else if (radarFilter === 'public') {
+        if (item.sourceType !== 'public') return false;
+      }
+
+      if (radarKeyword) {
+        const text = `${item.companyName} ${item.industry} ${item.title} ${item.notes || ''}`.toLowerCase();
+        if (!text.includes(radarKeyword)) return false;
+      }
+      return true;
+    });
+
+    if (!list.length) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 16px; color: var(--sub);">
+          <div style="font-size: 36px; margin-bottom: 12px;">📡</div>
+          <div style="font-size: 14px; font-weight: 700; color: var(--ink);">該当するレーダー情報はありません</div>
+          <div style="font-size: 12px; margin-top: 4px;">フィルターを切り替えるか、「今すぐスキャン」を実行してください。</div>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = list.map(item => {
+      const comp = catalog.find(x => x.id === item.companyId) || {
+        id: item.companyId,
+        name: item.companyName,
+        ind: item.industry,
+        color: '#8b7bff'
+      };
+      const cd = getRadarCountdown(item.deadline);
+      const isUrgent = cd && cd.isUrgent;
+      const isSoon = cd && cd.isSoon;
+
+      let pillClass = 'normal';
+      let pillText = '待機中';
+      if (cd) {
+        if (cd.expired) {
+          pillClass = 'normal';
+          pillText = '締切終了';
+        } else if (isUrgent) {
+          pillClass = 'urgent';
+          pillText = cd.text;
+        } else if (isSoon) {
+          pillClass = 'soon';
+          pillText = cd.text;
+        } else {
+          pillClass = 'normal';
+          pillText = cd.text;
+        }
+      }
+
+      const isConverted = item.status === 'converted' || (comp.added && comp.stage && comp.stage !== 'watch');
+
+      const entryBtnHtml = isConverted
+        ? `<button class="radar-btn-entry" style="background:rgba(52,211,153,.2);color:#34d399;cursor:default;" disabled>✓ 選考管理中 (Entry)</button>`
+        : `<button class="radar-btn-entry" onclick="addRadarToSelection('${item.id}')"><span>➕</span> 選考管理に追加 (Entry)</button>`;
+
+      const mypageBtnHtml = item.mypageUrl
+        ? `<a href="${item.mypageUrl}" target="_blank" rel="noopener noreferrer" class="radar-btn-ghost">🔗 MyPage</a>`
+        : '';
+
+      const dismissBtnHtml = !isConverted
+        ? `<button class="radar-btn-dismiss" onclick="dismissRadarItem('${item.id}')" title="この案内を見送る">✕ 見送る</button>`
+        : '';
+
+      const sourceIcon = item.sourceType === 'mypage' ? '🔒' : '🌐';
+
+      return `
+        <div class="radar-card ${isUrgent ? 'is-urgent' : ''}" style="--accent:${comp.color || '#8b7bff'}">
+          <div class="radar-card-header">
+            <div class="radar-company-info">
+              ${logoHtml(comp)}
+              <div style="min-width:0">
+                <div class="name" title="${item.companyName}">${item.companyName}</div>
+                <div class="meta">
+                  <span class="radar-tag">${item.industry || '未分類'}</span>
+                  <span class="radar-tag" style="color:var(--accent)">${item.category === 'early' ? '早期優遇' : (item.category === 'intern' ? 'インターン' : '本選考')}</span>
+                </div>
+              </div>
+            </div>
+            <div class="radar-countdown-badge">
+              <span class="radar-countdown-pill ${pillClass}">${pillText}</span>
+              ${item.deadline ? `<span class="radar-countdown-date">${item.deadline.slice(5)}</span>` : ''}
+            </div>
+          </div>
+
+          <div class="radar-card-body">
+            <div class="radar-event-title">${item.title}</div>
+            ${item.notes ? `<div class="radar-notes">${item.notes}</div>` : ''}
+          </div>
+
+          <div class="radar-card-footer">
+            <div class="radar-source-label">
+              <span>${sourceIcon}</span>
+              <span>${item.sourceLabel || 'システム通知'}</span>
+            </div>
+            <div class="radar-actions">
+              ${entryBtnHtml}
+              ${mypageBtnHtml}
+              ${dismissBtnHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
 
   // =========================================================================
   // SELECTION TIMELINE CRUD & MODAL
@@ -9698,12 +10500,14 @@
   // ===================== 共通 & 初期化 =====================
   function renderAll() {
     if (currentView === 'db') renderDB();
+    else if (currentView === 'radar') renderRadarView();
     else if (currentView === 'list') renderList();
     else if (currentView === 'kanban') renderKanban();
     else if (currentView === 'es') renderESDatabase();
     else if (currentView === 'story') renderStoryBank();
     else if (currentView === 'dash') renderDash();
     else if (currentView === 'mypage') renderMyPageTable();
+    updateRadarBadge();
   }
 
   document.getElementById('search').addEventListener('input', e => {
@@ -9750,6 +10554,7 @@
 
   // 起動時初期化
   loadAll();
+  loadRadarItems();
   applySettings();
   updateAuthUI();
 
