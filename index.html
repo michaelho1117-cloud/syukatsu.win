@@ -221,6 +221,7 @@
     max-width: 260px;
     flex: 1 1 190px;
     transition: .2s;
+    margin: 0;
   }
   .searchbox:focus-within {
     border-color: rgba(139, 123, 255, 0.5);
@@ -233,6 +234,13 @@
     width: 100%;
     font-size: 12.5px;
     color: var(--ink);
+    -webkit-appearance: none;
+  }
+  .searchbox input::-webkit-search-decoration,
+  .searchbox input::-webkit-search-cancel-button,
+  .searchbox input::-webkit-search-results-button,
+  .searchbox input::-webkit-search-results-decoration {
+    display: none;
   }
   .searchbox input::placeholder { color: var(--sub); }
 
@@ -2870,9 +2878,9 @@
       <button data-view="dash">📊 ダッシュボード</button>
     </nav>
     <div class="spacer"></div>
-    <div class="searchbox">
-      🔍<input id="search" placeholder="企業名・キーワードで検索…" autocomplete="off" />
-    </div>
+    <form class="searchbox" onsubmit="event.preventDefault()" role="search" autocomplete="off">
+      🔍<input type="search" id="search" name="company_search_q" placeholder="企業名・キーワードで検索…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-1p-ignore="true" data-lpignore="true" data-bwignore="true" />
+    </form>
     <button class="top-btn primary secondary-action" onclick="openNewCompanyModal()" title="データベースにない企業を手動登録">
       ＋<span class="btn-text"> 企業を追加</span>
     </button>
@@ -3452,19 +3460,19 @@
         <div class="form-group">
           <label class="form-label">マイページ ログイン URL</label>
           <div style="display:flex;gap:6px">
-            <input type="url" class="form-input" id="mMyPageUrl" placeholder="https://..." style="flex:1" />
+            <input type="url" class="form-input" id="mMyPageUrl" placeholder="https://..." style="flex:1" autocomplete="off" data-1p-ignore="true" data-lpignore="true" data-bwignore="true" />
             <button class="btn-sm-ghost" type="button" onclick="openExternalUrl(document.getElementById('mMyPageUrl').value)" title="マイページを開く">↗ 開く</button>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">マイページ ログインID / 受験番号</label>
-            <input class="form-input" id="mMyPageId" placeholder="IDや管理番号の備忘録" />
+            <input class="form-input" id="mMyPageId" placeholder="IDや管理番号の備忘録" autocomplete="off" autocorrect="off" autocapitalize="off" data-1p-ignore="true" data-lpignore="true" data-bwignore="true" />
           </div>
           <div class="form-group">
             <label class="form-label">マイページ パスワード</label>
             <div style="display:flex;gap:6px">
-              <input type="password" class="form-input" id="mMyPagePass" placeholder="パスワードの備忘録" style="flex:1" />
+              <input type="password" class="form-input" id="mMyPagePass" placeholder="パスワードの備忘録" style="flex:1" autocomplete="new-password" data-1p-ignore="true" data-lpignore="true" data-bwignore="true" />
               <button class="btn-sm-ghost" type="button" onclick="togglePassInput('mMyPagePass', this)" title="表示切り替え">👁</button>
             </div>
           </div>
@@ -5979,6 +5987,14 @@
     document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === tabTarget));
     document.querySelectorAll('.view').forEach(s => s.classList.toggle('active', s.id === 'view-' + v));
     document.body.classList.toggle('view-kanban-active', v === 'kanban');
+
+    // 切替時、ブラウザのパスワードマネージャーが検索欄へ誤自動入力したメールアドレス等を自動排除
+    const s = document.getElementById('search');
+    if (s && s.value && (s.value.includes('@') || s.value.includes('syukatsu.win'))) {
+      s.value = '';
+      keyword = '';
+    }
+
     if (v === 'mypage') {
       renderMyPageTable();
     } else {
@@ -9516,7 +9532,15 @@
   }
 
   document.getElementById('search').addEventListener('input', e => {
-    keyword = e.target.value.trim();
+    const val = (e.target.value || '').trim();
+    // ブラウザの自動補完によるメールアドレス誤入力を防止
+    if (val.includes('@') && (val.includes('syukatsu.win') || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))) {
+      e.target.value = '';
+      keyword = '';
+      renderAll();
+      return;
+    }
+    keyword = val;
     renderAll();
   });
 
@@ -9553,6 +9577,19 @@
   loadAll();
   applySettings();
   updateAuthUI();
+
+  // 起動直後・ブラウザパスワード補完の遅延検知と排除
+  function checkAndCleanAutofill() {
+    const s = document.getElementById('search');
+    if (s && s.value && (s.value.includes('@') || s.value.includes('syukatsu.win'))) {
+      s.value = '';
+      keyword = '';
+      if (currentView === 'db') renderDB();
+    }
+  }
+  setTimeout(checkAndCleanAutofill, 50);
+  setTimeout(checkAndCleanAutofill, 250);
+  setTimeout(checkAndCleanAutofill, 600);
 
   // Hash routing support for direct view and modal links
   const rawHash = (window.location.hash || '').replace('#', '');
@@ -9681,19 +9718,19 @@
         <div class="form-group">
           <label class="form-label">マイページ ログイン URL</label>
           <div style="display: flex; gap: 6px;">
-            <input type="url" class="form-input" id="mypageModalUrl" placeholder="https://mypage.xxxx.jp/..." style="flex: 1;" />
+            <input type="url" class="form-input" id="mypageModalUrl" placeholder="https://mypage.xxxx.jp/..." style="flex: 1;" autocomplete="off" data-1p-ignore="true" data-lpignore="true" data-bwignore="true" />
             <button class="btn-sm-ghost" type="button" onclick="openExternalUrl(document.getElementById('mypageModalUrl').value)" title="URLを開いて確認">↗ 開く</button>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">ログイン ID / 受験番号</label>
-            <input class="form-input" id="mypageModalId" placeholder="例: ATK000646" />
+            <input class="form-input" id="mypageModalId" placeholder="例: ATK000646" autocomplete="off" autocorrect="off" autocapitalize="off" data-1p-ignore="true" data-lpignore="true" data-bwignore="true" />
           </div>
           <div class="form-group">
             <label class="form-label">パスワード</label>
             <div style="display: flex; gap: 6px;">
-              <input type="password" class="form-input" id="mypageModalPass" placeholder="パスワード" style="flex: 1;" />
+              <input type="password" class="form-input" id="mypageModalPass" placeholder="パスワード" style="flex: 1;" autocomplete="new-password" data-1p-ignore="true" data-lpignore="true" data-bwignore="true" />
               <button class="btn-sm-ghost" type="button" onclick="togglePassInput('mypageModalPass', this)" title="表示切り替え">👁</button>
             </div>
           </div>
