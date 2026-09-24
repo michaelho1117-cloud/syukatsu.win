@@ -5737,6 +5737,9 @@
               return xClean === cleanName || xClean.includes(cleanName) || cleanName.includes(xClean);
             });
             if (!nameDup) {
+              const isAdded = Boolean(c.added === true && c.stage && c.stage !== 'watch');
+              c.added = isAdded;
+              c.stage = isAdded ? c.stage : 'watch';
               catalog.unshift(c);
             }
           }
@@ -6394,13 +6397,15 @@
         }
         if (item && !UNWANTED_MYPAGE_ACC_IDS.has(item.company_id)) {
           const parsed = parseCloudItemTags(item.tags);
-          const isItemAdded = Boolean((item.stage && item.stage !== 'watch') || item.due || parsed.myPageUrl || parsed.myPageId);
+          // 重要な仕様: MyPage情報があっても勝手に選考管理リスト(added=true)に追加しない
+          // 正式選考として追加(stage !== 'watch')されている企業のみを選考管理対象とする
+          const isItemAdded = Boolean(item.stage && item.stage !== 'watch');
           return Object.assign({}, m, {
             added: isItemAdded,
-            stage: item.stage || 'watch',
-            due: item.due || '',
-            dueLabel: item.due_label || '',
-            dueLv: item.due_lv || '',
+            stage: isItemAdded ? item.stage : 'watch',
+            due: isItemAdded ? (item.due || '') : '',
+            dueLabel: isItemAdded ? (item.due_label || '') : '',
+            dueLv: isItemAdded ? (item.due_lv || '') : '',
             noteMotiv: item.note_motiv || '',
             noteEs: item.note_es || '',
             noteInterview: item.note_interview || '',
@@ -6432,7 +6437,7 @@
       validCloudItems.forEach(item => {
         if (masterMap.has(item.company_id) || UNWANTED_MYPAGE_ACC_IDS.has(item.company_id)) return;
         const parsed = parseCloudItemTags(item.tags);
-        const isItemAdded = Boolean((item.stage && item.stage !== 'watch') || item.due || parsed.myPageUrl || parsed.myPageId);
+        const isItemAdded = Boolean(item.stage && item.stage !== 'watch');
         catalog.unshift({
           id: item.company_id,
           name: parsed.compName || item.company_id,
@@ -6445,10 +6450,10 @@
           avgAnnual: null,
           color: '#6366f1',
           added: isItemAdded,
-          stage: item.stage || 'watch',
-          due: item.due || '',
-          dueLabel: item.due_label || '',
-          dueLv: item.due_lv || '',
+          stage: isItemAdded ? item.stage : 'watch',
+          due: isItemAdded ? (item.due || '') : '',
+          dueLabel: isItemAdded ? (item.due_label || '') : '',
+          dueLv: isItemAdded ? (item.due_lv || '') : '',
           noteMotiv: item.note_motiv || '',
           noteEs: item.note_es || '',
           noteInterview: item.note_interview || '',
@@ -6489,10 +6494,10 @@
         const toUpsert = localAdded.map(c => ({
           user_id: currentAuthUser.id,
           company_id: c.id,
-          stage: c.stage || 'watch',
-          due: (c.id === 'c_smbc' && c.due === '2026-09-08') ? null : (c.due || null),
-          due_label: (c.id === 'c_smbc' && c.dueLabel === 'ES提出') ? null : (c.dueLabel || null),
-          due_lv: c.dueLv || null,
+          stage: (c.added && c.stage && c.stage !== 'watch') ? c.stage : 'watch',
+          due: (c.added && c.id === 'c_smbc' && c.due === '2026-09-08') ? null : (c.added ? (c.due || null) : null),
+          due_label: (c.added && c.id === 'c_smbc' && c.dueLabel === 'ES提出') ? null : (c.added ? (c.dueLabel || null) : null),
+          due_lv: c.added ? (c.dueLv || null) : null,
           note_motiv: c.noteMotiv || null,
           note_es: c.noteEs || null,
           note_interview: c.noteInterview || null,
@@ -8309,10 +8314,6 @@
     c.myPageUrl = (document.getElementById('mypageModalUrl').value || '').trim();
     c.myPageId = (document.getElementById('mypageModalId').value || '').trim();
     c.myPagePass = (document.getElementById('mypageModalPass').value || '').trim();
-
-    if (!c.added) {
-      c.added = true;
-    }
 
     saveAll();
     renderAll();
