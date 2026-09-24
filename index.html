@@ -5685,6 +5685,16 @@
               tags: (u.tags && u.tags.length) ? u.tags : (c.tags || []).filter(t => t !== '手動登録')
             });
           } else if (!c.id.startsWith('c_custom_acc_')) {
+            const isDummySeed = ['c_sony', 'c_toyota', 'c_mitsubishi_corp', 'c_recruit', 'c_mercari', 'c_freee'].includes(c.id) && !c.myPageUrl && !c.myPageId;
+            if (isDummySeed) {
+              // 端末ローカルに残存する展示用ダミーデータを完全無視
+              return;
+            }
+            if (c.id === 'c_smbc' && (c.due === '2026-09-08' || c.dueLabel === 'ES提出')) {
+              c.due = '';
+              c.dueLabel = '';
+              c.dueLv = '';
+            }
             if (c.added || (c.stage && c.stage !== 'watch') || c.due || c.dueLabel || c.myPageUrl || c.myPageId || c.myPagePass || c.noteMotiv || c.noteEs || c.noteInterview || c.isCustom) {
               userStateMap.set(c.id, c);
             }
@@ -6300,13 +6310,34 @@
         await supabaseClient.from('user_selections').delete().eq('user_id', currentAuthUser.id).like('company_id', 'c_custom_acc_%');
       }
 
-      // 1. 只有当云端没有任何数据（全新注册用户），且本地存在真正由用户手动登记的非种子企业时，才进行单向初次上云
-      // 若用户云端已有数据，云端为唯一真理（Source of Truth），严禁将移动端/未登录时的种子演示数据倒灌回云端
+      // 0.1 自动清除云端任何残留的假种子企业（如 Sony, Toyota, Mitsubishi Corp, Recruit, Mercari, Freee 等无真实 MyPage 的假数据）
       const DUMMY_SEED_IDS = new Set([
-        'c_sony', 'c_toyota', 'c_mitsubishi_corp', 'c_recruit', 'c_mercari', 'c_freee', 'c_smbc', 'c_msol',
+        'c_sony', 'c_toyota', 'c_mitsubishi_corp', 'c_recruit', 'c_mercari', 'c_freee',
         'c_deloitte', 'c_nttdata', 'c_unlisted_rms', 'c_tcs', 'c_keyence', 'c_8766', 'c_itochu', 'c_nri', 'c_7974', 'c_baycurrent', 'c_unlisted_bdx'
       ]);
+      const dummyInCloud = (cloudItems || []).filter(item => {
+        if (!DUMMY_SEED_IDS.has(item.company_id)) return false;
+        const parsed = parseCloudItemTags(item.tags);
+        return !parsed.myPageUrl && !parsed.myPageId && !parsed.myPagePass;
+      });
+      if (dummyInCloud.length > 0) {
+        for (const d of dummyInCloud) {
+          await supabaseClient.from('user_selections').delete().eq('user_id', currentAuthUser.id).eq('company_id', d.company_id);
+          cloudMap.delete(d.company_id);
+        }
+      }
 
+      // 0.2 重置三井住友银行的假截稿日期（保留真实的 MyPage 账号）
+      const smbcItem = cloudMap.get('c_smbc');
+      if (smbcItem && (smbcItem.due === '2026-09-08' || smbcItem.due_label === 'ES提出')) {
+        await supabaseClient.from('user_selections').update({ due: null, due_label: null, due_lv: null }).eq('user_id', currentAuthUser.id).eq('company_id', 'c_smbc');
+        smbcItem.due = null;
+        smbcItem.due_label = null;
+        smbcItem.due_lv = null;
+      }
+
+      // 1. 只有当云端没有任何数据（全新注册用户），且本地存在真正由用户手动登记的非种子企业时，才进行单向初次上云
+      // 若用户云端已有数据，云端为唯一真理（Source of Truth），严禁将移动端/未登录时的种子演示数据倒灌回云端
       if (!cloudItems || cloudItems.length === 0) {
         const localAdded = catalog.filter(c => 
           !c.id.startsWith('c_custom_acc_') &&
@@ -6342,6 +6373,25 @@
       // 先重置所有 master 企业的选考状态
       catalog = fullCatalog.map(m => {
         const item = cloudMap.get(m.id);
+        if (DUMMY_SEED_IDS.has(m.id)) {
+          const parsed = item ? parseCloudItemTags(item.tags) : {};
+          if (!parsed.myPageUrl && !parsed.myPageId && !parsed.myPagePass) {
+            return Object.assign({}, m, {
+              added: false,
+              stage: 'watch',
+              due: '',
+              dueLabel: '',
+              dueLv: '',
+              noteMotiv: '',
+              noteEs: '',
+              noteInterview: '',
+              isCustom: false,
+              myPageUrl: '',
+              myPageId: '',
+              myPagePass: ''
+            });
+          }
+        }
         if (item && !UNWANTED_MYPAGE_ACC_IDS.has(item.company_id)) {
           const parsed = parseCloudItemTags(item.tags);
           const isItemAdded = Boolean((item.stage && item.stage !== 'watch') || item.due || parsed.myPageUrl || parsed.myPageId);
@@ -6411,6 +6461,7 @@
       });
 
       catalog = catalog.filter(c => !c.id.startsWith('c_custom_acc_'));
+      selectionEvents = selectionEvents.filter(e => !DUMMY_SEED_IDS.has(e.companyId));
       saveAll();
       renderAll();
       if (currentView === 'mypage') renderMyPageTable();
@@ -6425,13 +6476,22 @@
     clearTimeout(cloudSyncTimer);
     cloudSyncTimer = setTimeout(async () => {
       try {
-        const localAdded = catalog.filter(c => c.added || c.myPageUrl || c.myPageId || c.myPagePass);
+        const DUMMY_SEED_IDS = new Set([
+          'c_sony', 'c_toyota', 'c_mitsubishi_corp', 'c_recruit', 'c_mercari', 'c_freee',
+          'c_deloitte', 'c_nttdata', 'c_unlisted_rms', 'c_tcs', 'c_keyence', 'c_8766', 'c_itochu', 'c_nri', 'c_7974', 'c_baycurrent', 'c_unlisted_bdx'
+        ]);
+
+        const localAdded = catalog.filter(c => 
+          !c.id.startsWith('c_custom_acc_') &&
+          !(DUMMY_SEED_IDS.has(c.id) && !c.myPageUrl && !c.myPageId) &&
+          (c.added || c.myPageUrl || c.myPageId || c.myPagePass)
+        );
         const toUpsert = localAdded.map(c => ({
           user_id: currentAuthUser.id,
           company_id: c.id,
           stage: c.stage || 'watch',
-          due: c.due || null,
-          due_label: c.dueLabel || null,
+          due: (c.id === 'c_smbc' && c.due === '2026-09-08') ? null : (c.due || null),
+          due_label: (c.id === 'c_smbc' && c.dueLabel === 'ES提出') ? null : (c.dueLabel || null),
           due_lv: c.dueLv || null,
           note_motiv: c.noteMotiv || null,
           note_es: c.noteEs || null,
@@ -6880,7 +6940,24 @@
       showToast(`「${c.name}」を選考リストに追加しました`);
     } else {
       c.stage = 'watch';
+      c.due = '';
+      c.dueLabel = '';
+      c.dueLv = '';
+      selectionEvents = selectionEvents.filter(e => e.companyId !== id);
       showToast(`「${c.name}」を選考リストから外しました`);
+
+      if (supabaseClient && currentAuthUser) {
+        if (!c.myPageUrl && !c.myPageId && !c.myPagePass) {
+          supabaseClient.from('user_selections').delete().eq('user_id', currentAuthUser.id).eq('company_id', id).then();
+        } else {
+          supabaseClient.from('user_selections').update({
+            stage: 'watch',
+            due: null,
+            due_label: null,
+            due_lv: null
+          }).eq('user_id', currentAuthUser.id).eq('company_id', id).then();
+        }
+      }
     }
     saveAll();
     renderAll();
