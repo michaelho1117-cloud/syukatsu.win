@@ -4602,7 +4602,7 @@
     { id:'c_kearney', name:'A.T.カーニー(Kearney)', code:null, domain:'kearney.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'世界大手 戦略コンサル(オペレーション/事業変革)', emp:350, empNote:'日本', payBachelor:500000, payMaster:520000, avgAnnual:1700, color:'#6b1f7c', added:false, stage:'watch', loc:'東京/全国', tags:["外資名門", "戦略コンサル", "高年収"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_rolandberger', name:'ローランド・ベルガー(Roland Berger)', code:null, domain:'rolandberger.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'欧州最大手 経営戦略コンサルファーム', emp:300, empNote:'日本', payBachelor:500000, payMaster:520000, avgAnnual:1650, color:'#009b3a', added:false, stage:'watch', loc:'東京/全国', tags:["外資名門", "戦略コンサル", "高年収"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_funaisoken', name:'船井総研ホールディングス', code:'9757', domain:'funaisoken.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'中堅・中小企業向け 総合経営コンサルティング最大手', emp:1400, empNote:'連結', payBachelor:250000, payMaster:274000, avgAnnual:740, color:'#e50012', added:false, stage:'watch', loc:'東京/全国', tags:["中小企業支援", "経営コンサル", "業種特化"], due:'', dueLabel:'', dueLv:'' },
-        { id:'c_msol', name:'株式会社マネジメントソリューションズ', code:'7033', domain:'mgmtsol.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'PMO / 経営・ITマネジメントコンサルティング', emp:950, empNote:'連結', payBachelor:300000, payMaster:320000, avgAnnual:830, color:'#8b7bff', added:false, stage:'watch', loc:'東京', tags:['PMO', '東証プライム', 'コンサル', '急成長'], due:'', dueLabel:'', dueLv:'', popRank:180, popBadge:'TOP 300' },
+        { id:'c_msol', name:'株式会社マネジメントソリューションズ', code:'7033', domain:'msols.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'PMO / 経営・ITマネジメントコンサルティング', emp:950, empNote:'連結', payBachelor:300000, payMaster:320000, avgAnnual:830, color:'#8b7bff', added:false, stage:'watch', loc:'東京', tags:['PMO', '東証プライム', 'コンサル', '急成長'], due:'', dueLabel:'', dueLv:'', popRank:180, popBadge:'TOP 300' },
     { id:'c_tcs', name:'日本タタ・コンサルタンシー・サービシズ', code:null, domain:'tcs.com/jp-ja', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'外資系ITコンサル・SIer (三菱商事合弁)', emp:4000, empNote:'国内(グローバル60万)', payBachelor:305000, payMaster:330000, avgAnnual:860, color:'#000000', added:false, stage:'watch', loc:'東京/全国', tags:["外資系", "ITコンサル", "三菱商事系", "グローバル", "日本TCS", "TCS", "Tata", "タタ"], due:'', dueLabel:'', dueLv:'', popRank:140, popBadge:'TOP 300' },
 
     // ── IT/SIer業界 ──
@@ -6595,23 +6595,25 @@
 
 
 
-  const NO_LOGO_SET = new Set([
-    'c_jfe_shoji','c_9042','c_dir','c_4543','c_3099','c_323A','c_5384','c_unlisted_iqvia','c_4733',
-    'c_unlisted_mercer','c_unlisted_vision_con','c_5831','c_8088','c_7167','c_4401','c_unlisted_nttdatakeieiken','c_9830','c_7984','c_8154',
-    'c_7729','c_4208','c_dentsu_digital','c_9508','c_3844','c_9644','c_7864','c_4694','c_2810','c_9519',
-    'c_543A','c_2292','c_5805','c_2585','c_6250','c_7345','c_4044','c_6523','c_6516','c_5851',
-    'c_6104','c_6420','c_2296','c_hitachi_sys','c_4914','c_2726','c_7721','c_6622','c_2385','c_7593',
-    'c_2752','c_7373','c_9250','c_9212','c_269A','c_7707','c_4419','c_339A','c_9238','c_421A',
-    'c_6580','c_6577','c_330A','c_4591','c_2981'
-  ]);
+  const NO_LOGO_SET = new Set();
+
+  function cleanInitial(name) {
+    if (!name) return '企';
+    const clean = name.replace(/株式会社|\(株\)|（株）|合同会社|相互会社/gi, '').trim();
+    return (clean || name).slice(0, 1) || '企';
+  }
 
   function logoHtml(c) {
-    const initial = (c.name || '企').slice(0, 1);
+    const initial = cleanInitial(c.name);
     const bg = c.color || '#8b7bff';
     if (NO_LOGO_SET.has(c.id)) {
       return `<div class="ico" style="background:${bg};color:#fff"><span>${initial}</span></div>`;
     }
-    return `<div class="ico" style="background:${bg};color:#fff"><img src="assets/logos/${c.id}.png" alt="${c.name}" loading="lazy" decoding="async" width="44" height="44" onerror="this.remove()"><span>${initial}</span></div>`;
+    const domainFallback = c.domain && !c.domain.startsWith('quote/') ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(c.domain)}&sz=128` : '';
+    const errHandler = domainFallback
+      ? `if(!this.dataset.fb){this.dataset.fb='1';this.src='${domainFallback}';}else{this.remove();}`
+      : `this.remove();`;
+    return `<div class="ico" style="background:${bg};color:#fff"><img src="assets/logos/${c.id}.png" alt="${c.name}" loading="lazy" decoding="async" width="44" height="44" onerror="${errHandler}"><span>${initial}</span></div>`;
   }
 
   // 締切カウントダウン計算
@@ -10401,12 +10403,16 @@
     document.getElementById('mTitle').textContent = c.name;
     document.getElementById('mSubTitle').textContent = `${catOf(c)} ・ ${c.sub || ''} ${c.code ? ' (' + c.code + ')' : ''}`;
     const mIco = document.getElementById('mIco');
-    const initial = (c.name || '企').slice(0, 1);
+    const initial = cleanInitial(c.name);
     mIco.style.background = c.color || '#8b7bff';
     if (NO_LOGO_SET.has(c.id)) {
       mIco.innerHTML = `<span>${initial}</span>`;
     } else {
-      mIco.innerHTML = `<img src="assets/logos/${c.id}.png" alt="${c.name}" decoding="async" onerror="this.remove()"><span>${initial}</span>`;
+      const domainFallback = c.domain && !c.domain.startsWith('quote/') ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(c.domain)}&sz=128` : '';
+      const errHandler = domainFallback
+        ? `if(!this.dataset.fb){this.dataset.fb='1';this.src='${domainFallback}';}else{this.remove();}`
+        : `this.remove();`;
+      mIco.innerHTML = `<img src="assets/logos/${c.id}.png" alt="${c.name}" decoding="async" onerror="${errHandler}"><span>${initial}</span>`;
     }
 
     // 企業統計バー反映
