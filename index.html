@@ -6245,6 +6245,7 @@
     let myPageId = '';
     let myPagePass = '';
     let compName = '';
+    let cloudEvents = [];
     const cleanTags = [];
     if (Array.isArray(tags)) {
       tags.forEach(t => {
@@ -6257,22 +6258,28 @@
           try { myPagePass = decodeURIComponent(t.slice(10)); } catch(e) { myPagePass = t.slice(10); }
         } else if (t.startsWith('__cn:')) {
           try { compName = decodeURIComponent(t.slice(5)); } catch(e) { compName = t.slice(5); }
+        } else if (t.startsWith('__ev:')) {
+          try { cloudEvents = JSON.parse(decodeURIComponent(t.slice(5))); } catch(e) {}
         } else {
           cleanTags.push(t);
         }
       });
     }
-    return { myPageUrl, myPageId, myPagePass, compName, cleanTags };
+    return { myPageUrl, myPageId, myPagePass, compName, cleanTags, cloudEvents };
   }
 
   function packCompanyCloudTags(c) {
-    const baseTags = (c.tags || []).filter(t => typeof t === 'string' && !t.startsWith('__mp_') && !t.startsWith('__cn:'));
+    const baseTags = (c.tags || []).filter(t => typeof t === 'string' && !t.startsWith('__mp_') && !t.startsWith('__cn:') && !t.startsWith('__ev:'));
     if (c.myPageUrl) baseTags.push('__mp_url:' + encodeURIComponent(c.myPageUrl));
     if (c.myPageId) baseTags.push('__mp_id:' + encodeURIComponent(c.myPageId));
     if (c.myPagePass) baseTags.push('__mp_pass:' + encodeURIComponent(c.myPagePass));
     const full = getFullCatalog();
     if (c.name && (c.isCustom || !full.find(x => x.id === c.id))) {
       baseTags.push('__cn:' + encodeURIComponent(c.name));
+    }
+    const cEvents = selectionEvents.filter(e => e.companyId === c.id);
+    if (cEvents.length > 0) {
+      baseTags.push('__ev:' + encodeURIComponent(JSON.stringify(cEvents)));
     }
     return baseTags;
   }
@@ -6466,6 +6473,23 @@
       });
 
       catalog = catalog.filter(c => !c.id.startsWith('c_custom_acc_'));
+
+      // 从云端 tags 恢复选考日程事件（待办事项）
+      (cloudItems || []).forEach(item => {
+        if (!item.tags || DUMMY_SEED_IDS.has(item.company_id)) return;
+        const parsed = parseCloudItemTags(item.tags);
+        if (parsed.cloudEvents && parsed.cloudEvents.length > 0) {
+          parsed.cloudEvents.forEach(cev => {
+            const existingIdx = selectionEvents.findIndex(e => e.id === cev.id);
+            if (existingIdx !== -1) {
+              selectionEvents[existingIdx] = Object.assign({}, selectionEvents[existingIdx], cev);
+            } else {
+              selectionEvents.push(cev);
+            }
+          });
+        }
+      });
+
       selectionEvents = selectionEvents.filter(e => !DUMMY_SEED_IDS.has(e.companyId));
       saveAll();
       renderAll();
