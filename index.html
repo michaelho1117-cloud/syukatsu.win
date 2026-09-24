@@ -3190,7 +3190,9 @@
     </div>
     <nav class="tabs" id="tabs">
       <button data-view="db" class="active">🏢 企業DB</button>
+      <!-- [OFFLINE: RADAR] レーダー機能一時下線（コードとデータは完全保持、再開時はコメント解除）
       <button data-view="radar" class="tab-radar">📡 締切レーダー <span class="radar-badge-count" id="radarBadgeCount">1</span></button>
+      -->
       <button data-view="list">📑 選考管理</button>
       <button data-view="kanban">📌 カンバン</button>
       <button data-view="es">📝 ES</button>
@@ -3697,10 +3699,12 @@
       <span class="icon">🏢</span>
       <span>企業DB</span>
     </button>
+    <!-- [OFFLINE: RADAR] レーダー機能一時下線（再開時はコメント解除）
     <button class="mobile-nav-btn" data-view="radar" onclick="switchView('radar')">
       <span class="icon">📡</span>
       <span>レーダー</span>
     </button>
+    -->
     <button class="mobile-nav-btn" data-view="list" onclick="switchView('list')">
       <span class="icon">📑</span>
       <span>選考管理</span>
@@ -6671,7 +6675,9 @@
     if (v === 'mypage') {
       renderMyPageTable();
     } else if (v === 'radar') {
-      renderRadarView();
+      // 締切レーダーは現在オフライン（機能改善・検証中のため一時非表示）
+      switchView('db');
+      return;
     } else {
       renderAll();
     }
@@ -10853,8 +10859,7 @@
 
   // ===================== 共通 & 初期化 =====================
   function renderAll() {
-    if (currentView === 'db') renderDB();
-    else if (currentView === 'radar') renderRadarView();
+    if (currentView === 'db' || currentView === 'radar') renderDB();
     else if (currentView === 'list') renderList();
     else if (currentView === 'kanban') renderKanban();
     else if (currentView === 'es') renderESDatabase();
