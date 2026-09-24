@@ -2073,6 +2073,21 @@
     flex-direction: column;
     gap: 3px;
   }
+  .sel-events-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .sel-event-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 24px;
+  }
+  .sel-event-divider {
+    border-top: 1px dashed rgba(255, 255, 255, 0.09);
+    padding-top: 6px;
+  }
 
   /* ===== ES Database & Story Bank Cards ===== */
   .es-grid, .story-grid {
@@ -7051,52 +7066,79 @@
     }
 
     tbody.innerHTML = added.map(c => {
-      const nextAct = getCompanyNextAction(c.id);
+      const upcomingActs = getCompanyUpcomingEvents(c.id, 2);
       const st = stageMap[c.stage] || stageMap.watch;
       const initial = (c.name || '企').slice(0, 1);
       const popBadgeHtml = c.popBadge ? `<span style="font-size:10px;padding:1px 6px;margin-left:5px;border-radius:4px;background:rgba(217,178,95,.18);color:var(--gold-2);border:1px solid rgba(217,178,95,.4);font-weight:700">${c.popBadge}</span>` : '';
 
-      // Next Action HTML
+      // Next Action & Due HTML
       let actionHtml = '';
-      if (nextAct.hasEvent && nextAct.event) {
-        actionHtml = `
-          <div class="action-col-cell">
-            <div style="display:flex;align-items:center;gap:6px">
-              ${renderEventTypeBadge(nextAct.type)}
-              <span style="font-weight:800;font-size:13px;color:var(--ink);">${nextAct.title}</span>
-            </div>
-            ${nextAct.event.memo ? `<div style="font-size:11px;color:var(--sub);margin-top:2px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${nextAct.event.memo}</div>` : ''}
-          </div>
-        `;
-      } else if (nextAct.title && nextAct.title !== '予定なし') {
-        actionHtml = `
-          <div class="action-col-cell">
-            <div style="display:flex;align-items:center;gap:6px">
-              ${renderEventTypeBadge(nextAct.type)}
-              <span style="font-weight:700;font-size:13px">${nextAct.title}</span>
-            </div>
-          </div>
-        `;
-      } else {
+      let dueHtml = '';
+
+      if (upcomingActs.length === 0) {
         actionHtml = `
           <div style="display:flex;align-items:center;gap:6px">
             <span style="color:var(--muted);font-size:12px">予定なし</span>
             <button class="btn-sm-ghost" style="padding:2px 6px;font-size:10.5px;color:var(--cyan);border-color:rgba(79,216,232,.3)" onclick="event.stopPropagation();openEventModal(null, '${c.id}')">＋予定</button>
           </div>
         `;
-      }
-
-      // Due HTML
-      let dueHtml = '';
-      if (nextAct.dueText && nextAct.dueText !== '—') {
+        dueHtml = `<span style="color:var(--muted);font-size:12px">—</span>`;
+      } else if (upcomingActs.length === 1) {
+        const act = upcomingActs[0];
+        actionHtml = `
+          <div class="action-col-cell">
+            <div style="display:flex;align-items:center;gap:6px">
+              ${renderEventTypeBadge(act.type)}
+              <span style="font-weight:800;font-size:13px;color:var(--ink);">${escapeHtml(act.title)}</span>
+            </div>
+            ${act.event && act.event.memo ? `<div style="font-size:11px;color:var(--sub);margin-top:2px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act.event.memo)}">${escapeHtml(act.event.memo)}</div>` : ''}
+          </div>
+        `;
         dueHtml = `
           <div style="display:flex;align-items:center;gap:6px">
-            <span style="font-weight:800;font-size:13px;color:var(--ink)">${nextAct.dueText}</span>
-            ${nextAct.badgeText ? `<span class="badge-due-${nextAct.badgeCls}">${nextAct.badgeText}</span>` : ''}
+            <span style="font-weight:800;font-size:13px;color:var(--ink)">${act.dueText}</span>
+            ${act.badgeText ? `<span class="badge-due-${act.badgeCls}">${act.badgeText}</span>` : ''}
           </div>
         `;
       } else {
-        dueHtml = `<span style="color:var(--muted);font-size:12px">—</span>`;
+        const [act1, act2] = upcomingActs;
+        const hasMemo1 = !!(act1.event && act1.event.memo);
+        const hasMemo2 = !!(act2.event && act2.event.memo);
+        const extraCount = act2.totalUpcomingCount > 2 ? act2.totalUpcomingCount - 2 : 0;
+        const extraBadge = extraCount > 0 ? `<span style="font-size:10px;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,0.06);color:var(--sub);border:1px solid var(--glass-brd);margin-left:2px" title="他 ${extraCount}件の予定あり">+${extraCount}</span>` : '';
+
+        actionHtml = `
+          <div class="sel-events-stack">
+            <div class="sel-event-row" style="flex-direction:column;align-items:flex-start;justify-content:center;min-height:${hasMemo1 ? '38px' : '22px'}">
+              <div style="display:flex;align-items:center;gap:6px">
+                ${renderEventTypeBadge(act1.type)}
+                <span style="font-weight:800;font-size:13px;color:var(--ink);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act1.title)}">${escapeHtml(act1.title)}</span>
+              </div>
+              ${hasMemo1 ? `<div style="font-size:11px;color:var(--sub);margin-top:2px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act1.event.memo)}">${escapeHtml(act1.event.memo)}</div>` : ''}
+            </div>
+            <div class="sel-event-row sel-event-divider" style="flex-direction:column;align-items:flex-start;justify-content:center;min-height:${hasMemo2 ? '38px' : '22px'}">
+              <div style="display:flex;align-items:center;gap:6px">
+                ${renderEventTypeBadge(act2.type)}
+                <span style="font-weight:700;font-size:12.5px;color:rgba(255,255,255,0.85);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act2.title)}">${escapeHtml(act2.title)}</span>
+                ${extraBadge}
+              </div>
+              ${hasMemo2 ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act2.event.memo)}">${escapeHtml(act2.event.memo)}</div>` : ''}
+            </div>
+          </div>
+        `;
+
+        dueHtml = `
+          <div class="sel-events-stack">
+            <div class="sel-event-row" style="min-height:${hasMemo1 ? '38px' : '22px'}">
+              <span style="font-weight:800;font-size:13px;color:var(--ink)">${act1.dueText}</span>
+              ${act1.badgeText ? `<span class="badge-due-${act1.badgeCls}">${act1.badgeText}</span>` : ''}
+            </div>
+            <div class="sel-event-row sel-event-divider" style="min-height:${hasMemo2 ? '38px' : '22px'}">
+              <span style="font-weight:700;font-size:12.5px;color:rgba(255,255,255,0.85)">${act2.dueText}</span>
+              ${act2.badgeText ? `<span class="badge-due-${act2.badgeCls}">${act2.badgeText}</span>` : ''}
+            </div>
+          </div>
+        `;
       }
 
       // Memo / Link HTML
@@ -7640,39 +7682,9 @@
     return `<span class="ev-type-badge ${item.cls}">${item.text}</span>`;
   }
 
-  function getCompanyNextAction(companyId) {
-    const events = selectionEvents.filter(e => e.companyId === companyId && e.status === 'upcoming');
-    if (!events.length) {
-      const c = catalog.find(x => x.id === companyId);
-      if (c && c.due) {
-        const dueInfo = getDueStatus(c);
-        return {
-          hasEvent: false,
-          type: detectEventType(c.dueLabel),
-          title: c.dueLabel || '選考締切',
-          datetime: c.due,
-          dueText: dueInfo.text || c.due,
-          badgeCls: dueInfo.cls || 'normal',
-          badgeText: dueInfo.badge || '',
-          days: dueInfo.days
-        };
-      }
-      return {
-        hasEvent: false,
-        type: null,
-        title: '予定なし',
-        datetime: null,
-        dueText: '—',
-        badgeCls: '',
-        badgeText: '',
-        days: null
-      };
-    }
-
-    // Sort by datetime ascending
-    events.sort((a, b) => (a.datetime || '').localeCompare(b.datetime || ''));
-    const nextEv = events[0];
-    const dtStr = nextEv.datetime || '';
+  function formatSelectionEvent(ev) {
+    if (!ev) return null;
+    const dtStr = ev.datetime || '';
     const dateOnly = dtStr.split('T')[0].split(' ')[0];
     const timeOnly = (dtStr.includes('T') || dtStr.includes(' ')) ? (dtStr.split('T')[1] || dtStr.split(' ')[1]).slice(0, 5) : '';
 
@@ -7717,14 +7729,64 @@
 
     return {
       hasEvent: true,
-      event: nextEv,
-      type: nextEv.type,
-      title: nextEv.title,
-      datetime: nextEv.datetime,
+      event: ev,
+      type: ev.type,
+      title: ev.title,
+      datetime: ev.datetime,
       dueText: formattedDate,
       badgeCls,
       badgeText,
       days
+    };
+  }
+
+  function getCompanyUpcomingEvents(companyId, limit = 2) {
+    const events = selectionEvents.filter(e => e.companyId === companyId && e.status === 'upcoming');
+    if (!events.length) {
+      const c = catalog.find(x => x.id === companyId);
+      if (c && c.due) {
+        const dueInfo = getDueStatus(c);
+        return [{
+          hasEvent: false,
+          type: detectEventType(c.dueLabel),
+          title: c.dueLabel || '選考締切',
+          datetime: c.due,
+          dueText: dueInfo.text || c.due,
+          badgeCls: dueInfo.cls || 'normal',
+          badgeText: dueInfo.badge || '',
+          days: dueInfo.days,
+          totalUpcomingCount: 1
+        }];
+      }
+      return [];
+    }
+
+    // Sort by datetime ascending
+    events.sort((a, b) => (a.datetime || '').localeCompare(b.datetime || ''));
+    const totalUpcomingCount = events.length;
+    return events.slice(0, limit).map((ev, idx) => {
+      const formatted = formatSelectionEvent(ev);
+      formatted.totalUpcomingCount = totalUpcomingCount;
+      formatted.index = idx;
+      return formatted;
+    });
+  }
+
+  function getCompanyNextAction(companyId) {
+    const upcoming = getCompanyUpcomingEvents(companyId, 1);
+    if (upcoming.length > 0) {
+      return upcoming[0];
+    }
+    return {
+      hasEvent: false,
+      type: null,
+      title: '予定なし',
+      datetime: null,
+      dueText: '—',
+      badgeCls: '',
+      badgeText: '',
+      days: null,
+      totalUpcomingCount: 0
     };
   }
 
