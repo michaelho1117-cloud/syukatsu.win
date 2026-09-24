@@ -4598,7 +4598,7 @@
     { id:'c_kearney', name:'A.T.カーニー(Kearney)', code:null, domain:'kearney.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'世界大手 戦略コンサル(オペレーション/事業変革)', emp:350, empNote:'日本', payBachelor:500000, payMaster:520000, avgAnnual:1700, color:'#6b1f7c', added:false, stage:'watch', loc:'東京/全国', tags:["外資名門", "戦略コンサル", "高年収"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_rolandberger', name:'ローランド・ベルガー(Roland Berger)', code:null, domain:'rolandberger.com', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'欧州最大手 経営戦略コンサルファーム', emp:300, empNote:'日本', payBachelor:500000, payMaster:520000, avgAnnual:1650, color:'#009b3a', added:false, stage:'watch', loc:'東京/全国', tags:["外資名門", "戦略コンサル", "高年収"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_funaisoken', name:'船井総研ホールディングス', code:'9757', domain:'funaisoken.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'中堅・中小企業向け 総合経営コンサルティング最大手', emp:1400, empNote:'連結', payBachelor:250000, payMaster:274000, avgAnnual:740, color:'#e50012', added:false, stage:'watch', loc:'東京/全国', tags:["中小企業支援", "経営コンサル", "業種特化"], due:'', dueLabel:'', dueLv:'' },
-        { id:'c_msol', name:'株式会社マネジメントソリューションズ', code:'7033', domain:'mgmtsol.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'PMO / 経営・ITマネジメントコンサルティング', emp:950, empNote:'連結', payBachelor:300000, payMaster:320000, avgAnnual:830, color:'#8b7bff', added:true, stage:'es', loc:'東京', tags:['PMO', '東証プライム', 'コンサル', '急成長'], due:'2026-05-28', dueLabel:'一次面接', dueLv:'soon', popRank:180, popBadge:'TOP 300' },
+        { id:'c_msol', name:'株式会社マネジメントソリューションズ', code:'7033', domain:'mgmtsol.co.jp', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'PMO / 経営・ITマネジメントコンサルティング', emp:950, empNote:'連結', payBachelor:300000, payMaster:320000, avgAnnual:830, color:'#8b7bff', added:false, stage:'watch', loc:'東京', tags:['PMO', '東証プライム', 'コンサル', '急成長'], due:'', dueLabel:'', dueLv:'', popRank:180, popBadge:'TOP 300' },
     { id:'c_tcs', name:'日本タタ・コンサルタンシー・サービシズ', code:null, domain:'tcs.com/jp-ja', ind17:'情報通信・サービス', cat:'コンサル・シンクタンク', sub:'外資系ITコンサル・SIer (三菱商事合弁)', emp:4000, empNote:'国内(グローバル60万)', payBachelor:305000, payMaster:330000, avgAnnual:860, color:'#000000', added:false, stage:'watch', loc:'東京/全国', tags:["外資系", "ITコンサル", "三菱商事系", "グローバル", "日本TCS", "TCS", "Tata", "タタ"], due:'', dueLabel:'', dueLv:'', popRank:140, popBadge:'TOP 300' },
 
     // ── IT/SIer業界 ──
@@ -6267,9 +6267,18 @@
   async function syncAfterLogin() {
     if (!supabaseClient || !currentAuthUser) return;
     try {
-      // 1. まず未ログイン時の展示用デモデータを破棄し、ユーザー専用プライベートデータをロード
+      // 0. 未ログイン時の展示用デモ・旧ローカルキャッシュを完全パージ
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(SETTINGS_KEY);
+        localStorage.removeItem(TASKS_KEY);
+        localStorage.removeItem(EVENTS_KEY);
+        localStorage.removeItem(ES_KEY);
+        localStorage.removeItem(STORIES_KEY);
+      } catch (e) {}
+
       loadAll();
-      renderAll();
+
       const { data: cloudItems, error } = await supabaseClient
         .from('user_selections')
         .select('*')
@@ -6291,12 +6300,21 @@
         await supabaseClient.from('user_selections').delete().eq('user_id', currentAuthUser.id).like('company_id', 'c_custom_acc_%');
       }
 
-      // 1. 本地已追加但云端没有的，自动迁移上云 (Migration)
-      // 严格排除任何 c_custom_acc_ 临时账号
-      const localAdded = catalog.filter(c => !c.id.startsWith('c_custom_acc_') && (c.added || c.myPageUrl || c.myPageId || c.myPagePass));
-      const toUpsert = [];
-      localAdded.forEach(c => {
-        if (!cloudMap.has(c.id)) {
+      // 1. 只有当云端没有任何数据（全新注册用户），且本地存在真正由用户手动登记的非种子企业时，才进行单向初次上云
+      // 若用户云端已有数据，云端为唯一真理（Source of Truth），严禁将移动端/未登录时的种子演示数据倒灌回云端
+      const DUMMY_SEED_IDS = new Set([
+        'c_sony', 'c_toyota', 'c_mitsubishi_corp', 'c_recruit', 'c_mercari', 'c_freee', 'c_smbc', 'c_msol',
+        'c_deloitte', 'c_nttdata', 'c_unlisted_rms', 'c_tcs', 'c_keyence', 'c_8766', 'c_itochu', 'c_nri', 'c_7974', 'c_baycurrent', 'c_unlisted_bdx'
+      ]);
+
+      if (!cloudItems || cloudItems.length === 0) {
+        const localAdded = catalog.filter(c => 
+          !c.id.startsWith('c_custom_acc_') &&
+          !DUMMY_SEED_IDS.has(c.id) &&
+          (c.isCustom || c.myPageUrl || c.myPageId || (c.added && c.stage && c.stage !== 'watch' && (c.noteMotiv || c.noteEs)))
+        );
+        const toUpsert = [];
+        localAdded.forEach(c => {
           toUpsert.push({
             user_id: currentAuthUser.id,
             company_id: c.id,
@@ -6310,116 +6328,87 @@
             tags: packCompanyCloudTags(c),
             updated_at: new Date().toISOString()
           });
+        });
+        if (toUpsert.length > 0) {
+          await supabaseClient.from('user_selections').upsert(toUpsert, { onConflict: 'user_id,company_id' });
         }
-      });
-
-      if (toUpsert.length > 0) {
-        await supabaseClient.from('user_selections').upsert(toUpsert, { onConflict: 'user_id,company_id' });
       }
 
-      // 2. 云端已有数据合并入本地 catalog
+      // 2. 以云端数据为权威，完整重构本地 catalog 选考状态
       const fullCatalog = getFullCatalog();
       const masterMap = new Map();
       fullCatalog.forEach(c => masterMap.set(c.id, c));
 
-      const validCloudItems = (cloudItems || []).filter(item => !item.company_id.startsWith('c_custom_acc_'));
-      if (validCloudItems && validCloudItems.length) {
-        validCloudItems.forEach(item => {
+      // 先重置所有 master 企业的选考状态
+      catalog = fullCatalog.map(m => {
+        const item = cloudMap.get(m.id);
+        if (item && !UNWANTED_MYPAGE_ACC_IDS.has(item.company_id)) {
           const parsed = parseCloudItemTags(item.tags);
-          let c = catalog.find(x => x.id === item.company_id);
-          const master = masterMap.get(item.company_id);
-
-          if (UNWANTED_MYPAGE_ACC_IDS.has(item.company_id)) {
-            return; // 誤マッチのジーニー・フラー・NEをスキップ
-          }
-
-          const isItemAdded = Boolean(item.stage && item.stage !== 'watch');
-
-          if (!c) {
-            if (master) {
-              c = Object.assign({}, master, {
-                added: isItemAdded,
-                stage: item.stage || 'watch',
-                due: item.due || '',
-                dueLabel: item.due_label || '',
-                dueLv: item.due_lv || '',
-                noteMotiv: item.note_motiv || '',
-                noteEs: item.note_es || '',
-                noteInterview: item.note_interview || '',
-                tags: (parsed.cleanTags.length && !parsed.cleanTags.includes('手動登録')) ? parsed.cleanTags : (master.tags || []),
-                isCustom: false,
-                myPageUrl: parsed.myPageUrl || '',
-                myPageId: parsed.myPageId || '',
-                myPagePass: parsed.myPagePass || ''
-              });
-              catalog.unshift(c);
-            } else {
-              // カタログ外・手動登録企業を生成
-              c = {
-                id: item.company_id,
-                name: parsed.compName || item.company_id,
-                cat: 'その他',
-                ind17: 'その他',
-                sub: 'その他',
-                emp: null,
-                payBachelor: null,
-                payMaster: null,
-                avgAnnual: null,
-                color: '#6366f1',
-                added: isItemAdded,
-                stage: item.stage || 'watch',
-                due: item.due || '',
-                dueLabel: item.due_label || '',
-                dueLv: item.due_lv || '',
-                noteMotiv: item.note_motiv || '',
-                noteEs: item.note_es || '',
-                noteInterview: item.note_interview || '',
-                tags: parsed.cleanTags.length ? parsed.cleanTags : ['手動登録'],
-                isCustom: true,
-                myPageUrl: parsed.myPageUrl || '',
-                myPageId: parsed.myPageId || '',
-                myPagePass: parsed.myPagePass || ''
-              };
-              catalog.unshift(c);
-            }
-          } else {
-            if (master) {
-              c.name = master.name;
-              c.code = master.code;
-              c.domain = master.domain;
-              c.ind17 = master.ind17;
-              c.cat = master.cat;
-              c.sub = master.sub;
-              c.emp = master.emp;
-              c.empNote = master.empNote;
-              c.payBachelor = master.payBachelor;
-              c.payMaster = master.payMaster;
-              c.avgAnnual = master.avgAnnual;
-              c.color = master.color;
-              c.scale = master.scale;
-              c.market = master.market;
-              c.hasLogo = master.hasLogo;
-              c.loc = master.loc;
-              c.isCustom = false;
-              if (!c.tags || c.tags.includes('手動登録') || !c.tags.length) {
-                c.tags = master.tags || [];
-              }
-            }
-            c.added = isItemAdded;
-            c.stage = item.stage || 'watch';
-            if (item.due !== undefined && item.due !== null) c.due = item.due;
-            if (item.due_label !== undefined && item.due_label !== null) c.dueLabel = item.due_label;
-            if (item.due_lv !== undefined && item.due_lv !== null) c.dueLv = item.due_lv;
-            if (item.note_motiv) c.noteMotiv = item.note_motiv;
-            if (item.note_es) c.noteEs = item.note_es;
-            if (item.note_interview) c.noteInterview = item.note_interview;
-            if (parsed.cleanTags.length && !parsed.cleanTags.includes('手動登録')) c.tags = parsed.cleanTags;
-            if (parsed.myPageUrl) c.myPageUrl = parsed.myPageUrl;
-            if (parsed.myPageId) c.myPageId = parsed.myPageId;
-            if (parsed.myPagePass) c.myPagePass = parsed.myPagePass;
-          }
+          const isItemAdded = Boolean((item.stage && item.stage !== 'watch') || item.due || parsed.myPageUrl || parsed.myPageId);
+          return Object.assign({}, m, {
+            added: isItemAdded,
+            stage: item.stage || 'watch',
+            due: item.due || '',
+            dueLabel: item.due_label || '',
+            dueLv: item.due_lv || '',
+            noteMotiv: item.note_motiv || '',
+            noteEs: item.note_es || '',
+            noteInterview: item.note_interview || '',
+            tags: (parsed.cleanTags.length && !parsed.cleanTags.includes('手動登録')) ? parsed.cleanTags : (m.tags || []),
+            isCustom: false,
+            myPageUrl: parsed.myPageUrl || '',
+            myPageId: parsed.myPageId || '',
+            myPagePass: parsed.myPagePass || ''
+          });
+        }
+        return Object.assign({}, m, {
+          added: false,
+          stage: 'watch',
+          due: '',
+          dueLabel: '',
+          dueLv: '',
+          noteMotiv: '',
+          noteEs: '',
+          noteInterview: '',
+          isCustom: false,
+          myPageUrl: '',
+          myPageId: '',
+          myPagePass: ''
         });
-      }
+      });
+
+      // 补充云端存在的非 master（手动注册）企业
+      const validCloudItems = (cloudItems || []).filter(item => !item.company_id.startsWith('c_custom_acc_'));
+      validCloudItems.forEach(item => {
+        if (masterMap.has(item.company_id) || UNWANTED_MYPAGE_ACC_IDS.has(item.company_id)) return;
+        const parsed = parseCloudItemTags(item.tags);
+        const isItemAdded = Boolean((item.stage && item.stage !== 'watch') || item.due || parsed.myPageUrl || parsed.myPageId);
+        catalog.unshift({
+          id: item.company_id,
+          name: parsed.compName || item.company_id,
+          cat: 'その他',
+          ind17: 'その他',
+          sub: 'その他',
+          emp: null,
+          payBachelor: null,
+          payMaster: null,
+          avgAnnual: null,
+          color: '#6366f1',
+          added: isItemAdded,
+          stage: item.stage || 'watch',
+          due: item.due || '',
+          dueLabel: item.due_label || '',
+          dueLv: item.due_lv || '',
+          noteMotiv: item.note_motiv || '',
+          noteEs: item.note_es || '',
+          noteInterview: item.note_interview || '',
+          tags: parsed.cleanTags.length ? parsed.cleanTags : ['手動登録'],
+          isCustom: true,
+          myPageUrl: parsed.myPageUrl || '',
+          myPageId: parsed.myPageId || '',
+          myPagePass: parsed.myPagePass || ''
+        });
+      });
 
       catalog = catalog.filter(c => !c.id.startsWith('c_custom_acc_'));
       saveAll();
