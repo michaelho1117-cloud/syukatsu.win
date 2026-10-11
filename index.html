@@ -11,6 +11,12 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 <link rel="alternate icon" href="favicon.ico" />
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<!-- PWA & Mobile Web App -->
+<link rel="manifest" href="manifest.json" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="就勝" />
 <!-- Open Graph / Web Snapshot -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://syukatsu.win/" />
@@ -3201,16 +3207,16 @@
     </nav>
     <div class="spacer"></div>
     <form class="searchbox" onsubmit="event.preventDefault()" role="search" autocomplete="off">
-      🔍<input type="search" id="search" name="company_search_q" placeholder="企業名・キーワードで検索…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-1p-ignore="true" data-lpignore="true" data-bwignore="true" />
+      🔍<input type="search" id="search" name="company_search_q" placeholder="企業名・キーワードで検索…" aria-label="企業名・キーワードで検索" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-1p-ignore="true" data-lpignore="true" data-bwignore="true" />
     </form>
-    <button class="top-btn primary secondary-action" onclick="openNewCompanyModal()" title="データベースにない企業を手動登録">
+    <button class="top-btn primary secondary-action" onclick="openNewCompanyModal()" title="データベースにない企業を手動登録" aria-label="新規企業を手動登録">
       ＋<span class="btn-text"> 企業を追加</span>
     </button>
-    <button class="top-btn secondary-action" onclick="openSettingsModal()" title="データ設定・バックアップ">
+    <button class="top-btn secondary-action" onclick="openSettingsModal()" title="データ設定・バックアップ" aria-label="データ管理・バックアップ設定">
       ⚙️<span class="btn-text"> データ管理</span>
     </button>
     <div id="authArea" style="display:inline-flex;align-items:center;">
-      <button class="top-btn" id="authLoginBtn" onclick="openAuthModal('login')" title="クラウド同期・ログイン" style="border-color:rgba(139,123,255,.45);background:rgba(139,123,255,.12);color:var(--ink);font-weight:700;">
+      <button class="top-btn" id="authLoginBtn" onclick="openAuthModal('login')" title="クラウド同期・ログイン" aria-label="クラウド同期・ログイン" style="border-color:rgba(139,123,255,.45);background:rgba(139,123,255,.12);color:var(--ink);font-weight:700;">
         ☁️<span class="btn-text"> ログイン</span>
       </button>
       <div id="userProfileWrap" style="display:none;position:relative;">
@@ -3740,7 +3746,7 @@
           <h3 id="mTitle">企業名</h3>
           <span style="color:var(--sub);font-size:11.5px" id="mSubTitle">業界・業種</span>
         </div>
-        <button class="modal-close" onclick="closeModal('companyModal')">✕</button>
+        <button class="modal-close" aria-label="閉じる" onclick="closeModal('companyModal')">✕</button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="mId" />
@@ -3923,7 +3929,7 @@
     <div class="modal">
       <div class="modal-head">
         <h3>＋ 新規企業を手動登録</h3>
-        <button class="modal-close" onclick="closeModal('newCompanyModal')">✕</button>
+        <button class="modal-close" aria-label="閉じる" onclick="closeModal('newCompanyModal')">✕</button>
       </div>
       <div class="modal-body">
         <div class="form-row">
@@ -4022,7 +4028,7 @@
     <div class="modal">
       <div class="modal-head">
         <h3>⚙️ データ管理・設定</h3>
-        <button class="modal-close" onclick="closeModal('settingsModal')">✕</button>
+        <button class="modal-close" aria-label="閉じる" onclick="closeModal('settingsModal')">✕</button>
       </div>
       <div class="modal-body">
         <div class="form-group" id="settingsAccountGroup">
@@ -4106,7 +4112,7 @@
         <div id="authConfirmHeader" style="display:none; font-weight:800; font-size:14.5px; color:#fff; padding-bottom:10px; align-items:center; gap:6px;">
           <span>✉️</span><span>メールアドレスの確認</span>
         </div>
-        <button class="modal-close" onclick="closeModal('authModal')" style="margin-bottom:8px;">✕</button>
+        <button class="modal-close" aria-label="閉じる" onclick="closeModal('authModal')" style="margin-bottom:8px;">✕</button>
       </div>
       <div class="modal-body" style="padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px;">
         <div id="authNotice" class="auth-notice-pill">
@@ -4194,7 +4200,7 @@
     <div class="modal" style="max-width:540px">
       <div class="modal-head">
         <h3 id="evModalTitle">📅 選考イベントの予定</h3>
-        <button class="modal-close" onclick="closeModal('eventModal')">✕</button>
+        <button class="modal-close" aria-label="閉じる" onclick="closeModal('eventModal')">✕</button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="evId" />
@@ -4257,7 +4263,7 @@
     <div class="modal" style="max-width:720px">
       <div class="modal-head">
         <h3 id="esModalTitle">📝 ES エントリーシート編集</h3>
-        <button class="modal-close" onclick="closeModal('esModal')">✕</button>
+        <button class="modal-close" aria-label="閉じる" onclick="closeModal('esModal')">✕</button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="esId" />
@@ -4343,7 +4349,7 @@
     <div class="modal" style="max-width:820px">
       <div class="modal-head">
         <h3 id="storyModalHeadTitle">💡 Story Bank 経験エピソード編集</h3>
-        <button class="modal-close" onclick="closeModal('storyModal')">✕</button>
+        <button class="modal-close" aria-label="閉じる" onclick="closeModal('storyModal')">✕</button>
       </div>
       <div class="modal-body" style="gap:16px">
         <input type="hidden" id="storyId" />
@@ -4461,7 +4467,7 @@
             <span style="color:var(--sub);font-size:11.5px" id="clonePickerSubTitle">過去に作成した優秀な回答を選び、この企業向けにクローン作成します</span>
           </div>
         </div>
-        <button class="modal-close" onclick="closeModal('esClonePickerModal')">✕</button>
+        <button class="modal-close" aria-label="閉じる" onclick="closeModal('esClonePickerModal')">✕</button>
       </div>
       <div class="modal-body" style="gap:12px">
         <!-- 絞り込みバー -->
@@ -5610,15 +5616,90 @@
     return currentAuthUser ? `${baseKey}_user_${currentAuthUser.id}` : null;
   }
 
+  // 展示用デモデータの動的日程正規化（閲覧日を起点に生き生きとした選考進捗・締切アラート・カレンダー予定を再現）
+  function getDynamicShowcaseData() {
+    const raw = JSON.parse(JSON.stringify(SHOWCASE_DATA));
+    const now = new Date();
+
+    const addDays = (offset, time = '12:00') => {
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return { date: `${y}-${m}-${day}`, datetime: `${y}-${m}-${day} ${time}` };
+    };
+
+    const compSchedule = {
+      'c_unlisted_rms': { offset: 2, label: '一次面接（オンライン）', lv: 'urgent' },
+      'c_mercari': { offset: 4, label: '技術オンラインテスト', lv: 'soon' },
+      'c_deloitte': { offset: 6, label: 'ケース二次面接', lv: 'soon' },
+      'c_nttdata': { offset: 9, label: '本選考ES＆適性検査', lv: 'soon' },
+      'c_7974': { offset: 13, label: 'クリエイティブES提出', lv: 'soon' },
+      'c_8766': { offset: 15, label: '二次人事面接', lv: 'soon' },
+      'c_smbc': { offset: 17, label: 'リクルーター個別面談', lv: 'soon' },
+      'c_nri': { offset: 20, label: '現場コンサルタント面接', lv: 'soon' },
+      'c_sony': { offset: 23, label: '現場エンジニア一次面接', lv: 'soon' },
+      'c_keyence': { offset: 26, label: '説得面接（一次選考）', lv: 'soon' },
+      'c_mitsubishi_corp': { offset: 29, label: '役員最終面接(対面)', lv: 'soon' },
+      'c_toyota': { offset: 33, label: '内々定面談・承諾回答', lv: 'soon' },
+      'c_tcs': { offset: 7, label: '適性検査受検締切', lv: 'soon' },
+      'c_itochu': { offset: 11, label: 'プレエントリー締切', lv: 'soon' }
+    };
+
+    raw.companies.forEach(c => {
+      const sch = compSchedule[c.id];
+      if (sch) {
+        c.due = addDays(sch.offset).date;
+        if (sch.label) c.dueLabel = sch.label;
+        if (sch.lv !== undefined) c.dueLv = sch.lv;
+      }
+    });
+
+    const eventSchedule = [
+      { id: 'ev_demo_1', offset: -12, time: '12:00' },
+      { id: 'ev_demo_2', offset: -8, time: '18:00' },
+      { id: 'ev_demo_3', offset: -4, time: '23:59' },
+      { id: 'ev_demo_4', offset: 4, time: '20:00' },
+      { id: 'ev_demo_5', offset: -2, time: '17:00' },
+      { id: 'ev_demo_6', offset: 2, time: '15:00' },
+      { id: 'ev_demo_7', offset: 9, time: '23:59' },
+      { id: 'ev_demo_8', offset: 13, time: '17:00' },
+      { id: 'ev_demo_9', offset: 17, time: '14:00' },
+      { id: 'ev_demo_10', offset: 20, time: '10:00' },
+      { id: 'ev_demo_11', offset: 23, time: '16:30' },
+      { id: 'ev_demo_12', offset: 26, time: '13:00' },
+      { id: 'ev_demo_13', offset: 6, time: '11:00' },
+      { id: 'ev_demo_14', offset: 15, time: '15:30' },
+      { id: 'ev_demo_15', offset: 29, time: '10:00' },
+      { id: 'ev_demo_16', offset: 33, time: '14:00' }
+    ];
+
+    (raw.selectionEvents || []).forEach(ev => {
+      const sch = eventSchedule.find(s => s.id === ev.id);
+      if (sch) {
+        const dt = addDays(sch.offset, sch.time);
+        ev.datetime = dt.datetime;
+        ev.due = dt.datetime;
+      }
+    });
+
+    (raw.esEntries || []).forEach((es, idx) => {
+      es.updatedAt = addDays(-(idx % 10) - 1).date;
+    });
+
+    return raw;
+  }
+
   function loadAll() {
     try {
       const fullCatalog = getFullCatalog();
 
       if (!currentAuthUser) {
         // ==================== 未ログイン: 展示用デモモード ====================
-        // 公共デモデータ（14社、各選考ステージ、ES10+、Story8+、Calendar Events）をメモリにロード
+        // 公共デモデータ（14社、各選考ステージ、ES10+、Story8+、Calendar Events）を動的日程でメモリにロード
+        const demoData = getDynamicShowcaseData();
         const demoCompMap = new Map();
-        SHOWCASE_DATA.companies.forEach(sc => demoCompMap.set(sc.id, sc));
+        demoData.companies.forEach(sc => demoCompMap.set(sc.id, sc));
 
         catalog = fullCatalog.map(c => {
           if (demoCompMap.has(c.id)) {
@@ -5628,16 +5709,16 @@
         });
 
         // プレースホルダーのカスタム企業があれば先頭に保持
-        SHOWCASE_DATA.companies.forEach(sc => {
+        demoData.companies.forEach(sc => {
           if (!catalog.find(x => x.id === sc.id)) {
             catalog.unshift(Object.assign({}, sc));
           }
         });
 
-        selectionEvents = JSON.parse(JSON.stringify(SHOWCASE_DATA.selectionEvents || []));
-        esList = JSON.parse(JSON.stringify(SHOWCASE_DATA.esEntries || []));
-        storyBank = JSON.parse(JSON.stringify(SHOWCASE_DATA.storyBank || []));
-        currentTasks = JSON.parse(JSON.stringify(SHOWCASE_DATA.tasks || []));
+        selectionEvents = JSON.parse(JSON.stringify(demoData.selectionEvents || []));
+        esList = JSON.parse(JSON.stringify(demoData.esEntries || []));
+        storyBank = JSON.parse(JSON.stringify(demoData.storyBank || []));
+        currentTasks = JSON.parse(JSON.stringify(demoData.tasks || []));
         currentSettings = { gradYear: '28卒' };
         return;
       }
@@ -11050,7 +11131,7 @@
           <h3 id="mypageModalTitle">MyPage アカウント登録</h3>
           <span style="color:var(--sub);font-size:11.5px">企業のマイページログイン情報を保存・更新します</span>
         </div>
-        <button class="modal-close" onclick="closeModal('mypageAddModal')">✕</button>
+        <button class="modal-close" aria-label="閉じる" onclick="closeModal('mypageAddModal')">✕</button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="mypageModalCompId" />
