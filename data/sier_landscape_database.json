@@ -37,12 +37,12 @@
     },
     {
       "id": "sier_ntt_comware",
-      "name": "NTTコムウェア",
-      "nameEn": "NTT COMWARE",
+      "name": "NTTドコモソリューションズ (旧 NTTコムウェア)",
+      "nameEn": "NTT DOCOMO SOLUTIONS, Inc. (formerly NTT COMWARE)",
       "category": "NTT系",
       "subCategory": "通信インフラ・NTTグループ内SI",
       "parentGroup": "NTTグループ (NTTドコモ傘下)",
-      "market": "非上場 (ドコモ子会社)",
+      "market": "非上場 (ドコモ子会社 / 2025年7月社名変更)",
       "scaleTier": "大手 (準メガ)",
       "revenue": "約2,500億円",
       "employees": 7200,
@@ -53,7 +53,7 @@
         "営業・プロデュース職"
       ],
       "minEducationalBackground": "学部卒 / 修士卒",
-      "appealPoints": "ドコモ・NTT東西の基幹ネットワーク及び顧客管理システムを一手に担う。ドコモ傘下となりスマートライフ事業DXが急加速。残業少なめでWLB抜群。",
+      "appealPoints": "2025年7月1日付でNTTコムウェアからNTTドコモソリューションズへ社名変更。ドコモグループの法人・スマートライフ・通信DXを中核として一手に担う。残業少なめでWLB抜群。",
       "risks": "内販（NTTグループ向け）比率が高く、外販拡大が中長期の課題。",
       "targetMatch": "高いWLB、通信×ITの巨大プラットフォーム基盤を志望する層"
     },
@@ -594,12 +594,12 @@
     },
     {
       "id": "sier_nec_solution_innovators",
-      "name": "NECソリューションイノベータ",
+      "name": "NECソリューションイノベータ (2026年10月NEC本体と吸収合併)",
       "nameEn": "NEC Solution Innovators",
       "category": "メーカー系",
       "subCategory": "NECグループ中核SI・ソフトウェア開発",
       "parentGroup": "日本電気100%",
-      "market": "非上場 (NECグループ最大子会社)",
+      "market": "非上場 (2026年10月1日付で親会社NECに吸収合併)",
       "scaleTier": "大手 (グループ開発部隊)",
       "revenue": "約3,000億円",
       "employees": 12500,
@@ -609,7 +609,7 @@
         "システムエンジニア"
       ],
       "minEducationalBackground": "大卒 / 院卒",
-      "appealPoints": "NECグループ内のSI・ソフトウェア開発部隊7社が統合。単体従業員1.2万人超の巨大SIer。農業DX、観光DXなど地方創生型ソリューションも多数。",
+      "appealPoints": "2026年10月1日付で親会社NECと吸収合併。新卒採用はNEC本体へ一本化されるため、同社の事業領域・開発に関心がある学生はNEC新卒採用へエントリーが必要。単体従業員1.2万人超のSI開発中枢が本体と直結し、AI・クラウド変革が加速。",
       "risks": "親会社NECからの受託開発案件比率が高い。",
       "targetMatch": "大規模開発部隊、エンジニアとしての確実なスキル習得、安定したNEC基盤"
     },
