@@ -5,7 +5,7 @@
 ![就勝 Logo](assets/og-image.png)
 
 ### 「就活を制するオールインワン・コックピット」
-**東証上場＆主要未上場 1,758社マスターデータベース × リアルタイム選考カンバン × ES・面接復盤STAR管理 × オフラインファーストSPA**
+**東証上場＆主要未上場 1,770社マスターデータベース × リアルタイム選考カンバン × ES・面接復盤STAR管理 × オフラインファーストSPA**
 
 [![Production](https://img.shields.io/badge/Production-syukatsu.win-2563eb?style=flat-square&logo=googlechrome&logoColor=white)](https://syukatsu.win)
 [![Vanilla JS](https://img.shields.io/badge/JavaScript-ES6%2B%20Vanilla%20(Zero--Build)-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/ja/docs/Web/JavaScript)
@@ -35,7 +35,7 @@
 | 📋 直感的選考カンバンボード | 📊 データ分析＆直近締切ダッシュボード |
 | :---: | :---: |
 | ![カンバンビュー](docs/screenshots/kanban_view.png) | ![ダッシュボード](docs/screenshots/dashboard_view.png) |
-| **🏢 東証1,758社企業データベース** | **📱 モバイルPWA・最適化UI** |
+| **🏢 東証1,770社企業データベース** | **📱 モバイルPWA・最適化UI** |
 | ![企業DB](docs/screenshots/enterprise_db.png) | ![モバイルビュー](docs/screenshots/mobile_view.png) |
 
 ---
@@ -55,8 +55,8 @@ flowchart TD
 
     subgraph Storage["永続化・データ層 (Offline-First Hybrid)"]
         LS[("LocalStorage Engine<br/>(ユーザー別スコープキー / 即時永続化)")]
-        Catalog[("企業マスターDB (1,758社)<br/>companies_catalog.js (1.2MB)")]
-        Logos[("公式企業ロゴ (1,765社)<br/>assets/logos/ (ローカル完全内蔵)")]
+        Catalog[("企業マスターDB (1,770社)<br/>companies_catalog.js (1.2MB)")]
+        Logos[("公式企業ロゴ (1,778社)<br/>assets/logos/ (ローカル完全内蔵)")]
     end
 
     subgraph Cloud["クラウド＆バックエンド層 (Optional Sync)"]
@@ -105,9 +105,9 @@ flowchart TD
   - PCとスマートフォンの複数端末で利用したいユーザーのために、Supabase（PostgreSQL + Auth）によるクラウド同期を実装。
   - **Row Level Security (RLS)** を採用し、データベースレベルで `auth.uid() = user_id` のポリシーを適用。他ユーザーのデータ混入や漏洩を数学的・構造的に防止しています。
 
-### 3. 1,758社 JPX東証マスターデータ設計と5次元スマートあいまい検索
+### 3. 1,770社 JPX東証マスターデータ設計と5次元スマートあいまい検索
 - **業界トップクラスの収録規模**：  
-  日本取引所グループ（JPX）の東証プライム・スタンダード・グロース上場企業、および外資コンサル・IT・大手未上場企業を含む **1,758社** のマスターデータを精査・内蔵。公式企業ロゴも **1,765社分** をローカルアセット化し、外部APIの障害時でもアバターの崩れが起きません。
+  日本取引所グループ（JPX）の東証プライム・スタンダード・グロース上場企業、および外資コンサル・IT・大手未上場企業を含む **1,770社** のマスターデータを精査・内蔵。公式企業ロゴも **1,778社分** をローカルアセット化し、外部APIの障害時でもアバターの崩れが起きません。
 - **5次元正規化ファジー検索アルゴリズム**：  
   就活生のタイピング速度と利便性を最大化するため、入力文字列に対して以下の多層変換を施し、0.1ms未満でインクリメンタルフィルタリングを実行します：
   1. **Unicode NFKC 正規化**：全角英数字・半角英数字の完全一致。
@@ -130,7 +130,7 @@ flowchart TD
 
 ## 🌟 主要機能一覧
 
-### 🏢 1. 企業データベース（1,758社 & 1,765ロゴ内蔵）
+### 🏢 1. 企業データベース（1,770社 & 1,778ロゴ内蔵）
 - 東証市場区分、17業種分類、従業員数、大卒初任給・大学院卒初任給、平均年収を網羅。
 - 就職人気ランキング格付（`TOP 10` / `TOP 100` / `TOP 300` / `TOP 500` / `名門`）バッジ表示。
 - 未収録企業・独自スタートアップ・官公庁の手動追加機能。
@@ -199,7 +199,7 @@ npx playwright test
 
 **主な自動検証項目**：
 - [x] 未ログイン時の動的ショーケースデータ（14社選考進捗・16件カレンダー予定）の正常生成
-- [x] 1,758社企業データベースのリアルタイム5次元あいまい検索
+- [x] 1,770社企業データベースのリアルタイム5次元あいまい検索
 - [x] カンバンボードのドラッグ＆ドロップおよびステージ更新
 - [x] LocalStorage への即時保存・整合性保持
 - [x] PWA マニフェスト（`manifest.json`）の配置とアクセシビリティ（a11y）`aria-label` 属性検証
@@ -215,11 +215,11 @@ syukatsu.win/
 ├── favicon.ico / favicon.svg    # アプリケーションアイコン
 ├── apple-touch-icon.png         # iOSホーム画面用アプリアイコン
 ├── assets/
-│   ├── logos/                   # 1,765社公式高解像度企業ロゴ（PNG/SVG）
+│   ├── logos/                   # 1,778社公式高解像度企業ロゴ（PNG/SVG）
 │   ├── logo-full.png            # ブランドロゴ
 │   └── og-image.png             # SNS共有用 OGP 画像
 ├── data/
-│   ├── companies_catalog.js     # 東証上場・主要企業マスターデータ（1,758社 / 約1.2MB）
+│   ├── companies_catalog.js     # 東証上場・主要企業マスターデータ（1,770社 / 約1.2MB）
 │   └── companies_catalog_raw.json # マスターデータ元データアーカイブ
 ├── docs/
 │   ├── RADAR_HANDOVER.md        # 選考締切レーダー機能の設計・引き継ぎ仕様書
