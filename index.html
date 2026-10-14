@@ -1120,6 +1120,7 @@
   .s-first  { color: #7fe6f0; } .s-first .dot{ background:#4fd8e8; color:#4fd8e8; }
   .s-final  { color: #ffa8cf; } .s-final .dot{ background:#ff7eb6; color:#ff7eb6; }
   .s-offer  { color: #86eeb8; } .s-offer .dot{ background:#4ee39a; color:#4ee39a; }
+  .s-rejected { color: #f87171; } .s-rejected .dot{ background:#ef4444; color:#ef4444; }
 
   .due { font-size: 12px; font-weight: 800; color: var(--sub); }
   .due.soon { color: #ffcf6b; }
@@ -3359,6 +3360,7 @@
         <span class="chip">ES・Webテスト</span>
         <span class="chip">面接中</span>
         <span class="chip">内定・内々定</span>
+        <span class="chip">お祈り・落選</span>
       </div>
       <div class="result-count">選考中・管理中 <b id="listShown">0</b> 社</div>
     </div>
@@ -3454,6 +3456,7 @@
       <div class="stat-strip">
         <span>選考中 <b id="kActive" style="color:var(--cyan)">0</b> 社</span>
         <span>内々定 <b id="kOffer" style="color:var(--green)">0</b> 社</span>
+        <span>落選 <b id="kRejected" style="color:#f87171">0</b> 社</span>
         <span class="hot">直近締切 <b id="kDue">0</b> 件</span>
       </div>
     </div>
@@ -3793,6 +3796,7 @@
             <option value="first">一次面接</option>
             <option value="final">二次・最終面接</option>
             <option value="offer">内々定・内定</option>
+            <option value="rejected">お祈り・落選（選考終了）</option>
           </select>
         </div>
 
@@ -3996,6 +4000,7 @@
             <option value="first">一次面接</option>
             <option value="final">二次・最終面接</option>
             <option value="offer">内々定・内定</option>
+            <option value="rejected">お祈り・落選（選考終了）</option>
           </select>
         </div>
 
@@ -4716,6 +4721,7 @@
     { key:'first',  label:'一次面接',     color:'#4fd8e8', cls:'s-first',  desc:'人事/若手面接・GD' },
     { key:'final',  label:'二次・最終面接',color:'#ff7eb6',cls:'s-final',  desc:'役員・社長面接' },
     { key:'offer',  label:'内々定/内定',  color:'#4ee39a', cls:'s-offer',  desc:'承諾検討・内定者フォロー' },
+    { key:'rejected',label:'お祈り/落選', color:'#ef4444', cls:'s-rejected',desc:'選考終了・お祈り' },
   ];
   const stageMap = Object.fromEntries(stages.map(s => [s.key, s]));
 
@@ -7086,7 +7092,12 @@
 
   function kCardHtml(c) {
     const dueInfo = getDueStatus(c);
-    const dueBadge = dueInfo.badge ? `<span class="k-due ${dueInfo.cls}">${dueInfo.badge}</span>` : (dueInfo.text ? `<span class="k-due">${dueInfo.text}</span>` : '');
+    let dueBadge = '';
+    if (c.stage === 'rejected') {
+      dueBadge = `<span class="k-due" style="color:#f87171;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3)">選考終了</span>`;
+    } else {
+      dueBadge = dueInfo.badge ? `<span class="k-due ${dueInfo.cls}">${dueInfo.badge}</span>` : (dueInfo.text ? `<span class="k-due">${dueInfo.text}</span>` : '');
+    }
 
     return `
       <div class="kcard"
@@ -7095,7 +7106,7 @@
            ondragstart="onCardDragStart(event, '${c.id}')"
            ondragend="onCardDragEnd(event)"
            onclick="openDetailModal('${c.id}')"
-           style="--accent:${c.color || '#8b7bff'}">
+           style="--accent:${c.stage === 'rejected' ? '#ef4444' : (c.color || '#8b7bff')}">
         <div class="kcard-inner">
           ${logoHtml(c)}
           <div class="name" title="${c.name}">${c.name}</div>
@@ -7131,7 +7142,10 @@
     const activeKeys = ['entry', 'es', 'first', 'final'];
     document.getElementById('kActive').textContent = added.filter(c => activeKeys.includes(c.stage)).length;
     document.getElementById('kOffer').textContent = added.filter(c => c.stage === 'offer').length;
+    const kRejEl = document.getElementById('kRejected');
+    if (kRejEl) kRejEl.textContent = added.filter(c => c.stage === 'rejected').length;
     document.getElementById('kDue').textContent = added.filter(c => {
+      if (c.stage === 'rejected' || c.stage === 'offer') return false;
       const d = getDueStatus(c);
       return d.days !== null && d.days >= 0 && d.days <= 7;
     }).length;
@@ -7188,12 +7202,13 @@
     const nextAct = getCompanyNextAction(c.id);
     switch (listFilter) {
       case 'すべて': return true;
-      case '締切あり': return nextAct.hasEvent || !!c.due;
-      case '直近締切あり': return nextAct.days !== null && nextAct.days >= 0 && nextAct.days <= 7;
+      case '締切あり': return (nextAct.hasEvent || !!c.due) && c.stage !== 'rejected';
+      case '直近締切あり': return nextAct.days !== null && nextAct.days >= 0 && nextAct.days <= 7 && c.stage !== 'rejected';
       case 'エントリー中': return c.stage === 'entry';
       case 'ES・Webテスト': return c.stage === 'es';
       case '面接中': return ['first', 'final'].includes(c.stage);
       case '内定・内々定': return c.stage === 'offer';
+      case 'お祈り・落選': return c.stage === 'rejected';
       default: return true;
     }
   }
@@ -7220,7 +7235,7 @@
         va = a.name || ''; vb = b.name || '';
         return sortAsc ? va.localeCompare(vb, 'ja') : vb.localeCompare(va, 'ja');
       } else if (sortCol === 'stage') {
-        const order = ['watch', 'entry', 'es', 'first', 'final', 'offer'];
+        const order = ['watch', 'entry', 'es', 'first', 'final', 'offer', 'rejected'];
         va = order.indexOf(a.stage); vb = order.indexOf(b.stage);
       } else if (sortCol === 'due') {
         const actA = getCompanyNextAction(a.id);
@@ -7695,6 +7710,7 @@
     const esReached = added.filter(c => ['es','first','final','offer'].includes(c.stage)).length;
     const esRate = total ? Math.round(esReached / total * 100) : 0;
     const dueSoon = added.filter(c => {
+      if (c.stage === 'rejected' || c.stage === 'offer') return false;
       const d = getDueStatus(c);
       return d.days !== null && d.days >= 0 && d.days <= 7;
     }).length;
