@@ -4950,145 +4950,6 @@
     return qs.reduce((sum, q) => sum + (q.characterLimit || 0), 0);
   }
 
-  // Client-side Smart Heuristic Parser for pasted text
-  function smartParseEsPastedText(rawText) {
-    rawText = (rawText || '').trim();
-    if (!rawText) return [];
-
-    function detectType(text) {
-      const s = (text || '').toLowerCase();
-      if (s.includes('志望') || s.includes('なぜ当社') || s.includes('実現したいこと') || s.includes('かなえたい夢') || s.includes('応募理由') || s.includes('興味を持っ')) return '志望動機';
-      if (s.includes('自己pr') || s.includes('自己アピール') || s.includes('強み') || s.includes('長所') || s.includes('ワークフィールドpr') || s.includes('実績やアウトプット')) return '自己PR';
-      if (s.includes('ガクチカ') || s.includes('学生時代') || s.includes('最も情熱') || s.includes('力を入れ') || s.includes('最も熱中') || s.includes('主体的に取り組んだ') || s.includes('成果をあげた') || s.includes('取り組んだ経験')) return 'ガクチカ';
-      if (s.includes('学業') || s.includes('研究') || s.includes('ゼミ') || s.includes('卒論') || s.includes('専攻')) return '学業・研究';
-      if (s.includes('短所') || s.includes('挫折') || s.includes('困難') || s.includes('失敗') || s.includes('見直した出来事')) return '長所・短所';
-      return 'その他';
-    }
-
-    function extractLimit(text) {
-      if (!text) return 0;
-      const m = text.match(/(?:上限|最大|〜|~)?\s*(\d{2,4})\s*(?:文字|字)(?:以内|程度|未満|以下)?/);
-      return m ? parseInt(m[1], 10) : 0;
-    }
-
-    // Format 1: Explicit '---' delimiter
-    if (/\n\s*---\s*\n/.test(rawText)) {
-      const chunks = rawText.split(/\n\s*---\s*\n/);
-      const items = [];
-      chunks.forEach((chunk, idx) => {
-        chunk = chunk.trim();
-        if (!chunk) return;
-
-        const limit = extractLimit(chunk.slice(0, 250));
-        const ansSplit = chunk.split(/(?:\n|^)\s*(?:【\s*回答\s*】|回答内容[：:\s]*|回答[：:\s]+)/i);
-        if (ansSplit.length > 1) {
-          const qPart = ansSplit[0].trim();
-          const aPart = ansSplit.slice(1).join('\n').trim();
-          items.push({
-            id: 'q_' + (idx + 1) + '_' + Math.random().toString(36).substr(2, 4),
-            type: detectType(qPart),
-            question: qPart,
-            answer: aPart,
-            characterLimit: limit || extractLimit(qPart)
-          });
-          return;
-        }
-
-        const lines = chunk.split('\n').map(l => l.trim()).filter(Boolean);
-        if (lines.length === 1) {
-          items.push({
-            id: 'q_' + (idx + 1) + '_' + Math.random().toString(36).substr(2, 4),
-            type: detectType(lines[0]),
-            question: lines[0],
-            answer: '',
-            characterLimit: limit
-          });
-        } else {
-          let qLines = [lines[0]];
-          let ansIdx = 1;
-          if (lines.length > 2 && (/(?:文字|以内|程度|案内|：|:|\?|？)/.test(lines[1]) || lines[1].length < 60)) {
-            qLines.push(lines[1]);
-            ansIdx = 2;
-          }
-          const prompt = qLines.join('\n');
-          const ans = lines.slice(ansIdx).join('\n').trim();
-          items.push({
-            id: 'q_' + (idx + 1) + '_' + Math.random().toString(36).substr(2, 4),
-            type: detectType(prompt),
-            question: prompt,
-            answer: ans,
-            characterLimit: limit || extractLimit(prompt)
-          });
-        }
-      });
-      if (items.length > 0) return items;
-    }
-
-    // Format 2: MyPage text with 設問 / Q markers
-    const hasSetsumon = /(?:^|\n)\s*(?:###\s*|【\s*|◆\s*|■\s*|●\s*|▼\s*)?設問\s*[0-9０-９一二三四五六七八九十]+/i.test(rawText);
-    let headerRegex;
-    if (hasSetsumon) {
-      headerRegex = /(?:^|\n)\s*(?:###\s*|【\s*|◆\s*|■\s*|●\s*|▼\s*)?設問\s*([0-9０-９一二三四五六七八九十]+)[:：.、\s\)\】\）\-]*(.*?)(?=\n|$)/gi;
-    } else {
-      headerRegex = /(?:^|\n)\s*(?:###\s*|【\s*|◆\s*|■\s*|●\s*|▼\s*)?(?:設問|質問|第[0-9０-９]+問|Q)\s*([0-9０-９一二三四五六七八九十]+)?[:：.、\s\)\】\）\-]*(.*?)(?=\n|$)/gi;
-    }
-
-    const matches = [];
-    let m;
-    while ((m = headerRegex.exec(rawText)) !== null) {
-      matches.push({ index: m.index, matchText: m[0], num: m[1], rest: m[2] });
-    }
-
-    if (matches.length >= 2) {
-      const items = [];
-      for (let i = 0; i < matches.length; i++) {
-        const start = matches[i].index;
-        const end = i + 1 < matches.length ? matches[i + 1].index : rawText.length;
-        const block = rawText.slice(start, end).trim();
-
-        const ansSplit = block.split(/(?:\n|^)\s*(?:【\s*回答\s*】|回答内容[：:\s]*|回答[：:\s]+)/i);
-        let qPart = '';
-        let aPart = '';
-
-        if (ansSplit.length > 1) {
-          qPart = ansSplit[0].trim();
-          aPart = ansSplit.slice(1).join('\n').trim();
-        } else {
-          const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
-          qPart = lines[0] || '';
-          if (lines.length > 2 && (/(?:文字|以内|程度|：|:|\?|？)/.test(lines[1]) || lines[1].length < 60)) {
-            qPart += '\n' + lines[1];
-            aPart = lines.slice(2).join('\n').trim();
-          } else {
-            aPart = lines.slice(1).join('\n').trim();
-          }
-        }
-
-        const limit = extractLimit(qPart + ' ' + aPart.slice(0, 100));
-
-        items.push({
-          id: 'q_' + (i + 1) + '_' + Math.random().toString(36).substr(2, 4),
-          type: detectType(qPart),
-          question: qPart,
-          answer: aPart,
-          characterLimit: limit
-        });
-      }
-      return items;
-    }
-
-    // Fallback: single entry
-    const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
-    const limit = extractLimit(rawText.slice(0, 150));
-    return [{
-      id: 'q_1_' + Math.random().toString(36).substr(2, 4),
-      type: detectType(lines[0] || ''),
-      question: lines[0] || '',
-      answer: lines.slice(1).join('\n').trim(),
-      characterLimit: limit
-    }];
-  }
-
   // Question Type detector
   function detectEsType(es) {
     if (es.questionType && es.questionType !== 'その他') return es.questionType;
@@ -5755,48 +5616,9 @@
   }
 
   // =========================================================================
-  // ES MODAL (Edit & Create: Multi-Question & Smart Heuristic Parser)
+  // ES MODAL (Edit & Create: Multi-Question)
   // =========================================================================
   const ES_QUESTION_TYPES = ['自己PR', 'ガクチカ', '志望動機', '学業・研究', '長所・短所', 'その他'];
-
-  function toggleEsFastPasteBox() {
-    const content = document.getElementById('esFastPasteContent');
-    const icon = document.getElementById('esFastPasteToggleIcon');
-    if (!content) return;
-    const isHidden = content.style.display === 'none';
-    content.style.display = isHidden ? 'block' : 'none';
-    if (icon) icon.textContent = isHidden ? '▲ 閉じる' : '▼ 展開';
-  }
-
-  function clearEsFastPasteInput() {
-    const inp = document.getElementById('esFastPasteInput');
-    if (inp) inp.value = '';
-  }
-
-  function onParseFastPasteClick() {
-    const raw = document.getElementById('esFastPasteInput')?.value || '';
-    if (!raw.trim()) {
-      showToast('⚠️ 解析するテキストを貼り付けてください');
-      return;
-    }
-    const parsed = smartParseEsPastedText(raw);
-    if (!parsed.length) {
-      showToast('⚠️ 設問を抽出できませんでした');
-      return;
-    }
-
-    renderEsQuestionBlocks(parsed);
-    updateEsModalCharCounts();
-
-    const titleInp = document.getElementById('esModalTitleInput');
-    if (titleInp && !titleInp.value) {
-      const compSelect = document.getElementById('esModalCompany');
-      const compName = compSelect && compSelect.selectedOptions[0] ? compSelect.selectedOptions[0].textContent.replace(/\(.*?\)/, '').trim() : '';
-      titleInp.value = `${compName ? compName + ' ' : ''}本選考 ES（${parsed.length}設問）`.trim();
-    }
-
-    showToast(`⚡ ${parsed.length} 件の設問と回答を自動反映しました！`);
-  }
 
   function createQuestionBlockHtml(q, idx) {
     const qId = q.id || ('q_' + (idx + 1) + '_' + Math.random().toString(36).substr(2, 4));
@@ -6037,13 +5859,6 @@
     const titleHead = document.getElementById('esModalTitle');
     const compSelect = document.getElementById('esModalCompany');
     const delBtn = document.getElementById('esModalDeleteBtn');
-
-    // Reset fast paste box
-    clearEsFastPasteInput();
-    const fastPasteContent = document.getElementById('esFastPasteContent');
-    const fastPasteIcon = document.getElementById('esFastPasteToggleIcon');
-    if (fastPasteContent) fastPasteContent.style.display = 'none';
-    if (fastPasteIcon) fastPasteIcon.textContent = '▼ 展開';
 
     // Populate company selector
     compSelect.innerHTML = '<option value="">（未指定・汎用テンプレート）</option>';
