@@ -3791,7 +3791,6 @@
           <label class="form-label">選考ステージ</label>
           <select class="form-select" id="mStage">
             <option value="rejected">お祈り・落選（選考終了）</option>
-            <option value="watch">気になる（志望検討）</option>
             <option value="entry">エントリー（マイページ作成）</option>
             <option value="es">ES・Webテスト</option>
             <option value="first">一次面接</option>
@@ -3995,7 +3994,6 @@
           <label class="form-label">選考ステージ</label>
           <select class="form-select" id="newCompStage">
             <option value="rejected">お祈り・落選（選考終了）</option>
-            <option value="watch">気になる（志望検討）</option>
             <option value="entry" selected>エントリー（応募準備）</option>
             <option value="es">ES・Webテスト</option>
             <option value="first">一次面接</option>
@@ -4716,7 +4714,6 @@
   // ---- 選考ステージ定義 ----
   const stages = [
     { key:'rejected',label:'お祈り/落選', color:'#ef4444', cls:'s-rejected',desc:'選考終了・お祈り' },
-    { key:'watch',  label:'気になる',     color:'#8a94a6', cls:'s-watch',  desc:'志望検討・業界研究' },
     { key:'entry',  label:'エントリー',   color:'#4c8bf5', cls:'s-entry',  desc:'マイページ登録・応募準備' },
     { key:'es',     label:'ES/Webテスト', color:'#8b7bff', cls:'s-es',     desc:'書類選考・SPI/適性受検' },
     { key:'first',  label:'一次面接',     color:'#4fd8e8', cls:'s-first',  desc:'人事/若手面接・GD' },
@@ -7118,7 +7115,7 @@
   function renderKanban() {
     const added = catalog.filter(c => c.added);
     board.innerHTML = stages.map(st => {
-      const items = added.filter(c => (c.stage || 'watch') === st.key);
+      const items = added.filter(c => ((c.stage === 'watch' || !c.stage) ? 'entry' : c.stage) === st.key);
       const body = items.length
         ? items.map(c => kCardHtml(c)).join('')
         : `<div class="empty-hint">企業カードをここにドラッグ</div>`;
@@ -7235,8 +7232,8 @@
         va = a.name || ''; vb = b.name || '';
         return sortAsc ? va.localeCompare(vb, 'ja') : vb.localeCompare(va, 'ja');
       } else if (sortCol === 'stage') {
-        const order = ['rejected', 'watch', 'entry', 'es', 'first', 'final', 'offer'];
-        va = order.indexOf(a.stage); vb = order.indexOf(b.stage);
+        const order = ['rejected', 'entry', 'es', 'first', 'final', 'offer'];
+        va = order.indexOf(a.stage === 'watch' ? 'entry' : a.stage); vb = order.indexOf(b.stage === 'watch' ? 'entry' : b.stage);
       } else if (sortCol === 'due') {
         const actA = getCompanyNextAction(a.id);
         const actB = getCompanyNextAction(b.id);
@@ -7266,7 +7263,7 @@
 
     tbody.innerHTML = added.map(c => {
       const upcomingActs = getCompanyUpcomingEvents(c.id, 2);
-      const st = stageMap[c.stage] || stageMap.watch;
+      const st = stageMap[c.stage] || stageMap.entry;
       const initial = (c.name || '企').slice(0, 1);
       const popBadgeHtml = c.popBadge ? `<span style="font-size:10px;padding:1px 6px;margin-left:5px;border-radius:4px;background:rgba(217,178,95,.18);color:var(--gold-2);border:1px solid rgba(217,178,95,.4);font-weight:700">${c.popBadge}</span>` : '';
 
@@ -7730,7 +7727,7 @@
       return added.filter(c => keysFrom.includes(c.stage)).length;
     };
     const funnelRows = [
-      { name:'エントリー', n: added.filter(c => c.stage !== 'watch').length, grad:'#7fb0ff,#4c8bf5', glow:'rgba(76,139,245,.4)' },
+      { name:'エントリー', n: reached('entry'), grad:'#7fb0ff,#4c8bf5', glow:'rgba(76,139,245,.4)' },
       { name:'ES提出',     n: reached('es'),    grad:'#b3a9ff,#8b7bff', glow:'rgba(139,123,255,.4)' },
       { name:'一次面接',   n: reached('first'), grad:'#7fe6f0,#4fd8e8', glow:'rgba(79,216,232,.4)' },
       { name:'最終面接',   n: reached('final'), grad:'#ffa8cf,#ff7eb6', glow:'rgba(255,126,182,.4)' },
@@ -7778,7 +7775,7 @@
     });
     document.getElementById('deadlines').innerHTML = withDue.slice(0, 6).map(c => {
       const d = getDueStatus(c);
-      const st = stageMap[c.stage] || stageMap.watch;
+      const st = stageMap[c.stage] || stageMap.entry;
       const urgent = d.cls === 'urgent' ? ' urgent' : '';
       const mMatch = (c.due || '').match(/(\d{1,2})[\/-](\d{1,2})/);
       const day = mMatch ? mMatch[2] : '–';
@@ -8307,7 +8304,7 @@
       const escapedPass = encodeURIComponent(c.myPagePass || '');
       const escapedUrl = escapeHtml(c.myPageUrl || '');
       const escapedId = escapeHtml(c.myPageId || '');
-      const stageInfo = stageMap[c.stage] || { label: '気になる', color: 'var(--sub)' };
+      const stageInfo = stageMap[c.stage] || { label: 'エントリー', color: 'var(--sub)' };
 
       // URL cell
       let urlCell = `<span style="color:var(--muted);font-size:12px;">未登録</span>`;
@@ -10529,7 +10526,7 @@
     }
     document.getElementById('mStatMarket').textContent = c.market || c.scale || (c.code ? '上場企業' : '非上場');
 
-    document.getElementById('mStage').value = c.stage || 'watch';
+    document.getElementById('mStage').value = (c.stage === 'watch' || !c.stage) ? 'entry' : c.stage;
 
 
     document.getElementById('mDue').value = c.due || '';
