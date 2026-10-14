@@ -96,9 +96,8 @@ flowchart TD
         SupaDB["PostgreSQL / Supabase Realtime\n(Row Level Security: ユーザーデータ完全分離)"]
     end
 
-    subgraph Dataset["ビルトイン・ナレッジ層"]
-        MasterDB["全17業界 1,770社 企業マスターDB\n(上場区分・初任給・年収・格付)"]
-        Landscape["SIer全景・業界構造リサーチ\n(ユーザー系/メーカー系/外資/シンクタンク)"]
+    subgraph Dataset["ビルトイン・データ層"]
+        MasterDB["全17業界 1,770社 企業マスターDB\n(東証上場区分・初任給・年収・格付)"]
     end
 
     UI <--> CF
@@ -107,7 +106,6 @@ flowchart TD
     UI <--> SupaAuth
     SupaAuth <--> SupaDB
     UI -.-> MasterDB
-    UI -.-> Landscape
 ```
 
 ### ■ 技術選定のトレードオフ（Engineering Trade-offs）
@@ -140,7 +138,6 @@ flowchart TD
 - **基本属性**：企業名、銘柄コード、公式ドメイン、本社所在地、上場区分（プライム/スタンダード/グロース/非上場/外資）
 - **待遇・規模指標**：従業員数（連結/単体）、大卒初任給、大学院卒初任給、平均年間給与
 - **就職市場格付**：人気就職ランキング（`TOP 10` / `TOP 100` / `TOP 300` / `TOP 500` / `名門`）
-- **専門リサーチ**：SIer業界の系列別分類（ユーザー系・メーカー系・独立系・外資・コンサル）を含む詳細レポート内蔵（[`data/sier_landscape_database.json`](data/sier_landscape_database.json)）。
 
 ---
 
