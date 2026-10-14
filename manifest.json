@@ -1,0 +1,30 @@
+{
+  "name": "就勝 syukatsu.win",
+  "short_name": "就勝",
+  "description": "日本新卒就活生・留学生のための次世代選考管理＆企業分析プラットフォーム",
+  "start_url": "./",
+  "id": "syukatsu-win-pwa",
+  "display": "standalone",
+  "background_color": "#0a0e1a",
+  "theme_color": "#0a0e1a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["productivity", "education", "business"]
+}

@@ -1,0 +1,27 @@
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment and sensitive keys
+.env
+.env.local
+.env.*.local
+
+# Personal resumes and private documents
+*.pdf
+*.xlsx
+*.xls
+*.docx
+*.doc
+
+# Temporary and log files
+*.log
+*temp*
+*.tmp
+
+# Editor & AI Tool configs
+.agent/
+.cursor/
+.vscode/
+.idea/
