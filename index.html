@@ -1112,23 +1112,29 @@
     </div>
   </div>
 
-  <!-- ===================== MODAL: ES作成・編集 ===================== -->
+  <!-- ===================== MODAL: ES作成・編集（複数設問＆スマート自動分割対応） ===================== -->
   <div class="modal-overlay" id="esModal" onclick="onModalOverlayClick(event, 'esModal')">
-    <div class="modal" style="max-width:720px">
-      <div class="modal-head">
-        <h3 id="esModalTitle">📝 ES エントリーシート編集</h3>
+    <div class="modal" style="max-width:840px;width:95vw;max-height:92vh;display:flex;flex-direction:column;">
+      <div class="modal-head" style="flex-shrink:0">
+        <div>
+          <h3 id="esModalTitle" style="margin:0 0 2px 0">📝 ES エントリーシート編集</h3>
+          <div style="font-size:11.5px;color:var(--sub)">企業マイページ提出単位で複数の設問・文字数・回答を一括管理</div>
+        </div>
         <button class="modal-close" aria-label="閉じる" onclick="closeModal('esModal')">✕</button>
       </div>
-      <div class="modal-body">
+
+      <div class="modal-body" style="overflow-y:auto;flex:1;padding-right:12px;">
         <input type="hidden" id="esId" />
+
+        <!-- 提出基本情報 -->
         <div class="form-row">
-          <div class="form-group">
+          <div class="form-group" style="flex:1.5">
             <label class="form-label">提出先企業（任意・汎用可）</label>
             <select class="form-select" id="esModalCompany">
               <option value="">（未指定・汎用テンプレート）</option>
             </select>
           </div>
-          <div class="form-group">
+          <div class="form-group" style="flex:1">
             <label class="form-label">提出ステータス</label>
             <select class="form-select" id="esModalStatus">
               <option value="draft">下書き (Draft)</option>
@@ -1136,61 +1142,67 @@
             </select>
           </div>
         </div>
+
         <div class="form-row">
-          <div class="form-group" style="flex:1.2">
-            <label class="form-label">設問タイプ</label>
-            <select class="form-select" id="esModalTypeSelect">
-              <option value="自己PR">自己PR</option>
-              <option value="ガクチカ">ガクチカ（学生時代に力を入れたこと）</option>
-              <option value="志望動機">志望動機・企業研究</option>
-              <option value="学業・研究">学業・研究・ゼミ</option>
-              <option value="長所・短所">長所・短所 / 挫折経験</option>
-              <option value="その他">その他</option>
-            </select>
-          </div>
           <div class="form-group" style="flex:2">
-            <label class="form-label">タイトル <span style="color:var(--red)">*</span></label>
-            <input class="form-input" id="esModalTitleInput" placeholder="例: 自己PR 400字 / 夏インターン志望動機" required />
+            <label class="form-label">提出タイトル <span style="color:var(--red)">*</span></label>
+            <input class="form-input" id="esModalTitleInput" placeholder="例: 本選考 ES / サマーインターン選考（総合職）" required />
           </div>
-          <div class="form-group" style="flex:1">
-            <label class="form-label">文字数制限</label>
-            <select class="form-select" id="esModalLimit" onchange="onEsModalLimitChange(this.value)">
-              <option value="200">200字</option>
-              <option value="300">300字</option>
-              <option value="400" selected>400字</option>
-              <option value="500">500字</option>
-              <option value="custom">カスタム指定</option>
-              <option value="0">上限なし</option>
-            </select>
+          <div class="form-group" style="flex:1.5">
+            <label class="form-label">タグ（カンマ区切り）</label>
+            <input class="form-input" id="esModalTags" placeholder="例: 本選考, ジョブマッチング, 5G" />
           </div>
         </div>
-        <div class="form-group" id="esCustomLimitGroup" style="display:none">
-          <label class="form-label">カスタム文字数上限</label>
-          <input type="number" class="form-input" id="esCustomLimitInput" placeholder="例: 250" oninput="updateEsModalCharCount()" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">設問（Question） <span style="color:var(--red)">*</span></label>
-          <textarea class="form-textarea" id="esModalQuestion" placeholder="例: あなたが学生時代に最も力を入れて取り組んだことと、そこから得た学びを教えてください。" style="min-height:60px"></textarea>
-        </div>
-        <div class="form-group">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <label class="form-label" style="margin-bottom:0">回答本文（Answer） <span style="color:var(--red)">*</span></label>
-            <span id="esModalCharCounter" style="font-size:12px;font-weight:800;color:var(--ink)">0 / 400 字</span>
+
+        <!-- ⚡ マイページ確認画面から一括貼り付け＆自動解析（Smart Heuristic Parser） -->
+        <div class="es-fast-paste-card">
+          <div class="es-fast-paste-toggle" onclick="toggleEsFastPasteBox()">
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-size:15px">⚡</span>
+              <span>マイページ確認画面から一括貼り付け＆自動分割</span>
+              <span class="badge-count" style="font-size:10px;padding:1px 6px">AI API不要・ローカル即時解析</span>
+            </div>
+            <span id="esFastPasteToggleIcon" style="font-size:12px;color:var(--sub)">▼ 展開</span>
           </div>
-          <textarea class="form-textarea" id="esModalAnswer" placeholder="回答文を入力してください…" style="min-height:160px;line-height:1.6" oninput="updateEsModalCharCount()"></textarea>
+          <div class="es-fast-paste-content" id="esFastPasteContent" style="display:none">
+            <div style="font-size:11.5px;color:var(--sub);margin-bottom:6px;line-height:1.4">
+              マイページ送信直前の確認画面や、手元のメモテキストを全選択（Ctrl+A / Cmd+A）して貼り付けてください。<br>
+              設問番号・設問文・文字数上限（例: 400文字以内）・回答本文を正規表現ヒューリスティックで瞬時に分割・カード化します。
+            </div>
+            <textarea class="form-textarea" id="esFastPasteInput" placeholder="【設問1】学生時代に最も力を入れて取り組んだこと（400文字以内）&#10;回答内容：&#10;大学の学園祭実行委員会において...&#10;&#10;【設問2】当社を志望する動機（300字程度）&#10;回答内容：&#10;..." style="min-height:90px;font-size:12px;line-height:1.4;margin-bottom:8px"></textarea>
+            <div style="display:flex;justify-content:flex-end;gap:8px">
+              <button type="button" class="btn-sm-ghost" onclick="clearEsFastPasteInput()">クリア</button>
+              <button type="button" class="top-btn primary" onclick="onParseFastPasteClick()" style="padding:6px 14px;font-size:12px">
+                ⚡ 設問と回答を自動解析・反映
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">引用 Story Bank（複数選択可）</label>
+
+        <!-- 設問一覧ヘッダー -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin:16px 0 10px 0;flex-wrap:wrap;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <h4 style="margin:0;font-size:14px;color:var(--ink);font-weight:800">設問・回答カード</h4>
+            <span class="es-summary-pill" id="esModalSummaryPill">全 1 設問 / 計 0 字</span>
+          </div>
+          <button type="button" class="btn-sm-ghost" onclick="addEsQuestionBlock()" style="color:var(--cyan);border-color:rgba(79,216,232,.35);font-weight:700">
+            ＋ 設問を追加
+          </button>
+        </div>
+
+        <!-- 動的設問コンテナ -->
+        <div id="esQuestionsContainer"></div>
+
+        <!-- 引用 Story Bank -->
+        <div class="form-group" style="margin-top:12px">
+          <label class="form-label">引用 Story Bank（エピソード紐付け・複数選択可）</label>
           <div id="esModalStoriesPicker" style="display:flex;flex-wrap:wrap;gap:6px;max-height:110px;overflow-y:auto;padding:6px;border:1px solid var(--glass-brd);border-radius:10px;background:rgba(0,0,0,.2)"></div>
         </div>
-        <div class="form-group">
-          <label class="form-label">タグ（カンマ区切り または Enter）</label>
-          <input class="form-input" id="esModalTags" placeholder="例: ガクチカ, チームワーク, 課題解決" />
-        </div>
       </div>
-      <div class="modal-foot">
+
+      <div class="modal-foot" style="flex-shrink:0">
         <button class="btn-sm-ghost" id="esModalDeleteBtn" onclick="deleteCurrentEs()" style="color:var(--red);display:none">このESを削除</button>
-        <button class="btn-sm-ghost" type="button" onclick="copyCurrentEsAnswerText()">📋 回答をコピー</button>
+        <button class="btn-sm-ghost" type="button" onclick="copyCurrentEsFullText()">📋 全設問・回答を一括コピー</button>
         <div style="flex:1"></div>
         <button class="btn-sm-ghost" onclick="closeModal('esModal')">キャンセル</button>
         <button class="top-btn primary" onclick="saveCurrentEs()">ESを保存</button>

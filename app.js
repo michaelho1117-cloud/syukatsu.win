@@ -706,6 +706,95 @@
   ],
   "esEntries": [
     {
+      "id": "es_docomo_sample",
+      "companyId": "c_nttdata",
+      "questionType": "ガクチカ",
+      "title": "株式会社NTTドコモ 本選考（ジョブマッチング面談）",
+      "question": "Q10. 経験①：主体的に取り組んだ経験（400字程度）",
+      "answer": "外資系戦略コンサルの長期インターンにおいて、台湾発OTA企業の日本市場戦略プロジェクトに参画した経験です。海外オフィスのコンサルタントが作成した戦略案が、日本の商習慣や消費者インサイトと乖離していたため、過去3年分の国内旅行市場データと競合5社のUI/UXを徹底分析。日本市場特有のペインを特定し、ローカライズ提案書を作成しました。さらに現地マネージャーとの英語ディスカッションを重ねて合意を形成し、新規プロダクトのローンチを成功させました。この「多様なステークホルダーと協働しながら事実に基づき課題を突破する力」を活かし、ドコモのオープンイノベーションを加速させます。",
+      "characterLimit": 1600,
+      "status": "submitted",
+      "questions": [
+        {
+          "id": "q_docomo_1",
+          "type": "ガクチカ",
+          "question": "Q10. 経験①：主体的に取り組んだ経験（400字程度）",
+          "answer": "外資系戦略コンサルの長期インターンにおいて、台湾発OTA企業の日本市場戦略プロジェクトに参画した経験です。海外オフィスのコンサルタントが作成した戦略案が、日本の商習慣や消費者インサイトと乖離していたため、過去3年分の国内旅行市場データと競合5社のUI/UXを徹底分析。日本市場特有のペインを特定し、ローカライズ提案書を作成しました。さらに現地マネージャーとの英語ディスカッションを重ねて合意を形成し、新規プロダクトのローンチを成功させました。この「多様なステークホルダーと協働しながら事実に基づき課題を突破する力」を活かし、ドコモのオープンイノベーションを加速させます。",
+          "characterLimit": 400
+        },
+        {
+          "id": "q_docomo_2",
+          "type": "ガクチカ",
+          "question": "Q11. 経験②：主体的に取り組んだ経験（400字程度）",
+          "answer": "大学院において、留学生支援コミュニティの代表としてオンライン学習プラットフォームの刷新を主導した経験です。コロナ禍において留学生の孤立と学修相談の停滞が課題となっていたため、SlackとNotionを連携させた24時間質問解決システムを構築。日本人学生メンター30名と協働して質問対応のマニュアル化と週次フォローミーティングを実施しました。結果、利用率は前年比240%に達し、退学・休学率をほぼゼロに抑えることができました。「課題に対してゼロから仕組みを構築し、周囲を巻き込んで成果につなげる推進力」を発揮します。",
+          "characterLimit": 400
+        },
+        {
+          "id": "q_docomo_3",
+          "type": "長所・短所",
+          "question": "Q13. 経験の中で自分の考えや判断を見直した出来事（400字程度）",
+          "answer": "ハッカソンにおいて技術選定に固執し、チームの開発進行を停滞させてしまった経験です。当初、最新の分散処理技術を導入することで優位性を出そうとしましたが、メンバー間のスキルセットの差を考慮せず、実装フェーズで手詰まりを起こしました。私は自身の技術先行の判断を真摯に反省し、即座に要件定義をピボット。全員が習熟しているフレームワークへ切り替え、タスクをモジュール単位で再配分しました。結果、期限内にプロトタイプを完成させ審査員特別賞を受賞。「手段ではなくユーザー価値とチームの力を最大化すること」の重要性を深く学びました。",
+          "characterLimit": 400
+        },
+        {
+          "id": "q_docomo_4",
+          "type": "志望動機",
+          "question": "Q14. ドコモでかなえたい夢・実現したいこと（400字程度）",
+          "answer": "モバイル通信網とスマートライフ事業の強固な顧客基盤を掛け合わせ、地方自治体や中小企業のDXを抜本的に推進したいです。少子高齢化が進む地域において、医療・モビリティ・決済のデジタル化は生活インフラそのものです。私は貴社が持つ圧倒的なデータ基盤とパートナーアセットを活用し、誰もが直感的に恩恵を享受できるスマートシティ基盤の社会実装に挑みます。ステークホルダーを泥臭く繋ぎ合わせ、一人ひとりの可能性を拡張する持続可能な社会インフラの実現に貢献します。",
+          "characterLimit": 400
+        }
+      ],
+      "linkedStoryIds": [
+        "story_intern_sales",
+        "story_lab_algo"
+      ],
+      "tags": [
+        "Docomo",
+        "本選考",
+        "通信",
+        "SE・開発"
+      ],
+      "createdAt": "2026-05-18T10:00:00.000Z",
+      "updatedAt": "2026-05-20T14:30:00.000Z"
+    },
+    {
+      "id": "es_jri_sample",
+      "companyId": "c_smbc",
+      "questionType": "自己PR",
+      "title": "株式会社日本総合研究所（JRI） インターン選考（PM / ITサービスマネジメント）",
+      "question": "【PM】学生時代に力を入れていることと強み（400字以下）",
+      "answer": "私の強みは「複雑な課題を事実に基づき構造化し、周囲を巻き込んで解決する力」です。長期インターン先において、商談獲得率が3%と低迷していた営業プロセスの再構築を主導しました。過去40件の失注データを分析し業界別のペイン仮説集を作成するとともに、週次ロープレを主導してチーム全体に定着させました。結果、個人目標160%達成に加え、チーム全体の成約率を2.2倍に向上させました。このプロジェクト推進力を活かし、大規模かつミッションクリティカルな社会インフラを支えるPMとして貢献します。",
+      "characterLimit": 700,
+      "status": "submitted",
+      "questions": [
+        {
+          "id": "q_jri_1",
+          "type": "自己PR",
+          "question": "【PM】学生時代に力を入れていることと強み（400字以下）",
+          "answer": "私の強みは「複雑な課題を事実に基づき構造化し、周囲を巻き込んで解決する力」です。長期インターン先において、商談獲得率が3%と低迷していた営業プロセスの再構築を主導しました。過去40件の失注データを分析し業界別のペイン仮説集を作成するとともに、週次ロープレを主導してチーム全体に定着させました。結果、個人目標160%達成に加え、チーム全体の成約率を2.2倍に向上させました。このプロジェクト推進力を活かし、大規模かつミッションクリティカルな社会インフラを支えるPMとして貢献します。",
+          "characterLimit": 400
+        },
+        {
+          "id": "q_jri_2",
+          "type": "志望動機",
+          "question": "【PM】インターン志望理由と期待すること（300字以下）",
+          "answer": "SMBCグループ全体の巨大金融インフラを支えつつ、最先端テクノロジーによる外販・新ビジネス創出に挑む貴社の「総合力と挑戦精神」に惹かれ志望します。本インターンを通じて、大規模ITプロジェクトにおける要件定義やリスクマネジメントのリアルを体感し、現役PMの思考プロセスと伴走力を吸収したいです。",
+          "characterLimit": 300
+        }
+      ],
+      "linkedStoryIds": [
+        "story_intern_sales"
+      ],
+      "tags": [
+        "JRI",
+        "ITコンサル",
+        "PM",
+        "三井住友"
+      ],
+      "createdAt": "2026-05-19T11:00:00.000Z",
+      "updatedAt": "2026-05-21T16:00:00.000Z"
+    },
+    {
       "id": "es_msol_sample",
       "companyId": "c_unlisted_rms",
       "questionType": "ガクチカ",
@@ -4792,24 +4881,31 @@
     }
 
     container.innerHTML = list.map(es => {
-      const len = (es.answer || '').length;
-      const limitStr = es.characterLimit ? `${len}/${es.characterLimit}字` : `${len}字`;
+      const qs = getEsQuestions(es);
+      const totalChars = getEsTotalCharCount(es);
+      const totalLimit = getEsTotalCharLimit(es);
+      const limitStr = totalLimit ? `${totalChars}/${totalLimit}字` : `${totalChars}字`;
       const statusBadge = es.status === 'submitted'
         ? `<span style="color:var(--green);font-size:10px;font-weight:700">● 提出済</span>`
         : `<span style="color:var(--gold-2);font-size:10px;font-weight:700">● 下書き</span>`;
 
+      const qSummary = qs.map((q, i) => `Q${i+1}: ${q.type || '設問'}`).join(' | ');
+
       return `
         <div class="comp-es-card" onclick="openEsModal('${es.id}')">
           <div style="display:flex;align-items:center;justify-content:space-between">
-            <b style="font-size:13px;color:var(--ink)">${es.title}</b>
+            <div style="display:flex;align-items:center;gap:6px">
+              <b style="font-size:13px;color:var(--ink)">${es.title}</b>
+              <span class="tag ind" style="font-size:10px;padding:1px 6px">全 ${qs.length} 設問</span>
+            </div>
             <div style="display:flex;align-items:center;gap:6px">
               ${statusBadge}
               <span class="badge-due-normal">${limitStr}</span>
               <button class="action-icon-btn" onclick="event.stopPropagation();openEsModal('${es.id}')" title="編集">✏️</button>
             </div>
           </div>
-          <div style="font-size:11.5px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-            ${es.question || es.answer || '（内容未入力）'}
+          <div style="font-size:11.5px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;">
+            ${qSummary}
           </div>
         </div>
       `;
@@ -4829,9 +4925,179 @@
   let currentEsEditId = null;
   let currentCloneTargetCompId = null;
 
+  // Normalizer: always returns array of { id, type, question, answer, characterLimit }
+  function getEsQuestions(es) {
+    if (!es) return [];
+    if (Array.isArray(es.questions) && es.questions.length > 0) {
+      return es.questions;
+    }
+    return [{
+      id: 'q_default_1',
+      type: es.questionType || detectEsType(es) || 'その他',
+      question: es.question || '',
+      answer: es.answer || '',
+      characterLimit: es.characterLimit || 0
+    }];
+  }
+
+  function getEsTotalCharCount(es) {
+    const qs = getEsQuestions(es);
+    return qs.reduce((sum, q) => sum + (q.answer || '').length, 0);
+  }
+
+  function getEsTotalCharLimit(es) {
+    const qs = getEsQuestions(es);
+    return qs.reduce((sum, q) => sum + (q.characterLimit || 0), 0);
+  }
+
+  // Client-side Smart Heuristic Parser for pasted text
+  function smartParseEsPastedText(rawText) {
+    rawText = (rawText || '').trim();
+    if (!rawText) return [];
+
+    function detectType(text) {
+      const s = (text || '').toLowerCase();
+      if (s.includes('志望') || s.includes('なぜ当社') || s.includes('実現したいこと') || s.includes('かなえたい夢') || s.includes('応募理由') || s.includes('興味を持っ')) return '志望動機';
+      if (s.includes('自己pr') || s.includes('自己アピール') || s.includes('強み') || s.includes('長所') || s.includes('ワークフィールドpr') || s.includes('実績やアウトプット')) return '自己PR';
+      if (s.includes('ガクチカ') || s.includes('学生時代') || s.includes('最も情熱') || s.includes('力を入れ') || s.includes('最も熱中') || s.includes('主体的に取り組んだ') || s.includes('成果をあげた') || s.includes('取り組んだ経験')) return 'ガクチカ';
+      if (s.includes('学業') || s.includes('研究') || s.includes('ゼミ') || s.includes('卒論') || s.includes('専攻')) return '学業・研究';
+      if (s.includes('短所') || s.includes('挫折') || s.includes('困難') || s.includes('失敗') || s.includes('見直した出来事')) return '長所・短所';
+      return 'その他';
+    }
+
+    function extractLimit(text) {
+      if (!text) return 0;
+      const m = text.match(/(?:上限|最大|〜|~)?\s*(\d{2,4})\s*(?:文字|字)(?:以内|程度|未満|以下)?/);
+      return m ? parseInt(m[1], 10) : 0;
+    }
+
+    // Format 1: Explicit '---' delimiter
+    if (/\n\s*---\s*\n/.test(rawText)) {
+      const chunks = rawText.split(/\n\s*---\s*\n/);
+      const items = [];
+      chunks.forEach((chunk, idx) => {
+        chunk = chunk.trim();
+        if (!chunk) return;
+
+        const limit = extractLimit(chunk.slice(0, 250));
+        const ansSplit = chunk.split(/(?:\n|^)\s*(?:【\s*回答\s*】|回答内容[：:\s]*|回答[：:\s]+)/i);
+        if (ansSplit.length > 1) {
+          const qPart = ansSplit[0].trim();
+          const aPart = ansSplit.slice(1).join('\n').trim();
+          items.push({
+            id: 'q_' + (idx + 1) + '_' + Math.random().toString(36).substr(2, 4),
+            type: detectType(qPart),
+            question: qPart,
+            answer: aPart,
+            characterLimit: limit || extractLimit(qPart)
+          });
+          return;
+        }
+
+        const lines = chunk.split('\n').map(l => l.trim()).filter(Boolean);
+        if (lines.length === 1) {
+          items.push({
+            id: 'q_' + (idx + 1) + '_' + Math.random().toString(36).substr(2, 4),
+            type: detectType(lines[0]),
+            question: lines[0],
+            answer: '',
+            characterLimit: limit
+          });
+        } else {
+          let qLines = [lines[0]];
+          let ansIdx = 1;
+          if (lines.length > 2 && (/(?:文字|以内|程度|案内|：|:|\?|？)/.test(lines[1]) || lines[1].length < 60)) {
+            qLines.push(lines[1]);
+            ansIdx = 2;
+          }
+          const prompt = qLines.join('\n');
+          const ans = lines.slice(ansIdx).join('\n').trim();
+          items.push({
+            id: 'q_' + (idx + 1) + '_' + Math.random().toString(36).substr(2, 4),
+            type: detectType(prompt),
+            question: prompt,
+            answer: ans,
+            characterLimit: limit || extractLimit(prompt)
+          });
+        }
+      });
+      if (items.length > 0) return items;
+    }
+
+    // Format 2: MyPage text with 設問 / Q markers
+    const hasSetsumon = /(?:^|\n)\s*(?:###\s*|【\s*|◆\s*|■\s*|●\s*|▼\s*)?設問\s*[0-9０-９一二三四五六七八九十]+/i.test(rawText);
+    let headerRegex;
+    if (hasSetsumon) {
+      headerRegex = /(?:^|\n)\s*(?:###\s*|【\s*|◆\s*|■\s*|●\s*|▼\s*)?設問\s*([0-9０-９一二三四五六七八九十]+)[:：.、\s\)\】\）\-]*(.*?)(?=\n|$)/gi;
+    } else {
+      headerRegex = /(?:^|\n)\s*(?:###\s*|【\s*|◆\s*|■\s*|●\s*|▼\s*)?(?:設問|質問|第[0-9０-９]+問|Q)\s*([0-9０-９一二三四五六七八九十]+)?[:：.、\s\)\】\）\-]*(.*?)(?=\n|$)/gi;
+    }
+
+    const matches = [];
+    let m;
+    while ((m = headerRegex.exec(rawText)) !== null) {
+      matches.push({ index: m.index, matchText: m[0], num: m[1], rest: m[2] });
+    }
+
+    if (matches.length >= 2) {
+      const items = [];
+      for (let i = 0; i < matches.length; i++) {
+        const start = matches[i].index;
+        const end = i + 1 < matches.length ? matches[i + 1].index : rawText.length;
+        const block = rawText.slice(start, end).trim();
+
+        const ansSplit = block.split(/(?:\n|^)\s*(?:【\s*回答\s*】|回答内容[：:\s]*|回答[：:\s]+)/i);
+        let qPart = '';
+        let aPart = '';
+
+        if (ansSplit.length > 1) {
+          qPart = ansSplit[0].trim();
+          aPart = ansSplit.slice(1).join('\n').trim();
+        } else {
+          const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+          qPart = lines[0] || '';
+          if (lines.length > 2 && (/(?:文字|以内|程度|：|:|\?|？)/.test(lines[1]) || lines[1].length < 60)) {
+            qPart += '\n' + lines[1];
+            aPart = lines.slice(2).join('\n').trim();
+          } else {
+            aPart = lines.slice(1).join('\n').trim();
+          }
+        }
+
+        const limit = extractLimit(qPart + ' ' + aPart.slice(0, 100));
+
+        items.push({
+          id: 'q_' + (i + 1) + '_' + Math.random().toString(36).substr(2, 4),
+          type: detectType(qPart),
+          question: qPart,
+          answer: aPart,
+          characterLimit: limit
+        });
+      }
+      return items;
+    }
+
+    // Fallback: single entry
+    const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
+    const limit = extractLimit(rawText.slice(0, 150));
+    return [{
+      id: 'q_1_' + Math.random().toString(36).substr(2, 4),
+      type: detectType(lines[0] || ''),
+      question: lines[0] || '',
+      answer: lines.slice(1).join('\n').trim(),
+      characterLimit: limit
+    }];
+  }
+
   // Question Type detector
   function detectEsType(es) {
-    if (es.questionType) return es.questionType;
+    if (es.questionType && es.questionType !== 'その他') return es.questionType;
+    const qs = getEsQuestions(es);
+    if (qs.length > 0) {
+      for (const q of qs) {
+        if (q.type && q.type !== 'その他') return q.type;
+      }
+    }
     const title = (es.title || '').toLowerCase();
     const tags = (es.tags || []).join(' ').toLowerCase();
     if (title.includes('志望動機') || title.includes('志望理由') || tags.includes('志望動機')) return '志望動機';
@@ -4840,13 +5106,14 @@
     if (title.includes('学業') || title.includes('研究') || tags.includes('研究')) return '学業・研究';
     if (title.includes('長所') || title.includes('短所') || title.includes('挫折')) return '長所・短所';
 
-    const str = ((es.question || '') + ' ' + tags).toLowerCase();
-    if (str.includes('志望動機') || str.includes('志望理由') || str.includes('志望する理由') || str.includes('なぜ当社')) return '志望動機';
-    if (str.includes('自己pr') || str.includes('自己アピール') || str.includes('強み')) return '自己PR';
-    if (str.includes('ガクチカ') || str.includes('学生時代') || str.includes('力を入れ') || str.includes('最も熱中') || str.includes('情熱を持っ')) return 'ガクチカ';
+    const qText = qs.map(q => q.question || '').join(' ');
+    const str = (qText + ' ' + (es.question || '') + ' ' + tags).toLowerCase();
+    if (str.includes('志望動機') || str.includes('志望理由') || str.includes('志望する理由') || str.includes('なぜ当社') || str.includes('志望')) return '志望動機';
+    if (str.includes('自己pr') || str.includes('自己アピール') || str.includes('強み') || str.includes('長所')) return '自己PR';
+    if (str.includes('ガクチカ') || str.includes('学生時代') || str.includes('力を入れ') || str.includes('最も熱中') || str.includes('情熱を持っ') || str.includes('主体的に取り組んだ')) return 'ガクチカ';
     if (str.includes('学業') || str.includes('研究') || str.includes('ゼミ') || str.includes('卒論')) return '学業・研究';
-    if (str.includes('短所') || str.includes('挫折') || str.includes('困難を乗り越え')) return '長所・短所';
-    return 'その他';
+    if (str.includes('短所') || str.includes('挫折') || str.includes('困難を乗り越え') || str.includes('見直した出来事')) return '長所・短所';
+    return es.questionType || 'その他';
   }
 
   // Industry detector
@@ -4867,18 +5134,42 @@
     return `<span class="es-type-badge ${cls}">${type}</span>`;
   }
 
+  // Format all questions & answers for clipboard
+  function formatEsForClipboard(es) {
+    const comp = catalog.find(x => x.id === es.companyId);
+    const compName = comp ? comp.name : '汎用ストック';
+    const qs = getEsQuestions(es);
+
+    if (qs.length === 1 && !qs[0].question) {
+      return qs[0].answer || '';
+    }
+
+    let text = `【企業】${compName}\n【タイトル】${es.title || 'エントリーシート'}\n\n`;
+    qs.forEach((q, idx) => {
+      const limitStr = q.characterLimit ? ` (${q.characterLimit}字以内)` : '';
+      const typeStr = q.type ? `[${q.type}] ` : '';
+      text += `----------------------------------------\n`;
+      text += `【設問 ${idx + 1}】${typeStr}${limitStr}\n`;
+      text += `${q.question || '（設問未入力）'}\n\n`;
+      text += `【回答】\n`;
+      text += `${q.answer || '（回答未入力）'}\n\n`;
+    });
+    return text.trim();
+  }
+
   // One-click copy helper
   function copyEsAnswer(esId, e) {
     if (e) e.stopPropagation();
     const es = esList.find(x => x.id === esId);
-    if (!es || !es.answer) {
+    if (!es) return;
+    const textToCopy = formatEsForClipboard(es);
+    if (!textToCopy) {
       showToast('コピーする本文がありません');
       return;
     }
-    const textToCopy = es.answer;
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(textToCopy).then(() => {
-        showToast(`📋 「${es.title}」の本文をコピーしました`);
+        showToast(`📋 「${es.title}」の全設問・回答をコピーしました`);
       }).catch(() => {
         fallbackCopyText(textToCopy, es.title);
       });
@@ -5104,23 +5395,29 @@
     const compName = comp ? comp.name : '汎用ストック';
     const ind = getEsIndustry(es);
     const type = detectEsType(es);
-    const charLen = (es.answer || '').length;
-    const limit = es.characterLimit;
+    const qs = getEsQuestions(es);
+    const totalChars = getEsTotalCharCount(es);
+    const totalLimit = getEsTotalCharLimit(es);
+
     let charBadge = '';
-    if (limit) {
+    if (totalLimit) {
       let badgeClass = 'warn';
-      let titleHint = `8割目安(${Math.ceil(limit*0.8)}字)まであと${Math.ceil(limit*0.8)-charLen}字`;
-      if (charLen > limit) {
+      let titleHint = `8割目安(${Math.ceil(totalLimit*0.8)}字)まであと${Math.ceil(totalLimit*0.8)-totalChars}字`;
+      if (totalChars > totalLimit) {
         badgeClass = 'over';
-        titleHint = `${charLen - limit}字超過`;
-      } else if (charLen >= Math.ceil(limit * 0.8)) {
+        titleHint = `${totalChars - totalLimit}字超過`;
+      } else if (totalChars >= Math.ceil(totalLimit * 0.8)) {
         badgeClass = 'ok';
-        titleHint = `適正文字数 (${Math.round(charLen/limit*100)}%)`;
+        titleHint = `適正文字数 (${Math.round(totalChars/totalLimit*100)}%)`;
       }
-      charBadge = `<span class="es-char-badge ${badgeClass}" title="${titleHint}">${charLen} / ${limit}字</span>`;
+      charBadge = `<span class="es-char-badge ${badgeClass}" title="${titleHint}">計 ${totalChars} / ${totalLimit}字</span>`;
     } else {
-      charBadge = `<span class="es-char-badge">${charLen}字</span>`;
+      charBadge = `<span class="es-char-badge">計 ${totalChars}字</span>`;
     }
+
+    const qCountBadge = qs.length > 1
+      ? `<span class="tag ind" style="font-size:10.5px;padding:2px 7px;font-weight:800">全 ${qs.length} 設問</span>`
+      : getEsTypeBadge(type);
 
     const statusBadge = es.status === 'submitted'
       ? `<span class="badge-due-normal" style="color:var(--green);border-color:rgba(78,227,154,.4);font-size:11px">● 提出済</span>`
@@ -5135,6 +5432,8 @@
       ? `<span class="es-comp-anchor" onclick="event.stopPropagation();openDetailModal('${comp.id}')" title="企業詳細・選考Timelineを開く">🏢 ${compName}</span>`
       : `<span style="color:var(--sub);font-size:11.5px;font-weight:700">📁 汎用ストック</span>`;
 
+    const qSummary = qs.map((q, i) => `Q${i+1}: ${q.type || '設問'}`).join(' | ');
+
     return `
       <tr class="es-table-row" onclick="openEsModal('${es.id}')">
         <td>
@@ -5143,10 +5442,10 @@
             <span class="es-industry-tag" style="width:fit-content">${ind}</span>
           </div>
         </td>
-        <td>${getEsTypeBadge(type)}</td>
+        <td>${qCountBadge}</td>
         <td>
           <div style="font-weight:700;color:var(--ink);margin-bottom:2px;max-width:320px;overflow:hidden;text-overflow:ellipsis;" title="${es.title}">${es.title}</div>
-          <div style="font-size:11.5px;color:var(--sub);max-width:320px;overflow:hidden;text-overflow:ellipsis;" title="${es.question || ''}">${es.question || es.answer || '（設問未入力）'}</div>
+          <div style="font-size:11.5px;color:var(--sub);max-width:320px;overflow:hidden;text-overflow:ellipsis;" title="${qSummary}">${qSummary}</div>
         </td>
         <td>${charBadge}</td>
         <td>${statusBadge}</td>
@@ -5154,7 +5453,7 @@
         <td style="font-size:11px;color:var(--sub)">${(es.updatedAt || '').slice(0, 10)}</td>
         <td style="text-align:right" onclick="event.stopPropagation()">
           <div style="display:inline-flex;gap:5px;align-items:center">
-            <button class="action-icon-btn" onclick="copyEsAnswer('${es.id}', event)" title="回答本文をコピー">📋</button>
+            <button class="action-icon-btn" onclick="copyEsAnswer('${es.id}', event)" title="全設問・回答を一括コピー">📋</button>
             <button class="action-icon-btn" onclick="openEsModal('${es.id}')" title="編集">✏️</button>
             <button class="action-icon-btn delete" onclick="deleteEs('${es.id}', event)" title="削除">✕</button>
           </div>
@@ -5169,22 +5468,24 @@
     const compName = comp ? comp.name : '汎用ストック';
     const ind = getEsIndustry(es);
     const type = detectEsType(es);
-    const charLen = (es.answer || '').length;
-    const limit = es.characterLimit;
+    const qs = getEsQuestions(es);
+    const totalChars = getEsTotalCharCount(es);
+    const totalLimit = getEsTotalCharLimit(es);
+
     let charBadge = '';
-    if (limit) {
+    if (totalLimit) {
       let badgeClass = 'warn';
-      let titleHint = `8割目安(${Math.ceil(limit*0.8)}字)まであと${Math.ceil(limit*0.8)-charLen}字`;
-      if (charLen > limit) {
+      let titleHint = `8割目安(${Math.ceil(totalLimit*0.8)}字)まであと${Math.ceil(totalLimit*0.8)-totalChars}字`;
+      if (totalChars > totalLimit) {
         badgeClass = 'over';
-        titleHint = `${charLen - limit}字超過`;
-      } else if (charLen >= Math.ceil(limit * 0.8)) {
+        titleHint = `${totalChars - totalLimit}字超過`;
+      } else if (totalChars >= Math.ceil(totalLimit * 0.8)) {
         badgeClass = 'ok';
-        titleHint = `適正文字数 (${Math.round(charLen/limit*100)}%)`;
+        titleHint = `適正文字数 (${Math.round(totalChars/totalLimit*100)}%)`;
       }
-      charBadge = `<span class="es-char-badge ${badgeClass}" title="${titleHint}">${charLen} / ${limit}字</span>`;
+      charBadge = `<span class="es-char-badge ${badgeClass}" title="${titleHint}">計 ${totalChars} / ${totalLimit}字</span>`;
     } else {
-      charBadge = `<span class="es-char-badge">${charLen}字</span>`;
+      charBadge = `<span class="es-char-badge">計 ${totalChars}字</span>`;
     }
 
     const statusBadge = es.status === 'submitted'
@@ -5200,23 +5501,45 @@
       ? `<span class="es-comp-anchor" onclick="event.stopPropagation();openDetailModal('${comp.id}')" title="企業詳細・選考Timelineを開く">🏢 ${compName}</span>`
       : `<span style="color:var(--sub);font-size:11.5px;font-weight:700">📁 汎用ストック</span>`;
 
+    // Multi-question preview blocks (up to 3 questions previewed)
+    const previewCards = qs.slice(0, 3).map((q, i) => {
+      const qLen = (q.answer || '').length;
+      const qLimitStr = q.characterLimit ? ` / ${q.characterLimit}字` : '';
+      return `
+        <div class="es-preview-q-item">
+          <div style="font-weight:700;color:var(--ink);font-size:11.5px;display:flex;justify-content:space-between;margin-bottom:2px">
+            <span>Q${i+1} [${q.type || '設問'}]</span>
+            <span style="color:var(--cyan);font-size:10.5px">${qLen}${qLimitStr}</span>
+          </div>
+          <div style="color:var(--sub);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px">${escapeHtml(q.question || '（設問未入力）')}</div>
+          <div style="color:rgba(240,243,246,.82);font-size:11.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml((q.answer || '（回答未入力）').replace(/\n/g, ' '))}</div>
+        </div>
+      `;
+    }).join('');
+
+    const moreQsNotice = qs.length > 3
+      ? `<div style="font-size:11px;color:var(--cyan);font-weight:700;text-align:center;padding:2px">＋ 他 ${qs.length - 3} 設問（クリックして全問表示・編集）</div>`
+      : '';
+
     return `
       <div class="es-card" onclick="openEsModal('${es.id}')">
         <div class="es-card-head">
           <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
             ${compAnchor}
             <span class="es-industry-tag">${ind}</span>
-            ${getEsTypeBadge(type)}
+            <span class="tag ind" style="font-size:10.5px;font-weight:800">全 ${qs.length} 設問</span>
           </div>
           <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
             ${statusBadge}
-            <button class="action-icon-btn" onclick="copyEsAnswer('${es.id}', event)" title="回答本文をコピー">📋</button>
+            <button class="action-icon-btn" onclick="copyEsAnswer('${es.id}', event)" title="全設問・回答を一括コピー">📋</button>
             <button class="action-icon-btn delete" onclick="deleteEs('${es.id}', event)" title="削除">✕</button>
           </div>
         </div>
         <div class="es-card-title">${es.title}</div>
-        <div class="es-question-box">${es.question || '（設問未入力）'}</div>
-        <div class="es-answer-preview">${(es.answer || '（本文未入力）').replace(/\n/g, ' ')}</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${previewCards}
+          ${moreQsNotice}
+        </div>
         ${storiesHtml ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:2px">${storiesHtml}</div>` : ''}
         <div class="es-meta-bar">
           ${charBadge}
@@ -5403,15 +5726,17 @@
       baseTitle = baseTitle.replace(sourceComp.name, '').trim();
     }
 
+    const sourceQuestions = getEsQuestions(sourceEs);
     const newEs = {
       id: 'es_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
       companyId: targetCompId,
       status: 'draft',
       questionType: sourceEs.questionType || detectEsType(sourceEs),
       title: `${targetCompName} ${baseTitle}`.trim(),
-      question: sourceEs.question || '',
-      answer: sourceEs.answer || '',
-      characterLimit: sourceEs.characterLimit || 400,
+      questions: JSON.parse(JSON.stringify(sourceQuestions)),
+      question: sourceEs.question || (sourceQuestions[0] ? sourceQuestions[0].question : ''),
+      answer: sourceEs.answer || (sourceQuestions[0] ? sourceQuestions[0].answer : ''),
+      characterLimit: sourceEs.characterLimit || (sourceQuestions[0] ? sourceQuestions[0].characterLimit : 400),
       linkedStoryIds: [...(sourceEs.linkedStoryIds || [])],
       tags: [...(sourceEs.tags || []), '複製'],
       createdAt: new Date().toISOString(),
@@ -5430,16 +5755,295 @@
   }
 
   // =========================================================================
-  // ES MODAL (Edit & Create)
+  // ES MODAL (Edit & Create: Multi-Question & Smart Heuristic Parser)
   // =========================================================================
+  const ES_QUESTION_TYPES = ['自己PR', 'ガクチカ', '志望動機', '学業・研究', '長所・短所', 'その他'];
+
+  function toggleEsFastPasteBox() {
+    const content = document.getElementById('esFastPasteContent');
+    const icon = document.getElementById('esFastPasteToggleIcon');
+    if (!content) return;
+    const isHidden = content.style.display === 'none';
+    content.style.display = isHidden ? 'block' : 'none';
+    if (icon) icon.textContent = isHidden ? '▲ 閉じる' : '▼ 展開';
+  }
+
+  function clearEsFastPasteInput() {
+    const inp = document.getElementById('esFastPasteInput');
+    if (inp) inp.value = '';
+  }
+
+  function onParseFastPasteClick() {
+    const raw = document.getElementById('esFastPasteInput')?.value || '';
+    if (!raw.trim()) {
+      showToast('⚠️ 解析するテキストを貼り付けてください');
+      return;
+    }
+    const parsed = smartParseEsPastedText(raw);
+    if (!parsed.length) {
+      showToast('⚠️ 設問を抽出できませんでした');
+      return;
+    }
+
+    renderEsQuestionBlocks(parsed);
+    updateEsModalCharCounts();
+
+    const titleInp = document.getElementById('esModalTitleInput');
+    if (titleInp && !titleInp.value) {
+      const compSelect = document.getElementById('esModalCompany');
+      const compName = compSelect && compSelect.selectedOptions[0] ? compSelect.selectedOptions[0].textContent.replace(/\(.*?\)/, '').trim() : '';
+      titleInp.value = `${compName ? compName + ' ' : ''}本選考 ES（${parsed.length}設問）`.trim();
+    }
+
+    showToast(`⚡ ${parsed.length} 件の設問と回答を自動反映しました！`);
+  }
+
+  function createQuestionBlockHtml(q, idx) {
+    const qId = q.id || ('q_' + (idx + 1) + '_' + Math.random().toString(36).substr(2, 4));
+    const limit = q.characterLimit;
+    const isCustom = limit && ![200, 300, 400, 500, 0].includes(limit);
+    const limitSelectVal = !limit ? '0' : (isCustom ? 'custom' : String(limit));
+
+    const typeOptions = ES_QUESTION_TYPES.map(t => `<option value="${t}" ${q.type === t ? 'selected' : ''}>${t}</option>`).join('');
+
+    return `
+      <div class="es-q-block" data-qid="${qId}" id="block_${qId}">
+        <div class="es-q-block-head">
+          <div class="es-q-num-badge">設問 <span class="es-q-num-text">${idx + 1}</span></div>
+          <select class="form-select es-q-type-select" style="width:130px;padding:3px 8px;font-size:11.5px">
+            ${typeOptions}
+          </select>
+          <select class="form-select es-q-limit-select" style="width:110px;padding:3px 8px;font-size:11.5px" onchange="onEsBlockLimitChange(this)">
+            <option value="200" ${limitSelectVal === '200' ? 'selected' : ''}>200字以内</option>
+            <option value="300" ${limitSelectVal === '300' ? 'selected' : ''}>300字以内</option>
+            <option value="400" ${limitSelectVal === '400' ? 'selected' : ''}>400字以内</option>
+            <option value="500" ${limitSelectVal === '500' ? 'selected' : ''}>500字以内</option>
+            <option value="custom" ${limitSelectVal === 'custom' ? 'selected' : ''}>カスタム指定</option>
+            <option value="0" ${limitSelectVal === '0' ? 'selected' : ''}>上限なし</option>
+          </select>
+          <input type="number" class="form-input es-q-custom-limit" style="width:75px;padding:3px 8px;font-size:11.5px;display:${isCustom ? 'inline-block' : 'none'}" placeholder="字数" value="${isCustom ? limit : ''}" oninput="updateEsModalCharCounts()" />
+          <div class="es-q-actions">
+            <button type="button" class="action-icon-btn" onclick="moveEsBlock('${qId}', -1)" title="上へ移動">▲</button>
+            <button type="button" class="action-icon-btn" onclick="moveEsBlock('${qId}', 1)" title="下へ移動">▼</button>
+            <button type="button" class="action-icon-btn" onclick="copySingleQuestionAnswer('${qId}')" title="この設問の回答をコピー">📋</button>
+            <button type="button" class="action-icon-btn delete" onclick="removeEsQuestionBlock('${qId}')" title="この設問を削除">✕</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label" style="font-size:11.5px;margin-bottom:3px;color:var(--sub)">設問内容（Question）</label>
+          <textarea class="form-textarea es-q-prompt-input" rows="2" placeholder="例: 学生時代に最も情熱を持って取り組んだこと（400字以内）" style="font-size:12px;min-height:46px">${escapeHtml(q.question || '')}</textarea>
+        </div>
+
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+            <label class="form-label" style="font-size:11.5px;margin-bottom:0;color:var(--sub)">回答本文（Answer）</label>
+            <span class="es-q-counter-pill" id="counter_${qId}" style="color:var(--ink)">0 字</span>
+          </div>
+          <textarea class="form-textarea es-q-answer-input" rows="5" placeholder="回答文を入力してください…" style="line-height:1.6;font-size:12.5px" oninput="updateEsModalCharCounts()">${escapeHtml(q.answer || '')}</textarea>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderEsQuestionBlocks(questions) {
+    const container = document.getElementById('esQuestionsContainer');
+    if (!container) return;
+    if (!questions || !questions.length) {
+      questions = [{ id: 'q_' + Date.now(), type: '自己PR', question: '', answer: '', characterLimit: 400 }];
+    }
+    container.innerHTML = questions.map((q, idx) => createQuestionBlockHtml(q, idx)).join('');
+    updateEsModalCharCounts();
+  }
+
+  function addEsQuestionBlock(data = null) {
+    const container = document.getElementById('esQuestionsContainer');
+    if (!container) return;
+    const count = container.querySelectorAll('.es-q-block').length;
+    const defaultData = data || {
+      id: 'q_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+      type: '志望動機',
+      question: '',
+      answer: '',
+      characterLimit: 400
+    };
+    const div = document.createElement('div');
+    div.innerHTML = createQuestionBlockHtml(defaultData, count);
+    const newEl = div.firstElementChild;
+    container.appendChild(newEl);
+    renumberEsBlocks();
+    updateEsModalCharCounts();
+    newEl.querySelector('.es-q-prompt-input')?.focus();
+  }
+
+  function removeEsQuestionBlock(qId) {
+    const block = document.getElementById(`block_${qId}`);
+    if (!block) return;
+    const container = document.getElementById('esQuestionsContainer');
+    const remaining = container.querySelectorAll('.es-q-block').length;
+    if (remaining <= 1) {
+      block.querySelector('.es-q-prompt-input').value = '';
+      block.querySelector('.es-q-answer-input').value = '';
+      block.querySelector('.es-q-type-select').value = '自己PR';
+      block.querySelector('.es-q-limit-select').value = '400';
+      block.querySelector('.es-q-custom-limit').style.display = 'none';
+      updateEsModalCharCounts();
+      return;
+    }
+    block.remove();
+    renumberEsBlocks();
+    updateEsModalCharCounts();
+  }
+
+  function moveEsBlock(qId, direction) {
+    const block = document.getElementById(`block_${qId}`);
+    if (!block) return;
+    if (direction === -1 && block.previousElementSibling) {
+      block.parentNode.insertBefore(block, block.previousElementSibling);
+    } else if (direction === 1 && block.nextElementSibling) {
+      block.parentNode.insertBefore(block.nextElementSibling, block);
+    }
+    renumberEsBlocks();
+  }
+
+  function renumberEsBlocks() {
+    const blocks = document.querySelectorAll('#esQuestionsContainer .es-q-block');
+    blocks.forEach((b, idx) => {
+      const numSpan = b.querySelector('.es-q-num-text');
+      if (numSpan) numSpan.textContent = idx + 1;
+    });
+  }
+
+  function onEsBlockLimitChange(selectEl) {
+    const block = selectEl.closest('.es-q-block');
+    if (!block) return;
+    const customInp = block.querySelector('.es-q-custom-limit');
+    if (selectEl.value === 'custom') {
+      customInp.style.display = 'inline-block';
+      customInp.focus();
+    } else {
+      customInp.style.display = 'none';
+    }
+    updateEsModalCharCounts();
+  }
+
+  function updateEsModalCharCounts() {
+    const blocks = document.querySelectorAll('#esQuestionsContainer .es-q-block');
+    let totalChars = 0;
+    let totalLimit = 0;
+
+    blocks.forEach(block => {
+      const qId = block.dataset.qid;
+      const ans = block.querySelector('.es-q-answer-input')?.value || '';
+      const len = ans.length;
+      totalChars += len;
+
+      const limitSelect = block.querySelector('.es-q-limit-select')?.value;
+      let limit = null;
+      if (limitSelect === 'custom') {
+        limit = parseInt(block.querySelector('.es-q-custom-limit')?.value) || null;
+      } else if (limitSelect && limitSelect !== '0') {
+        limit = parseInt(limitSelect) || null;
+      }
+      if (limit) totalLimit += limit;
+
+      const counter = document.getElementById(`counter_${qId}`);
+      if (!counter) return;
+
+      if (limit) {
+        const minRec = Math.ceil(limit * 0.8);
+        if (len > limit) {
+          const over = len - limit;
+          counter.innerHTML = `<span style="color:var(--red);font-weight:800">${len}</span> / ${limit} 字 <span style="color:var(--red);font-size:10.5px;font-weight:700">⚠️ ${over}字超過</span>`;
+        } else if (len >= minRec) {
+          const pct = Math.round((len / limit) * 100);
+          counter.innerHTML = `<span style="color:var(--green);font-weight:800">${len}</span> / ${limit} 字 <span style="color:var(--green);font-size:10.5px;font-weight:700">✓ 適正 (${pct}%)・残${limit - len}字</span>`;
+        } else {
+          const diff = minRec - len;
+          counter.innerHTML = `<span style="color:var(--gold-2);font-weight:800">${len}</span> / ${limit} 字 <span style="color:var(--sub);font-size:10.5px">(8割まであと${diff}字)</span>`;
+        }
+      } else {
+        counter.innerHTML = `<span style="font-weight:800">${len}</span> 文字`;
+      }
+    });
+
+    const summaryPill = document.getElementById('esModalSummaryPill');
+    if (summaryPill) {
+      summaryPill.textContent = `全 ${blocks.length} 設問 / 計 ${totalChars} 字${totalLimit ? ` (上限 ${totalLimit} 字)` : ''}`;
+    }
+  }
+
+  function copySingleQuestionAnswer(qId) {
+    const block = document.getElementById(`block_${qId}`);
+    if (!block) return;
+    const ans = block.querySelector('.es-q-answer-input')?.value || '';
+    if (!ans) {
+      showToast('コピーする回答本文がありません');
+      return;
+    }
+    const num = block.querySelector('.es-q-num-text')?.textContent || '';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(ans).then(() => {
+        showToast(`📋 設問 ${num} の回答をコピーしました`);
+      }).catch(() => {
+        fallbackCopyText(ans, `設問 ${num}`);
+      });
+    } else {
+      fallbackCopyText(ans, `設問 ${num}`);
+    }
+  }
+
+  function copyCurrentEsFullText() {
+    const title = document.getElementById('esModalTitleInput')?.value || 'エントリーシート';
+    const compSelect = document.getElementById('esModalCompany');
+    const compName = compSelect && compSelect.selectedOptions[0] ? compSelect.selectedOptions[0].textContent.replace(/\(.*?\)/, '').trim() : '汎用';
+
+    const blocks = document.querySelectorAll('#esQuestionsContainer .es-q-block');
+    const qs = [];
+    blocks.forEach(b => {
+      const type = b.querySelector('.es-q-type-select')?.value || '';
+      const prompt = b.querySelector('.es-q-prompt-input')?.value || '';
+      const ans = b.querySelector('.es-q-answer-input')?.value || '';
+      const limitSel = b.querySelector('.es-q-limit-select')?.value;
+      let limit = 0;
+      if (limitSel === 'custom') {
+        limit = parseInt(b.querySelector('.es-q-custom-limit')?.value) || 0;
+      } else if (limitSel && limitSel !== '0') {
+        limit = parseInt(limitSel) || 0;
+      }
+      qs.push({ type, question: prompt, answer: ans, characterLimit: limit });
+    });
+
+    const mockEs = { title, companyId: null, questions: qs };
+    const textToCopy = formatEsForClipboard(mockEs);
+    if (!textToCopy) {
+      showToast('コピーする内容がありません');
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        showToast(`📋 全設問・回答を一括コピーしました`);
+      }).catch(() => {
+        fallbackCopyText(textToCopy, title);
+      });
+    } else {
+      fallbackCopyText(textToCopy, title);
+    }
+  }
+
   function openEsModal(esId = null, prefillCompanyId = null) {
     if (!esId && !requireAuth('新規ESの作成')) return;
-    if (!esId && !requireAuth('新規ESエントリーシートの作成')) return;
     currentEsEditId = esId;
     const titleHead = document.getElementById('esModalTitle');
     const compSelect = document.getElementById('esModalCompany');
     const delBtn = document.getElementById('esModalDeleteBtn');
-    const typeSelect = document.getElementById('esModalTypeSelect');
+
+    // Reset fast paste box
+    clearEsFastPasteInput();
+    const fastPasteContent = document.getElementById('esFastPasteContent');
+    const fastPasteIcon = document.getElementById('esFastPasteToggleIcon');
+    if (fastPasteContent) fastPasteContent.style.display = 'none';
+    if (fastPasteIcon) fastPasteIcon.textContent = '▼ 展開';
 
     // Populate company selector
     compSelect.innerHTML = '<option value="">（未指定・汎用テンプレート）</option>';
@@ -5453,6 +6057,7 @@
     });
 
     let activeStoryIds = [];
+    let initialQuestions = [];
 
     if (esId) {
       const es = esList.find(x => x.id === esId);
@@ -5461,39 +6066,23 @@
       document.getElementById('esId').value = es.id;
       compSelect.value = es.companyId || '';
       document.getElementById('esModalStatus').value = es.status || 'draft';
-      if (typeSelect) typeSelect.value = es.questionType || detectEsType(es);
       document.getElementById('esModalTitleInput').value = es.title || '';
-      document.getElementById('esModalQuestion').value = es.question || '';
-      document.getElementById('esModalAnswer').value = es.answer || '';
       document.getElementById('esModalTags').value = (es.tags || []).join(', ');
-
-      const limit = es.characterLimit;
-      if (limit === null || limit === undefined || limit === 0) {
-        document.getElementById('esModalLimit').value = '0';
-      } else if ([200, 300, 400, 500].includes(limit)) {
-        document.getElementById('esModalLimit').value = String(limit);
-      } else {
-        document.getElementById('esModalLimit').value = 'custom';
-        document.getElementById('esCustomLimitInput').value = limit;
-      }
       activeStoryIds = es.linkedStoryIds || [];
+      initialQuestions = getEsQuestions(es);
       if (delBtn) delBtn.style.display = 'inline-block';
     } else {
       titleHead.textContent = '📝 新規ES作成';
       document.getElementById('esId').value = '';
       if (prefillCompanyId) compSelect.value = prefillCompanyId;
       document.getElementById('esModalStatus').value = 'draft';
-      if (typeSelect) typeSelect.value = '自己PR';
       document.getElementById('esModalTitleInput').value = '';
-      document.getElementById('esModalLimit').value = '400';
-      document.getElementById('esModalQuestion').value = '';
-      document.getElementById('esModalAnswer').value = '';
       document.getElementById('esModalTags').value = '';
+      initialQuestions = [{ id: 'q_' + Date.now(), type: '自己PR', question: '', answer: '', characterLimit: 400 }];
       if (delBtn) delBtn.style.display = 'none';
     }
 
-    onEsModalLimitChange(document.getElementById('esModalLimit').value);
-    updateEsModalCharCount();
+    renderEsQuestionBlocks(initialQuestions);
 
     // Render Story Picker Checkboxes
     const picker = document.getElementById('esModalStoriesPicker');
@@ -5516,64 +6105,53 @@
     openModal('esModal');
   }
 
-  function onEsModalLimitChange(val) {
-    const customGroup = document.getElementById('esCustomLimitGroup');
-    if (val === 'custom') {
-      customGroup.style.display = 'block';
-    } else {
-      customGroup.style.display = 'none';
-    }
-    updateEsModalCharCount();
-  }
-
-  function updateEsModalCharCount() {
-    const ans = document.getElementById('esModalAnswer')?.value || '';
-    const len = ans.length;
-    const limitSelect = document.getElementById('esModalLimit')?.value;
-    let limit = null;
-    if (limitSelect === 'custom') {
-      limit = parseInt(document.getElementById('esCustomLimitInput')?.value) || null;
-    } else if (limitSelect && limitSelect !== '0') {
-      limit = parseInt(limitSelect) || null;
-    }
-
-    const counter = document.getElementById('esModalCharCounter');
-    if (!counter) return;
-
-    if (limit) {
-      const minRecommended = Math.ceil(limit * 0.8);
-      if (len > limit) {
-        const over = len - limit;
-        counter.innerHTML = `<span style="color:var(--red);font-weight:800">${len}</span> / ${limit} 字 <span style="color:var(--red);font-size:11px;font-weight:700">⚠️ ${over}字超過</span>`;
-      } else if (len >= minRecommended) {
-        const pct = Math.round((len / limit) * 100);
-        counter.innerHTML = `<span style="color:var(--green);font-weight:800">${len}</span> / ${limit} 字 <span style="color:var(--green);font-size:11px;font-weight:700">✓ 適正 (${pct}%)・残り${limit - len}字</span>`;
-      } else {
-        const diff = minRecommended - len;
-        counter.innerHTML = `<span style="color:var(--gold-2);font-weight:800">${len}</span> / ${limit} 字 <span style="color:var(--sub);font-size:11px">(8割目安まであと${diff}字)</span>`;
-      }
-    } else {
-      counter.textContent = `${len} 文字`;
-    }
-  }
-
   function saveCurrentEs() {
     if (!requireAuth('ESの保存・編集')) return;
     const companyId = document.getElementById('esModalCompany').value || null;
     const status = document.getElementById('esModalStatus').value;
-    const questionType = document.getElementById('esModalTypeSelect')?.value || 'その他';
     const title = document.getElementById('esModalTitleInput').value.trim();
-    const question = document.getElementById('esModalQuestion').value.trim();
-    const answer = document.getElementById('esModalAnswer').value;
     const tagsStr = document.getElementById('esModalTags').value;
     const tags = tagsStr.split(/[,、]/).map(t => t.trim()).filter(Boolean);
 
-    const limitSelect = document.getElementById('esModalLimit').value;
-    let characterLimit = null;
-    if (limitSelect === 'custom') {
-      characterLimit = parseInt(document.getElementById('esCustomLimitInput').value) || null;
-    } else if (limitSelect && limitSelect !== '0') {
-      characterLimit = parseInt(limitSelect) || null;
+    // Read all questions from the dynamic container
+    const qBlocks = document.querySelectorAll('#esQuestionsContainer .es-q-block');
+    const questions = [];
+
+    qBlocks.forEach((block, idx) => {
+      const qId = block.dataset.qid || ('q_' + (idx + 1) + '_' + Math.random().toString(36).substr(2, 4));
+      const type = block.querySelector('.es-q-type-select')?.value || 'その他';
+      const questionText = block.querySelector('.es-q-prompt-input')?.value.trim() || '';
+      const answerText = block.querySelector('.es-q-answer-input')?.value || '';
+      
+      const limitSelect = block.querySelector('.es-q-limit-select');
+      let limit = null;
+      if (limitSelect) {
+        if (limitSelect.value === 'custom') {
+          limit = parseInt(block.querySelector('.es-q-custom-limit')?.value, 10) || null;
+        } else if (limitSelect.value !== '0') {
+          limit = parseInt(limitSelect.value, 10) || null;
+        }
+      }
+
+      if (questionText || answerText) {
+        questions.push({
+          id: qId,
+          type: type,
+          question: questionText,
+          answer: answerText,
+          characterLimit: limit
+        });
+      }
+    });
+
+    if (!title) {
+      alert('タイトルを入力してください');
+      return;
+    }
+
+    if (questions.length === 0) {
+      alert('少なくとも1つの設問または回答を入力してください');
+      return;
     }
 
     // Selected Stories
@@ -5582,23 +6160,22 @@
       selectedStories.push(cb.value);
     });
 
-    if (!title) {
-      alert('タイトルを入力してください');
-      return;
-    }
-
     const now = new Date().toISOString();
+    const primaryQ = questions[0] || {};
+    const totalLimit = questions.reduce((acc, q) => acc + (q.characterLimit || 0), 0);
 
     if (currentEsEditId) {
       const es = esList.find(x => x.id === currentEsEditId);
       if (es) {
         es.companyId = companyId;
         es.status = status;
-        es.questionType = questionType;
         es.title = title;
-        es.question = question;
-        es.answer = answer;
-        es.characterLimit = characterLimit;
+        es.questions = questions;
+        // Backward-compatible fallback fields
+        es.questionType = primaryQ.type || 'その他';
+        es.question = primaryQ.question || '';
+        es.answer = primaryQ.answer || '';
+        es.characterLimit = totalLimit || primaryQ.characterLimit || null;
         es.linkedStoryIds = selectedStories;
         es.tags = tags;
         es.updatedAt = now;
@@ -5609,11 +6186,12 @@
         id: 'es_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
         companyId,
         status,
-        questionType,
         title,
-        question,
-        answer,
-        characterLimit,
+        questions,
+        questionType: primaryQ.type || 'その他',
+        question: primaryQ.question || '',
+        answer: primaryQ.answer || '',
+        characterLimit: totalLimit || primaryQ.characterLimit || null,
         linkedStoryIds: selectedStories,
         tags,
         submittedAt: status === 'submitted' ? now : null,
@@ -5650,7 +6228,6 @@
   function deleteEs(esId, e) {
     if (e) e.stopPropagation();
     if (!requireAuth('ESの削除')) return;
-    if (e) e.stopPropagation();
     if (!confirm('このESを削除しますか？')) return;
     const es = esList.find(x => x.id === esId);
     const compId = es ? es.companyId : null;
