@@ -1,0 +1,6 @@
+# Linguist language detection overrides
+app.js linguist-detectable=true linguist-vendored=false
+style.css linguist-detectable=true linguist-vendored=false
+data/companies_catalog.js linguist-detectable=true linguist-vendored=false
+data/radar_feed.js linguist-detectable=true linguist-vendored=false
+index.html linguist-detectable=true

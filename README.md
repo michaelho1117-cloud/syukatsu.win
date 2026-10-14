@@ -16,7 +16,7 @@
   <img src="https://img.shields.io/badge/BaaS-Supabase_Auth_%26_PostgreSQL-3ecf8e?style=flat-square&logo=supabase&logoColor=white" alt="Supabase">
   <img src="https://img.shields.io/badge/Platform-PWA_Ready-8b7bff?style=flat-square" alt="PWA">
   <img src="https://img.shields.io/badge/Enterprise_DB-1%2C770%2B_Companies-4ee39a?style=flat-square" alt="Database">
-  <img src="https://img.shields.io/badge/License-MIT-gray?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/License-All_Rights_Reserved-red?style=flat-square" alt="All Rights Reserved">
 </p>
 
 ---
@@ -195,8 +195,12 @@ python -m http.server 8000
 
 ---
 
-## 📄 ライセンス
+## 📄 版権および利用規約（All Rights Reserved）
 
-本プロジェクトは [MIT License](LICENSE) のもとで公開されています。
-企画・開発：**michaelho1117-cloud**
+Copyright (c) 2026 syukatsu.win / michaelho1117-cloud. All Rights Reserved.
+
+本リポジトリに掲載されているソースコード、システム設計、画面レイアウト、および企業データベース（1,770社以上の属性・待遇データを含む）の全著作権は **syukatsu.win / michaelho1117-cloud** に帰属します。
+
+本プロジェクトは就職活動における**ポートフォリオ・実績評価（Portfolio & Evaluation）**の目的でのみ限定的に公開されています。著作権者の書面による事前の許諾なく、本ソフトウェアおよびデータの全部または一部を複製、改変、転載、再配布、リバースエンジニアリング、または商用目的で利用することを固く禁じます。
+
 Production URL: [https://syukatsu.win](https://syukatsu.win)
