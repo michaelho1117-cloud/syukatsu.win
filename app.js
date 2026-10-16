@@ -78,6 +78,9 @@
     { id:'c_gmo', name:'GMOインターネットグループ', code:'9449', domain:'gmo.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'Webサービス/インフラ', emp:7500, empNote:'連結', payBachelor:260000, payMaster:279000, avgAnnual:830, color:'#009fce', added:false, stage:'watch', loc:'東京/全国', tags:["ネットインフラ", "ドメイン・ホスティング", "FinTech"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_shift', name:'SHIFT', code:'3697', domain:'shiftinc.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'ソフトウェアテスト', emp:12000, empNote:'連結', payBachelor:280000, payMaster:300000, avgAnnual:620, color:'#0b8a3e', added:false, stage:'watch', loc:'東京/全国', tags:["ソフトウェアテスト", "品質保証DX", "超急成長"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_rakus', name:'ラクス', code:'3923', domain:'rakus.co.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SaaS', emp:2600, empNote:'連結', payBachelor:280000, payMaster:301000, avgAnnual:650, color:'#e8380d', added:false, stage:'watch', loc:'東京/全国', tags:["楽楽精算", "SaaS", "バックオフィスDX", "高収益"], due:'', dueLabel:'', dueLv:'' },
+    { id:'c_unlisted_docomo_smtb_netbk', name:'ドコモSMTBネット銀行', code:null, domain:'netbk.co.jp', ind17:'金融（除く銀行）', cat:'金融', sub:'ネット銀行・BaaS・FinTech', emp:1200, empNote:'単体', payBachelor:400000, payMaster:420000, avgAnnual:920, color:'#003b8e', added:false, stage:'watch', loc:'東京', tags:['ネット銀行', 'FinTech', 'BaaS', 'NTTドコモ系', '高初任給', '旧住信SBI'], due:'', dueLabel:'', dueLv:'', popRank:145, popBadge:'注目企業' },
+    { id:'c_unlisted_fujifilm_bi', name:'富士フイルムビジネスイノベーション', code:null, domain:'fujifilm.com', ind17:'情報通信・サービスその他', cat:'IT・通信', sub:'ドキュメントDX・複合機・クラウド・メーカー系SIer', emp:6500, empNote:'単体(連結3.6万)', payBachelor:255000, payMaster:279000, avgAnnual:750, color:'#009a44', added:false, stage:'watch', loc:'東京/全国', tags:['メーカー系SIer', '旧富士ゼロックス', '富士フイルム系', 'ドキュメントDX'], due:'', dueLabel:'', dueLv:'', popRank:210, popBadge:'大手優良' },
+    { id:'c_unlisted_canon_its', name:'キヤノンITソリューションズ', code:null, domain:'canon-its.co.jp', ind17:'情報通信・サービスその他', cat:'IT・通信', sub:'EDI・セキュリティ・製造/金融SIer', emp:4200, empNote:'単体', payBachelor:250000, payMaster:270000, avgAnnual:760, color:'#cc0000', added:false, stage:'watch', loc:'東京', tags:['メーカー系SIer', 'キヤノン系', 'サイバーセキュリティ', 'EDI首位'], due:'', dueLabel:'', dueLv:'', popRank:470, popBadge:'大手優良' },
     { id:'c_sansan', name:'Sansan', code:'4443', domain:'sansan.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SaaS', emp:1600, empNote:'単体', payBachelor:330000, payMaster:350000, avgAnnual:750, color:'#e60012', added:false, stage:'watch', loc:'東京/全国', tags:["名刺管理", "Bill One", "営業DX", "SaaS"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_moneyforward', name:'マネーフォワード', code:'3994', domain:'moneyforward.com', ind17:'情報通信・サービス', cat:'IT・通信', sub:'SaaS/FinTech', emp:2400, empNote:'単体', payBachelor:320000, payMaster:340000, avgAnnual:720, color:'#2f80ed', added:false, stage:'watch', loc:'東京/全国', tags:["マネーフォワードME", "クラウド会計", "FinTech", "SaaS"], due:'', dueLabel:'', dueLv:'' },
     { id:'c_lycorp', name:'LINEヤフー', code:'4689', domain:'lycorp.co.jp', ind17:'情報通信・サービス', cat:'IT・通信', sub:'Webサービス', emp:11500, empNote:'単体(連結2.8万)', payBachelor:300000, payMaster:325000, avgAnnual:820, color:'#06c755', added:false, stage:'watch', loc:'東京/全国', tags:["LINE", "Yahoo! JAPAN", "PayPay", "国内最大トラフィック"], due:'', dueLabel:'', dueLv:'' },
@@ -2369,7 +2372,8 @@
 
   function normalizeSearchText(str) {
     if (!str) return '';
-    return toKatakana(String(str).normalize('NFKC').toLowerCase());
+    const norm = toKatakana(String(str).normalize('NFKC').toLowerCase());
+    return norm.replace(/キャ/g, 'キヤ').replace(/フィルム/g, 'フイルム');
   }
 
   function stripNoise(str) {
@@ -2381,6 +2385,11 @@
   }
 
   const KNOWN_ALIASES = {
+    c_unlisted_docomo_smtb_netbk: ['住信sbiネット銀行', '住信sbi', '住信', 'sbiネット銀行', 'netbk', 'ドコモsmtbネット銀行', 'ドコモ銀行', '7163', 'smtb', 'sbiネット', 'ネオバンク', 'docomo smtb'],
+    c_unlisted_fujifilm_bi: ['富士フイルムビジネスイノベーション', '富士フィルムビジネスイノベーション', '富士ゼロックス', 'fujixerox', 'fuji xerox', '富士フイルムbi', '富士フィルムbi', 'fb', 'ゼロックス'],
+    c_unlisted_canon_its: ['キヤノンit', 'キャノンit', 'キャノン', 'cits', 'canon its', 'キヤノンits', 'キャノンits'],
+    c_canon: ['キヤノン', 'キャノン', 'canon'],
+    c_4901: ['富士フイルム', '富士フィルム', 'fujifilm', '富士フイルムホールディングス', '富士フィルムホールディングス'],
     c_meiji_yasuda: ['明治安田', '明治安田生命', 'meiji yasuda', '明治安田 internship', '明治安田生命保険'],
     c_unlisted_nttdocomo: ['nttドコモ', 'docomo', 'ドコモ', 'nttdocomo'],
     c_unlisted_bdx: ['bdx', 'b&dx', 'ビーディーエックス', 'b and dx'],
