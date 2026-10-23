@@ -185,6 +185,7 @@
       const savedTasks = localStorage.getItem(privateTasksKey);
       currentTasks = savedTasks ? JSON.parse(savedTasks) : JSON.parse(JSON.stringify(DEFAULT_TASKS));
       rebuildCatalogIndex();
+      if (typeof cleanupAndSyncAllEvents === 'function') cleanupAndSyncAllEvents();
 
     } catch (e) {
       console.error('Storage load error:', e);
@@ -196,6 +197,7 @@
 
   function saveAll() {
     rebuildCatalogIndex();
+    if (typeof cleanupAndSyncAllEvents === 'function') cleanupAndSyncAllEvents();
     if (!currentAuthUser) {
       // 未ログイン状態ではローカル保存や上書きを防止
       return;
@@ -887,23 +889,20 @@
 
       catalog = catalog.filter(c => !c.id.startsWith('c_custom_acc_'));
 
-      // 从云端 tags 恢复选考日程事件（待办事项）
+      // 从云端 tags 恢复选考日程事件（待办事项，以云端为权威覆盖）
       (cloudItems || []).forEach(item => {
-        if (!item.tags || DUMMY_SEED_IDS.has(item.company_id)) return;
+        if (!item.company_id || DUMMY_SEED_IDS.has(item.company_id)) return;
         const parsed = parseCloudItemTags(item.tags);
+        selectionEvents = selectionEvents.filter(e => e.companyId !== item.company_id);
         if (parsed.cloudEvents && parsed.cloudEvents.length > 0) {
           parsed.cloudEvents.forEach(cev => {
-            const existingIdx = selectionEvents.findIndex(e => e.id === cev.id);
-            if (existingIdx !== -1) {
-              selectionEvents[existingIdx] = Object.assign({}, selectionEvents[existingIdx], cev);
-            } else {
-              selectionEvents.push(cev);
-            }
+            selectionEvents.push(Object.assign({}, cev, { companyId: cev.companyId || item.company_id }));
           });
         }
       });
 
       selectionEvents = selectionEvents.filter(e => !DUMMY_SEED_IDS.has(e.companyId));
+      if (typeof cleanupAndSyncAllEvents === 'function') cleanupAndSyncAllEvents();
       saveAll();
       renderAll();
       if (currentView === 'mypage') renderMyPageTable();
@@ -1553,17 +1552,24 @@
     const countEl = document.getElementById('calMonthEventCount');
     if (!gridEl || !monthLabel) return;
 
+    if (typeof cleanupAndSyncAllEvents === 'function') cleanupAndSyncAllEvents();
+
     monthLabel.textContent = `${calYear}年 ${calMonth + 1}月`;
 
-    // Gather all events mapped by YYYY-MM-DD
+    const curMonthPrefix = `${calYear}-${String(calMonth + 1).padStart(2, '0')}`;
+    const todayStr = getLocalTodayStr();
+
+    // Gather all active upcoming events mapped by YYYY-MM-DD
     const eventsByDate = {};
     let monthEventTotal = 0;
 
-    // From selectionEvents
+    // From selectionEvents (exclude completed, past, or inactive company events)
     selectionEvents.forEach(ev => {
+      if (isSelectionEventEnded(ev)) return;
       const dt = ev.due || ev.datetime;
       if (!dt) return;
-      const dateKey = dt.slice(0, 10);
+      const dateKey = normalizeDateKey(dt);
+      if (!dateKey || dateKey < todayStr) return;
       if (!eventsByDate[dateKey]) eventsByDate[dateKey] = [];
       eventsByDate[dateKey].push({
         id: ev.id,
@@ -1576,9 +1582,11 @@
       });
     });
 
-    // From added companies with c.due if not already mapped
-    catalog.filter(c => c.added && c.due).forEach(c => {
-      const dKey = c.due.slice(0, 10);
+    // From added companies with c.due if company has no selectionEvents and due date is active
+    catalog.filter(c => c.added && c.stage !== 'rejected' && c.due).forEach(c => {
+      if (selectionEvents.some(e => e.companyId === c.id)) return;
+      const dKey = normalizeDateKey(c.due);
+      if (!dKey || dKey < todayStr) return;
       if (!eventsByDate[dKey]) eventsByDate[dKey] = [];
       const alreadyHas = eventsByDate[dKey].some(e => e.companyId === c.id);
       if (!alreadyHas) {
@@ -1595,9 +1603,6 @@
     });
 
     // Auto-select date in month: 当月なら今日、他月ならイベント初日または1日
-    const curMonthPrefix = `${calYear}-${String(calMonth + 1).padStart(2, '0')}`;
-    const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
     if (!selectedCalDate || !selectedCalDate.startsWith(curMonthPrefix)) {
       if (todayStr.startsWith(curMonthPrefix)) {
@@ -2024,29 +2029,123 @@
     };
   }
 
+  function getLocalTodayStr() {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  }
+
+  function normalizeDateKey(dtStr) {
+    if (!dtStr) return '';
+    const m = String(dtStr).trim().match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+    if (!m) return String(dtStr).slice(0, 10);
+    return `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
+  }
+
+  function isSelectionEventEnded(ev) {
+    if (!ev) return true;
+    if (ev.status === 'completed' || ev.status === 'cancelled' || ev.status === 'dismissed') return true;
+    const comp = getCompanyById(ev.companyId);
+    if (!comp || !comp.added || comp.stage === 'rejected') return true;
+    const dt = (ev.datetime || ev.due || '').trim();
+    if (!dt) return false;
+    const dateKey = normalizeDateKey(dt);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) return false;
+    return dateKey < getLocalTodayStr();
+  }
+
+  function syncCompanyPrimaryDue(companyId) {
+    if (!companyId) return;
+    const todayStr = getLocalTodayStr();
+    selectionEvents.forEach(ev => {
+      if (ev && ev.companyId === companyId && ev.status !== 'completed') {
+        const dKey = normalizeDateKey(ev.datetime || ev.due);
+        if (dKey && /^\d{4}-\d{2}-\d{2}$/.test(dKey) && dKey < todayStr) {
+          ev.status = 'completed';
+        }
+      }
+    });
+
+    const c = getCompanyById(companyId);
+    if (!c) return;
+    if (!c.added || c.stage === 'rejected') {
+      c.due = '';
+      c.dueLabel = '';
+      c.dueLv = '';
+      return;
+    }
+
+    const activeEvents = selectionEvents.filter(e => e && e.companyId === companyId && !isSelectionEventEnded(e));
+    if (activeEvents.length > 0) {
+      activeEvents.sort((a, b) => (a.datetime || a.due || '').localeCompare(b.datetime || b.due || ''));
+      const primary = activeEvents[0];
+      c.due = normalizeDateKey(primary.datetime || primary.due);
+      c.dueLabel = primary.title || '選考締切';
+    } else if (selectionEvents.some(e => e && e.companyId === companyId)) {
+      c.due = '';
+      c.dueLabel = '';
+      c.dueLv = '';
+    } else if (c.due) {
+      const dKey = normalizeDateKey(c.due);
+      if (dKey && /^\d{4}-\d{2}-\d{2}$/.test(dKey) && dKey < todayStr) {
+        c.due = '';
+        c.dueLabel = '';
+        c.dueLv = '';
+      }
+    }
+
+    if (typeof currentModalComp !== 'undefined' && currentModalComp && currentModalComp.id === companyId) {
+      const mDueEl = document.getElementById('mDue');
+      const mDueLabelEl = document.getElementById('mDueLabel');
+      if (mDueEl) mDueEl.value = c.due || '';
+      if (mDueLabelEl) mDueLabelEl.value = c.dueLabel || '';
+    }
+  }
+
+  function cleanupAndSyncAllEvents() {
+    const todayStr = getLocalTodayStr();
+    selectionEvents.forEach(ev => {
+      if (ev && ev.status !== 'completed') {
+        const dKey = normalizeDateKey(ev.datetime || ev.due);
+        if (dKey && /^\d{4}-\d{2}-\d{2}$/.test(dKey) && dKey < todayStr) {
+          ev.status = 'completed';
+        }
+      }
+    });
+    if (Array.isArray(catalog)) {
+      catalog.forEach(c => {
+        if (c && c.id) syncCompanyPrimaryDue(c.id);
+      });
+    }
+  }
+
   function getCompanyUpcomingEvents(companyId, limit = 2) {
-    const events = selectionEvents.filter(e => e.companyId === companyId && e.status === 'upcoming');
+    const todayStr = getLocalTodayStr();
+    const events = selectionEvents.filter(e => e && e.companyId === companyId && !isSelectionEventEnded(e));
     if (!events.length) {
       const c = getCompanyById(companyId);
-      if (c && c.due) {
-        const dueInfo = getDueStatus(c);
-        return [{
-          hasEvent: false,
-          type: detectEventType(c.dueLabel),
-          title: c.dueLabel || '選考締切',
-          datetime: c.due,
-          dueText: dueInfo.text || c.due,
-          badgeCls: dueInfo.cls || 'normal',
-          badgeText: dueInfo.badge || '',
-          days: dueInfo.days,
-          totalUpcomingCount: 1
-        }];
+      const hasAnyEvents = selectionEvents.some(e => e && e.companyId === companyId);
+      if (!hasAnyEvents && c && c.added && c.stage !== 'rejected' && c.due) {
+        const dKey = normalizeDateKey(c.due);
+        if (dKey && dKey >= todayStr) {
+          const dueInfo = getDueStatus(c);
+          return [{
+            hasEvent: false,
+            type: detectEventType(c.dueLabel),
+            title: c.dueLabel || '選考締切',
+            datetime: c.due,
+            dueText: dueInfo.text || c.due,
+            badgeCls: dueInfo.cls || 'normal',
+            badgeText: dueInfo.badge || '',
+            days: dueInfo.days,
+            totalUpcomingCount: 1
+          }];
+        }
       }
       return [];
     }
 
     // Sort by datetime ascending
-    events.sort((a, b) => (a.datetime || '').localeCompare(b.datetime || ''));
+    events.sort((a, b) => (a.datetime || a.due || '').localeCompare(b.datetime || b.due || ''));
     const totalUpcomingCount = events.length;
     return events.slice(0, limit).map((ev, idx) => {
       const formatted = formatSelectionEvent(ev);
@@ -3227,6 +3326,7 @@
     if (comp && !comp.added) {
       comp.added = true;
     }
+    syncCompanyPrimaryDue(compId);
 
     saveAllV3();
     renderAll();
@@ -3244,6 +3344,15 @@
     const ev = selectionEvents.find(x => x.id === currentEventEditId);
     const compId = ev ? ev.companyId : null;
     selectionEvents = selectionEvents.filter(x => x.id !== currentEventEditId);
+    if (compId) {
+      const comp = getCompanyById(compId);
+      if (comp && !selectionEvents.some(x => x.companyId === compId && !isSelectionEventEnded(x))) {
+        comp.due = '';
+        comp.dueLabel = '';
+        comp.dueLv = '';
+      }
+      syncCompanyPrimaryDue(compId);
+    }
     saveAllV3();
     renderAll();
     if (compId && currentModalComp && currentModalComp.id === compId) {
@@ -3260,6 +3369,15 @@
     const ev = selectionEvents.find(x => x.id === eventId);
     const compId = ev ? ev.companyId : null;
     selectionEvents = selectionEvents.filter(x => x.id !== eventId);
+    if (compId) {
+      const comp = getCompanyById(compId);
+      if (comp && !selectionEvents.some(x => x.companyId === compId && !isSelectionEventEnded(x))) {
+        comp.due = '';
+        comp.dueLabel = '';
+        comp.dueLv = '';
+      }
+      syncCompanyPrimaryDue(compId);
+    }
     saveAllV3();
     renderAll();
     if (compId && currentModalComp && currentModalComp.id === compId) {
@@ -3275,6 +3393,7 @@
     if (!ev) return;
     ev.status = ev.status === 'completed' ? 'upcoming' : 'completed';
     ev.updatedAt = new Date().toISOString();
+    syncCompanyPrimaryDue(ev.companyId);
     saveAllV3();
     renderAll();
     if (currentModalComp && currentModalComp.id === ev.companyId) {
@@ -4763,6 +4882,7 @@
 
     document.getElementById('mStage').value = (c.stage === 'watch' || !c.stage) ? 'entry' : c.stage;
 
+    syncCompanyPrimaryDue(c.id);
 
     document.getElementById('mDue').value = c.due || '';
     document.getElementById('mDueLabel').value = c.dueLabel || '';
@@ -4913,9 +5033,45 @@
     if (!requireAuth('選考進捗やメモを編集・保存')) return;
     if (!currentModalComp) return;
     const c = currentModalComp;
+    const prevDue = c.due || '';
     c.stage = document.getElementById('mStage').value;
-    c.due = document.getElementById('mDue').value;
-    c.dueLabel = document.getElementById('mDueLabel').value.trim();
+    const inputDue = document.getElementById('mDue').value;
+    const inputDueLabel = document.getElementById('mDueLabel').value.trim();
+    const todayStr = getLocalTodayStr();
+    const normInputDue = normalizeDateKey(inputDue);
+
+    if (c.stage === 'rejected' || !normInputDue || normInputDue < todayStr) {
+      if (prevDue && !normInputDue) {
+        selectionEvents.forEach(ev => {
+          if (ev && ev.companyId === c.id && normalizeDateKey(ev.datetime || ev.due) === normalizeDateKey(prevDue)) {
+            ev.status = 'completed';
+          }
+        });
+      }
+      c.due = '';
+      c.dueLabel = '';
+      c.dueLv = '';
+    } else {
+      c.due = normInputDue;
+      c.dueLabel = inputDueLabel;
+      if (selectionEvents.some(e => e && e.companyId === c.id)) {
+        const hasMatchingActive = selectionEvents.some(e => e && e.companyId === c.id && !isSelectionEventEnded(e) && normalizeDateKey(e.datetime || e.due) === normInputDue);
+        if (!hasMatchingActive) {
+          selectionEvents.push({
+            id: 'ev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+            companyId: c.id,
+            title: inputDueLabel || '選考締切',
+            type: detectEventType(inputDueLabel),
+            status: 'upcoming',
+            datetime: normInputDue,
+            memo: '',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          });
+        }
+      }
+    }
+
     c.myPageUrl = document.getElementById('mMyPageUrl').value.trim();
     c.myPageId = document.getElementById('mMyPageId').value.trim();
     c.myPagePass = (document.getElementById('mMyPagePass')?.value || '').trim();
@@ -4924,7 +5080,9 @@
     c.noteInterview = document.getElementById('mNoteInterview').value;
     c.tags = [...modalTags];
     delete c._searchHay;
+    delete c._searchCache;
 
+    syncCompanyPrimaryDue(c.id);
     saveAll();
     renderAll();
     closeModal('companyModal');
