@@ -1,15 +1,49 @@
-# Secrets & Environment Variables
+# ============================================================================
+# 1. Secrets, Environment & OS / Build Artifacts
+# ============================================================================
 .env
 .env.*
 !.env.example
 secrets/
 *.key
 *.pem
-
-# OS / Temporary files
 .DS_Store
 Thumbs.db
 *.log
 scratch/
 node_modules/
 package*.json
+
+# ============================================================================
+# 2. Personal Job-Hunting Data & AI Workflow Workspace (Strictly Private)
+# ============================================================================
+# AI Agent Instructions & Skills
+GEMINI.md
+.agent/
+.cursor/
+
+# Personal ES, Story Bank, Interview Vault & Profile
+es/
+interview/
+interview_review/
+interview_vault/
+profile/
+
+# Personal Corporate Research, Recruit Profiles, Sessions & DPO Arena Data
+data/companies/
+data/recruit_profiles/
+data/sessions/
+data/dpo_cases.js
+data/dpo_cases.json
+data/dpo_feedback.json
+
+# Personal SOP Documentation
+docs/ES_WRITING_SOP.md
+docs/INTERVIEW_REVIEW_SOP.md
+
+# Local Scraping, Transcript Analysis & Automation Scripts
+scripts/
+tools/
+webtest/
+output/
+search.cmd
