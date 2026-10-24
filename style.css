@@ -1220,17 +1220,13 @@
   .barchart .cap { font-size: 11px; color: var(--sub); font-weight: 700; text-align: center; }
   .barchart .num { font-size: 13px; font-weight: 900; }
 
-  /* 今日やること (Dashboard & Home) */
+  /* 今日やること (Dashboard) */
   .today-todo-panel {
     margin-bottom: 16px;
     padding: 14px 16px 12px;
     border: 1px solid rgba(79, 216, 232, .22);
     background: linear-gradient(135deg, rgba(79, 216, 232, .06), rgba(139, 123, 255, .05));
     box-shadow: 0 0 24px rgba(79, 216, 232, .08);
-  }
-  .today-todo-panel--compact {
-    margin: 0 0 14px;
-    padding: 12px 14px 10px;
   }
   .today-todo-head {
     display: flex;
@@ -1349,7 +1345,6 @@
   }
   @media (max-width: 640px) {
     .today-todo-stage { display: none; }
-    .today-todo-panel--compact .today-todo-row:nth-child(n+4) { display: none; }
   }
 
   /* Deadlines in Dash */

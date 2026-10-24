@@ -1123,7 +1123,6 @@
 
     document.getElementById('dbTotal').textContent = catalog.length;
     document.getElementById('dbShown').textContent = Math.min(dbPageSize, list.length);
-    renderTodayTodo();
   }
 
   function openNewCompanyWithKeyword(kw = '') {
@@ -1970,42 +1969,30 @@
       </div>`;
   }
 
-  function renderTodayTodoEmptyHtml(variant) {
-    const isHome = variant === 'home';
-    const secondaryBtn = isHome
-      ? `<button type="button" class="btn-sm-ghost" onclick="switchView('dash')">ダッシュボードを見る</button>`
-      : `<button type="button" class="btn-sm-ghost" onclick="switchView('db')">企業DBを開く</button>`;
+  function renderTodayTodoEmptyHtml() {
     return `
       <div class="today-todo-empty">
         <p>今日は${TODAY_TODO_HORIZON_DAYS}日以内の締切はありません。企業研究やESの仕上げに集中できる日です。</p>
         <div class="today-todo-cta">
           <button type="button" class="btn-sm-ghost" onclick="switchView('list')">選考管理を見る</button>
-          ${secondaryBtn}
+          <button type="button" class="btn-sm-ghost" onclick="switchView('db')">企業DBを開く</button>
         </div>
       </div>`;
   }
 
-  function renderTodayTodoTargets(targets) {
+  function renderTodayTodo() {
+    const listEl = document.getElementById('todayTodoList');
+    const subEl = document.getElementById('todayTodoSub');
+    if (!listEl) return;
+
     const items = collectTodayTodoItems();
     const subText = items.length ? `直近${TODAY_TODO_HORIZON_DAYS}日・${items.length}件` : '予定なし';
+    const slice = items.slice(0, 8);
 
-    targets.forEach(t => {
-      const listEl = document.getElementById(t.listId);
-      const subEl = document.getElementById(t.subId);
-      if (!listEl) return;
-      const slice = items.slice(0, t.limit);
-      listEl.innerHTML = slice.length
-        ? slice.map(renderTodayTodoRow).join('')
-        : renderTodayTodoEmptyHtml(t.variant);
-      if (subEl) subEl.textContent = subText;
-    });
-  }
-
-  function renderTodayTodo() {
-    renderTodayTodoTargets([
-      { listId: 'todayTodoList', subId: 'todayTodoSub', limit: 8, variant: 'dash' },
-      { listId: 'todayTodoHomeList', subId: 'todayTodoHomeSub', limit: 5, variant: 'home' }
-    ]);
+    listEl.innerHTML = slice.length
+      ? slice.map(renderTodayTodoRow).join('')
+      : renderTodayTodoEmptyHtml();
+    if (subEl) subEl.textContent = subText;
   }
 
   function renderDash() {
