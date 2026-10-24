@@ -5199,7 +5199,7 @@
   function applySettings() {
     const b = document.getElementById('gradBadge');
     if (b) b.textContent = currentSettings.gradYear || '28卒';
-    document.title = '就勝 syukatsu.win';
+    document.title = '就勝 (syukatsu.win) ― 日本新卒・留学生の選考管理＆企業分析プラットフォーム';
   }
 
   // JSON エクスポート / インポート
