@@ -829,13 +829,42 @@
     return parsed;
   }
 
+  class MyPageCloudPackError extends Error {
+    constructor(companyLabel) {
+      super('MyPage password could not be packed for cloud sync');
+      this.name = 'MyPageCloudPackError';
+      this.companyLabel = companyLabel || '企業';
+    }
+  }
+
+  function cloudTagsIncludeMyPagePass(tags) {
+    if (!Array.isArray(tags)) return false;
+    return tags.some(t => typeof t === 'string' && (t.startsWith('__mp_pass_enc:v1:') || t.startsWith('__mp_pass:')));
+  }
+
+  function notifyMyPageCloudPackFailure(err) {
+    const label = (err && err.companyLabel) ? err.companyLabel : '企業';
+    showToast(`⚠️ 「${label}」のマイページパスワードを暗号化できませんでした。クラウドへの保存を中止しました。ページを再読み込みするか、別のブラウザでお試しください。`);
+  }
+
   async function packCompanyCloudTags(c) {
     const baseTags = (c.tags || []).filter(t => typeof t === 'string' && !t.startsWith('__mp_') && !t.startsWith('__cn:') && !t.startsWith('__ev:'));
     if (c.myPageUrl) baseTags.push('__mp_url:' + encodeURIComponent(c.myPageUrl));
     if (c.myPageId) baseTags.push('__mp_id:' + encodeURIComponent(c.myPageId));
-    if (c.myPagePass && currentAuthUser && typeof MyPageCrypto !== 'undefined') {
-      const encTag = await MyPageCrypto.encryptPassword(c.myPagePass, currentAuthUser.id);
-      if (encTag) baseTags.push(encTag);
+    const pass = (c.myPagePass || '').trim();
+    if (pass) {
+      const companyLabel = c.name || c.id || '企業';
+      if (!currentAuthUser || typeof MyPageCrypto === 'undefined') {
+        throw new MyPageCloudPackError(companyLabel);
+      }
+      const encTag = await MyPageCrypto.encryptPassword(pass, currentAuthUser.id);
+      if (!encTag) {
+        throw new MyPageCloudPackError(companyLabel);
+      }
+      baseTags.push(encTag);
+      if (!cloudTagsIncludeMyPagePass(baseTags)) {
+        throw new MyPageCloudPackError(companyLabel);
+      }
     }
     const full = getFullCatalog();
     if (c.name && (c.isCustom || !full.find(x => x.id === c.id))) {
@@ -844,6 +873,9 @@
     const cEvents = selectionEvents.filter(e => e.companyId === c.id);
     if (cEvents.length > 0) {
       baseTags.push('__ev:' + encodeURIComponent(JSON.stringify(cEvents)));
+    }
+    if (pass && !cloudTagsIncludeMyPagePass(baseTags)) {
+      throw new MyPageCloudPackError(c.name || c.id || '企業');
     }
     return baseTags;
   }
@@ -920,23 +952,31 @@
           (c.isCustom || c.myPageUrl || c.myPageId || (c.added && c.stage && c.stage !== 'watch' && (c.noteMotiv || c.noteEs)))
         );
         const toUpsert = [];
-        for (const c of localAdded) {
-          toUpsert.push({
-            user_id: currentAuthUser.id,
-            company_id: c.id,
-            stage: c.stage || 'watch',
-            due: c.due || null,
-            due_label: c.dueLabel || null,
-            due_lv: c.dueLv || null,
-            note_motiv: c.noteMotiv || null,
-            note_es: c.noteEs || null,
-            note_interview: c.noteInterview || null,
-            tags: await packCompanyCloudTags(c),
-            updated_at: new Date().toISOString()
-          });
-        }
-        if (toUpsert.length > 0) {
-          await supabaseClient.from('user_selections').upsert(toUpsert, { onConflict: 'user_id,company_id' });
+        try {
+          for (const c of localAdded) {
+            toUpsert.push({
+              user_id: currentAuthUser.id,
+              company_id: c.id,
+              stage: c.stage || 'watch',
+              due: c.due || null,
+              due_label: c.dueLabel || null,
+              due_lv: c.dueLv || null,
+              note_motiv: c.noteMotiv || null,
+              note_es: c.noteEs || null,
+              note_interview: c.noteInterview || null,
+              tags: await packCompanyCloudTags(c),
+              updated_at: new Date().toISOString()
+            });
+          }
+          if (toUpsert.length > 0) {
+            await supabaseClient.from('user_selections').upsert(toUpsert, { onConflict: 'user_id,company_id' });
+          }
+        } catch (err) {
+          if (err && err.name === 'MyPageCloudPackError') {
+            notifyMyPageCloudPackFailure(err);
+          } else {
+            throw err;
+          }
         }
       }
 
@@ -1098,6 +1138,10 @@
           await supabaseClient.from('user_selections').upsert(toUpsert, { onConflict: 'user_id,company_id' });
         }
       } catch (err) {
+        if (err && err.name === 'MyPageCloudPackError') {
+          notifyMyPageCloudPackFailure(err);
+          return;
+        }
         console.warn('Auto cloud sync failed:', err);
       }
     }, 600);
