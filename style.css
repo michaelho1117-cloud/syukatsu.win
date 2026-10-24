@@ -1220,6 +1220,138 @@
   .barchart .cap { font-size: 11px; color: var(--sub); font-weight: 700; text-align: center; }
   .barchart .num { font-size: 13px; font-weight: 900; }
 
+  /* 今日やること (Dashboard & Home) */
+  .today-todo-panel {
+    margin-bottom: 16px;
+    padding: 14px 16px 12px;
+    border: 1px solid rgba(79, 216, 232, .22);
+    background: linear-gradient(135deg, rgba(79, 216, 232, .06), rgba(139, 123, 255, .05));
+    box-shadow: 0 0 24px rgba(79, 216, 232, .08);
+  }
+  .today-todo-panel--compact {
+    margin: 0 0 14px;
+    padding: 12px 14px 10px;
+  }
+  .today-todo-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .today-todo-head h2 { margin-bottom: 0; }
+  .today-todo-more {
+    font-size: 11.5px;
+    padding: 4px 10px;
+    white-space: nowrap;
+  }
+  .today-todo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .today-todo-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--glass-brd);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .03);
+    cursor: pointer;
+    transition: .15s;
+    min-width: 0;
+  }
+  .today-todo-row:hover {
+    background: rgba(255, 255, 255, .07);
+    border-color: var(--glass-brd-hover);
+  }
+  .today-todo-row.is-overdue {
+    border-color: rgba(224, 52, 90, .45);
+    background: rgba(224, 52, 90, .08);
+  }
+  .today-todo-row.is-today {
+    border-color: rgba(255, 106, 95, .5);
+    background: rgba(255, 106, 95, .1);
+  }
+  .today-todo-row.is-urgent {
+    border-color: rgba(224, 52, 90, .32);
+  }
+  .today-todo-main {
+    flex: 1;
+    min-width: 0;
+  }
+  .today-todo-company {
+    font-weight: 800;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .today-todo-action {
+    font-size: 11.5px;
+    color: var(--sub);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .today-todo-urgency {
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: 1px solid var(--glass-brd);
+    background: rgba(255, 255, 255, .04);
+    color: var(--sub);
+  }
+  .today-todo-urgency.urgent,
+  .today-todo-urgency.today,
+  .today-todo-urgency.past {
+    color: #fff;
+    border-color: transparent;
+    background: linear-gradient(135deg, #ff6a5f, #e0345a);
+    box-shadow: 0 0 10px rgba(224, 52, 90, .45);
+  }
+  .today-todo-urgency.soon {
+    color: var(--gold-2);
+    border-color: rgba(217, 178, 95, .45);
+    background: rgba(217, 178, 95, .12);
+  }
+  .today-todo-stage {
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: 1px solid var(--glass-brd);
+    max-width: 88px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .today-todo-empty {
+    text-align: center;
+    padding: 16px 12px 10px;
+    color: var(--sub);
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+  .today-todo-empty p { margin: 0 0 12px; }
+  .today-todo-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  @media (max-width: 640px) {
+    .today-todo-stage { display: none; }
+    .today-todo-panel--compact .today-todo-row:nth-child(n+4) { display: none; }
+  }
+
   /* Deadlines in Dash */
   .deadlines { display: flex; flex-direction: column; gap: 9px; }
   .dl {

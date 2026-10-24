@@ -1123,6 +1123,7 @@
 
     document.getElementById('dbTotal').textContent = catalog.length;
     document.getElementById('dbShown').textContent = Math.min(dbPageSize, list.length);
+    renderTodayTodo();
   }
 
   function openNewCompanyWithKeyword(kw = '') {
@@ -1892,6 +1893,121 @@
     return { day: String(day), mon: `${month}月(${weekdays[dt.getDay()]})` };
   }
 
+  const TODAY_TODO_HORIZON_DAYS = 7;
+
+  function getTodayTodoUrgencyMeta(days, fallbackBadge) {
+    if (fallbackBadge) {
+      let rowCls = '';
+      if (days !== null && days < 0) rowCls = 'is-overdue';
+      else if (days === 0) rowCls = 'is-today';
+      else if (days !== null && days <= 3) rowCls = 'is-urgent';
+      let badgeCls = 'normal';
+      if (days !== null && days < 0) badgeCls = 'past';
+      else if (days === 0 || fallbackBadge === '本日締切') badgeCls = 'today';
+      else if (days !== null && days <= 3) badgeCls = 'urgent';
+      else if (days !== null && days <= 7) badgeCls = 'soon';
+      return { text: fallbackBadge, badgeCls, rowCls };
+    }
+    if (days === null) return { text: '', badgeCls: 'normal', rowCls: '' };
+    if (days < 0) return { text: '期限超過', badgeCls: 'past', rowCls: 'is-overdue' };
+    if (days === 0) return { text: '本日', badgeCls: 'today', rowCls: 'is-today' };
+    if (days === 1) return { text: '明日締切', badgeCls: 'urgent', rowCls: 'is-urgent' };
+    if (days <= 3) return { text: `あと${days}日`, badgeCls: 'urgent', rowCls: 'is-urgent' };
+    if (days <= TODAY_TODO_HORIZON_DAYS) return { text: `あと${days}日`, badgeCls: 'soon', rowCls: '' };
+    return { text: `あと${days}日`, badgeCls: 'normal', rowCls: '' };
+  }
+
+  function collectTodayTodoItems() {
+    const added = catalog.filter(c => c.added && c.stage !== 'rejected');
+    const items = [];
+
+    added.forEach(c => {
+      const next = getCompanyNextAction(c.id);
+      let days = next.days;
+      let actionLabel = (next.title && next.title !== '予定なし') ? next.title : (c.dueLabel || '次の選考アクション');
+      let badgeText = next.badgeText || '';
+
+      if ((days === null || days === undefined) && c.due) {
+        const dueInfo = getDueStatus(c);
+        days = dueInfo.days;
+        if (!badgeText) badgeText = dueInfo.badge || '';
+      }
+
+      if (days === null || days === undefined) return;
+      if (days > TODAY_TODO_HORIZON_DAYS) return;
+
+      items.push({
+        companyId: c.id,
+        companyName: c.name,
+        stage: c.stage,
+        actionLabel,
+        days,
+        badgeText
+      });
+    });
+
+    items.sort((a, b) => {
+      if (a.days !== b.days) return a.days - b.days;
+      return (a.companyName || '').localeCompare(b.companyName || '', 'ja');
+    });
+
+    return items;
+  }
+
+  function renderTodayTodoRow(item) {
+    const urgency = getTodayTodoUrgencyMeta(item.days, item.badgeText);
+    const st = stageMap[item.stage] || stageMap.entry;
+    const rowCls = urgency.rowCls ? ` ${urgency.rowCls}` : '';
+    const badgeCls = urgency.badgeCls ? ` ${urgency.badgeCls}` : '';
+    return `
+      <div class="today-todo-row${rowCls}" role="button" tabindex="0" onclick="openDetailModal('${item.companyId}')" onkeydown="if(event.key==='Enter')openDetailModal('${item.companyId}')">
+        <div class="today-todo-main">
+          <div class="today-todo-company">${escapeHtml(item.companyName)}</div>
+          <div class="today-todo-action">${escapeHtml(item.actionLabel)}</div>
+        </div>
+        <span class="today-todo-urgency${badgeCls}">${escapeHtml(urgency.text)}</span>
+        <span class="today-todo-stage" style="color:${st.color}">${escapeHtml(st.label)}</span>
+      </div>`;
+  }
+
+  function renderTodayTodoEmptyHtml(variant) {
+    const isHome = variant === 'home';
+    const secondaryBtn = isHome
+      ? `<button type="button" class="btn-sm-ghost" onclick="switchView('dash')">ダッシュボードを見る</button>`
+      : `<button type="button" class="btn-sm-ghost" onclick="switchView('db')">企業DBを開く</button>`;
+    return `
+      <div class="today-todo-empty">
+        <p>今日は${TODAY_TODO_HORIZON_DAYS}日以内の締切はありません。企業研究やESの仕上げに集中できる日です。</p>
+        <div class="today-todo-cta">
+          <button type="button" class="btn-sm-ghost" onclick="switchView('list')">選考管理を見る</button>
+          ${secondaryBtn}
+        </div>
+      </div>`;
+  }
+
+  function renderTodayTodoTargets(targets) {
+    const items = collectTodayTodoItems();
+    const subText = items.length ? `直近${TODAY_TODO_HORIZON_DAYS}日・${items.length}件` : '予定なし';
+
+    targets.forEach(t => {
+      const listEl = document.getElementById(t.listId);
+      const subEl = document.getElementById(t.subId);
+      if (!listEl) return;
+      const slice = items.slice(0, t.limit);
+      listEl.innerHTML = slice.length
+        ? slice.map(renderTodayTodoRow).join('')
+        : renderTodayTodoEmptyHtml(t.variant);
+      if (subEl) subEl.textContent = subText;
+    });
+  }
+
+  function renderTodayTodo() {
+    renderTodayTodoTargets([
+      { listId: 'todayTodoList', subId: 'todayTodoSub', limit: 8, variant: 'dash' },
+      { listId: 'todayTodoHomeList', subId: 'todayTodoHomeSub', limit: 5, variant: 'home' }
+    ]);
+  }
+
   function renderDash() {
     renderCalendar();
     const added = catalog.filter(c => c.added);
@@ -1989,6 +2105,7 @@
         </div>`;
     }).join('') || `<div style="color:var(--sub);padding:14px;text-align:center">締切が設定された企業はありません。</div>`;
 
+    renderTodayTodo();
     renderTasks();
   }
 
