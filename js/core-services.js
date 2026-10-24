@@ -496,3 +496,325 @@
       return `<span class="story-ref-badge" onclick="event.stopPropagation();openStoryModal('${s.id}')" title="${escapeHtml(s.title)}">🔗 ${escapeHtml(displayTitle)}</span>`;
     }).filter(Boolean).join(' ');
   }
+
+  // ===================== 9. JOB-HUNTING TERM GLOSSARY (P1-4) =====================
+  /** @type {Record<string, { label: string, ja: string, zh?: string, sort?: number }>} */
+  const TERM_GLOSSARY = {
+    es: {
+      label: 'ES',
+      ja: 'エントリーシートの略。企業への応募書類で、自己PR・志望動機・ガクチカなどを記入します。',
+      zh: '求职申请书（网申问卷），常含自我介绍与志愿动机。',
+      sort: 1
+    },
+    gakuchika: {
+      label: 'ガクチカ',
+      ja: '「学生時代に力を入れたこと」の略。ESや面接で経験の深掘りを聞かれる定番設問です。',
+      zh: '「学生时代最投入的事」，日本求职经典经历题。',
+      sort: 2
+    },
+    shiboudouki: {
+      label: '志望動機',
+      ja: 'なぜその企業・業界・職種を志望するかを書く設問。企業研究の成果が問われます。',
+      zh: '志愿动机：说明为何选择该公司/行业/岗位。',
+      sort: 3
+    },
+    jiko_pr: {
+      label: '自己PR',
+      ja: '自分の強み・魅力を短く伝える設問。ガクチカと組み合わせて書くことが多いです。',
+      zh: '自我推销：概括自己的优势与特点。',
+      sort: 4
+    },
+    honshinsotsu: {
+      label: '本選考',
+      ja: 'インターンや説明会とは別の、新卒採用の正式な選考プロセス。ES提出から内定までを指します。',
+      zh: '正式选考流程（相对实习/说明会）。',
+      sort: 5
+    },
+    entry: {
+      label: 'エントリー',
+      ja: '採用マイページへの登録や応募の第一歩。ここから書類・テスト・面接が始まります。',
+      zh: '网申/报名入口，选考的第一步。',
+      sort: 6
+    },
+    es_webtest: {
+      label: 'ES・Webテスト',
+      ja: '書類（ES）提出と、SPI・玉手箱などのオンライン適性検査の段階。通過率の分かれ目になりやすいです。',
+      zh: '材料审查 + 线上性格/能力测试（如 SPI）。',
+      sort: 7
+    },
+    webtest: {
+      label: 'Webテスト',
+      ja: 'Web上で受ける適性検査・テストの総称。SPI、玉手箱、TG-WEB などがあります。',
+      zh: '网测/在线适性测验的统称。',
+      sort: 8
+    },
+    first_interview: {
+      label: '一次面接',
+      ja: '最初の面接。人事や若手社員が担当することが多く、志望動機やガクチカの確認が中心です。',
+      zh: '第一轮面试（一面）。',
+      sort: 9
+    },
+    final_interview: {
+      label: '最終面接',
+      ja: '役員・社長などが実施する最終確認の面接。内定直前の段階です。',
+      zh: '终面/高管面试。',
+      sort: 10
+    },
+    naitei: {
+      label: '内々定・内定',
+      ja: '採用内定。内々定は正式な内定通知前の口頭・仮内定。承諾期限に注意します。',
+      zh: '内定；内定前有时先有口头「内定」。',
+      sort: 11
+    },
+    oinori: {
+      label: 'お祈り・落選',
+      ja: '不採用の結果。「お祈りメール」は就活用の婉曲表現です。次の企業に切り替えて再チャレンジします。',
+      zh: '落选；「祈福邮件」是日本常见的婉拒说法。',
+      sort: 12
+    },
+    shimekiri: {
+      label: '締切',
+      ja: 'ES提出・テスト受検・面接予約などの期限。複数社を並行すると見落としやすいのでカレンダー管理が有効です。',
+      zh: '截止日期（提交/测试/预约等）。',
+      sort: 13
+    },
+    ob: {
+      label: 'OB訪問',
+      ja: '先輩社員（OB/OG）に訪問・面談し、業界・仕事・社風を聞く活動。志望動機の材料になります。',
+      zh: '拜访在职前辈（OB/OG）了解公司与行业。',
+      sort: 14
+    },
+    intern: {
+      label: 'インターン',
+      ja: '短期の仕事体験。選考型インターンは参加・評価が本選考の優遇（早期ルート）に直結することがあります。',
+      zh: '实习；选考型实习可能影响正式选考。',
+      sort: 15
+    },
+    star: {
+      label: 'STAR',
+      ja: 'Situation（状況）・Task（課題）・Action（行動）・Result（結果）で話す回答の型。ガクチカ整理に使えます。',
+      zh: 'STAR 结构化回答法（情境-任务-行动-结果）。',
+      sort: 16
+    },
+    stage_status: {
+      label: '選考ステージ',
+      ja: '今どの選考段階にいるかの状態（エントリー→ES→面接→内定など）。カンバンやリストで管理します。',
+      zh: '选考进度/当前阶段状态。',
+      sort: 17
+    },
+    mypage: {
+      label: 'マイページ',
+      ja: '各社採用サイト上のあなた専用ページ。ES提出・日程予約・結果通知を受け取ります。',
+      zh: '企业招聘官网上的个人申请页。',
+      sort: 18
+    },
+    kanban: {
+      label: 'カンバン',
+      ja: '選考段階を列で並べ、企業カードをドラッグして進捗を更新するボードUI。',
+      zh: '看板式进度板，拖拽更新阶段。',
+      sort: 19
+    },
+    funnel: {
+      label: '選考ファネル',
+      ja: 'エントリーから内定まで、各段階に何人（何社）残っているかの通過イメージ。ボトルネックが見えます。',
+      zh: '选考漏斗：各阶段通过人数/社数。',
+      sort: 20
+    }
+  };
+
+  const STAGE_TERM_IDS = {
+    rejected: 'oinori',
+    entry: 'entry',
+    es: 'es_webtest',
+    first: 'first_interview',
+    final: 'final_interview',
+    offer: 'naitei'
+  };
+
+  const ES_TYPE_TERM_IDS = {
+    '自己PR': 'jiko_pr',
+    'ガクチカ': 'gakuchika',
+    '志望動機': 'shiboudouki',
+    'ES': 'es'
+  };
+
+  const TermGlossary = {
+    _inited: false,
+    _popoverEl: null,
+    _openBtn: null,
+
+    get(id) {
+      return TERM_GLOSSARY[id] || null;
+    },
+
+    hintHtml(id, opts = {}) {
+      const term = this.get(id);
+      if (!term) return escapeHtml(opts.label || opts.fallback || id || '');
+      const label = opts.label != null ? opts.label : term.label;
+      const mode = opts.mode || 'icon';
+      const extra = opts.wrapClass ? ` ${opts.wrapClass}` : '';
+      if (mode === 'underline') {
+        return `<span class="term-hint-wrap${extra}"><button type="button" class="term-hint term-hint--underline" data-term="${escapeHtml(id)}" aria-expanded="false" aria-label="${escapeHtml(term.label)}の説明">${escapeHtml(label)}</button></span>`;
+      }
+      return `<span class="term-hint-wrap${extra}">${escapeHtml(label)}<button type="button" class="term-hint term-hint--icon" data-term="${escapeHtml(id)}" aria-expanded="false" aria-label="${escapeHtml(term.label)}の説明">?</button></span>`;
+    },
+
+    esTypeChipHtml(typeLabel, count) {
+      const termId = ES_TYPE_TERM_IDS[typeLabel];
+      const text = `${typeLabel} (${count})`;
+      if (termId) return this.hintHtml(termId, { label: text, mode: 'underline' });
+      return escapeHtml(text);
+    },
+
+    init() {
+      if (this._inited) return;
+      this._inited = true;
+      this._popoverEl = document.getElementById('termPopover');
+      if (!this._popoverEl) {
+        this._popoverEl = document.createElement('div');
+        this._popoverEl.id = 'termPopover';
+        this._popoverEl.className = 'term-popover';
+        this._popoverEl.setAttribute('role', 'dialog');
+        this._popoverEl.setAttribute('aria-hidden', 'true');
+        this._popoverEl.hidden = true;
+        document.body.appendChild(this._popoverEl);
+      }
+      document.addEventListener('click', e => this._onDocumentClick(e));
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          this.closePopover();
+          this.closeDrawer();
+        }
+      });
+      window.addEventListener('resize', () => {
+        if (this._openBtn) this._positionPopover(this._openBtn);
+      });
+      this.renderDrawerList();
+    },
+
+    _onDocumentClick(e) {
+      const btn = e.target.closest('.term-hint');
+      if (btn) {
+        e.preventDefault();
+        e.stopPropagation();
+        this._toggleFromButton(btn);
+        return;
+      }
+      if (this._popoverEl && !e.target.closest('.term-popover') && !e.target.closest('.term-hint')) {
+        this.closePopover();
+      }
+    },
+
+    _toggleFromButton(btn) {
+      const id = btn.getAttribute('data-term');
+      if (!id) return;
+      if (this._openBtn === btn && this._popoverEl && !this._popoverEl.hidden) {
+        this.closePopover();
+        return;
+      }
+      this._openBtn = btn;
+      this._showPopover(id, btn);
+    },
+
+    _showPopover(id, anchorBtn) {
+      const term = this.get(id);
+      if (!term || !this._popoverEl) return;
+      document.querySelectorAll('.term-hint[aria-expanded="true"]').forEach(el => {
+        el.setAttribute('aria-expanded', 'false');
+      });
+      anchorBtn.setAttribute('aria-expanded', 'true');
+      const zhBlock = term.zh
+        ? `<div class="term-popover-zh"><span class="term-popover-zh-label">中文</span>${escapeHtml(term.zh)}</div>`
+        : '';
+      this._popoverEl.innerHTML = `
+        <div class="term-popover-head">
+          <strong class="term-popover-title">${escapeHtml(term.label)}</strong>
+          <button type="button" class="term-popover-close" aria-label="閉じる" data-term-popover-close>✕</button>
+        </div>
+        <p class="term-popover-ja">${escapeHtml(term.ja)}</p>
+        ${zhBlock}
+        <button type="button" class="term-popover-more" data-term-open-glossary>📖 用語メモ一覧</button>
+      `;
+      this._popoverEl.hidden = false;
+      this._popoverEl.setAttribute('aria-hidden', 'false');
+      const closeBtn = this._popoverEl.querySelector('[data-term-popover-close]');
+      if (closeBtn) closeBtn.addEventListener('click', ev => { ev.stopPropagation(); this.closePopover(); });
+      const moreBtn = this._popoverEl.querySelector('[data-term-open-glossary]');
+      if (moreBtn) moreBtn.addEventListener('click', ev => { ev.stopPropagation(); this.closePopover(); this.openDrawer(); });
+      this._positionPopover(anchorBtn);
+    },
+
+    _positionPopover(anchorBtn) {
+      if (!this._popoverEl || !anchorBtn) return;
+      const rect = anchorBtn.getBoundingClientRect();
+      const margin = 8;
+      const pop = this._popoverEl;
+      pop.style.visibility = 'hidden';
+      pop.style.left = '0';
+      pop.style.top = '0';
+      pop.style.maxWidth = Math.min(320, window.innerWidth - margin * 2) + 'px';
+      const popRect = pop.getBoundingClientRect();
+      let left = rect.left + rect.width / 2 - popRect.width / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - popRect.width - margin));
+      let top = rect.bottom + margin;
+      if (top + popRect.height > window.innerHeight - margin) {
+        top = rect.top - popRect.height - margin;
+      }
+      if (top < margin) top = margin;
+      pop.style.left = `${Math.round(left)}px`;
+      pop.style.top = `${Math.round(top)}px`;
+      pop.style.visibility = '';
+    },
+
+    closePopover() {
+      if (!this._popoverEl) return;
+      this._popoverEl.hidden = true;
+      this._popoverEl.setAttribute('aria-hidden', 'true');
+      document.querySelectorAll('.term-hint[aria-expanded="true"]').forEach(el => {
+        el.setAttribute('aria-expanded', 'false');
+      });
+      this._openBtn = null;
+    },
+
+    renderDrawerList() {
+      const listEl = document.getElementById('glossaryDrawerList');
+      if (!listEl) return;
+      const entries = Object.entries(TERM_GLOSSARY)
+        .sort((a, b) => (a[1].sort || 99) - (b[1].sort || 99) || a[1].label.localeCompare(b[1].label, 'ja'));
+      listEl.innerHTML = entries.map(([id, t]) => {
+        const zh = t.zh ? `<div class="glossary-item-zh">${escapeHtml(t.zh)}</div>` : '';
+        return `<article class="glossary-item" id="glossary-item-${escapeHtml(id)}">
+          <h3 class="glossary-item-label">${escapeHtml(t.label)}</h3>
+          <p class="glossary-item-ja">${escapeHtml(t.ja)}</p>
+          ${zh}
+        </article>`;
+      }).join('');
+    },
+
+    openDrawer() {
+      this.closePopover();
+      const drawer = document.getElementById('glossaryDrawer');
+      const overlay = document.getElementById('glossaryDrawerOverlay');
+      if (!drawer || !overlay) return;
+      this.renderDrawerList();
+      drawer.classList.add('open');
+      overlay.classList.add('open');
+      drawer.setAttribute('aria-hidden', 'false');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('glossary-drawer-open');
+    },
+
+    closeDrawer() {
+      const drawer = document.getElementById('glossaryDrawer');
+      const overlay = document.getElementById('glossaryDrawerOverlay');
+      if (drawer) {
+        drawer.classList.remove('open');
+        drawer.setAttribute('aria-hidden', 'true');
+      }
+      if (overlay) {
+        overlay.classList.remove('open');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      document.body.classList.remove('glossary-drawer-open');
+    }
+  };
