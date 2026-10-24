@@ -131,7 +131,7 @@ Browsers block ES module `import`/`export` under the local `file://` protocol du
   Because the schema is compact, auxiliary metadata is packed into the `tags` text array:
   * `__mp_url:<encoded_url>`: MyPage portal URL.
   * `__mp_id:<encoded_id>`: MyPage login username/ID.
-  * `__mp_pass:<encoded_password>`: MyPage login password.
+  * `__mp_pass_enc:v1:<base64(iv+ciphertext)>`: MyPage login password (AES-GCM, client-derived key; legacy `__mp_pass:` plaintext migrated on save).
   * `__cn:<encoded_custom_name>`: Display name for user-created custom companies.
   * `__ev:<encoded_json>`: Serialized JSON array of `selectionEvents` for this company.
 

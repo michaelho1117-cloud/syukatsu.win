@@ -477,9 +477,9 @@
 
   function getMyPageStorageTrustMessage() {
     if (currentAuthUser) {
-      return '🔐 ログイン中の保存先：お使いのブラウザ内（端末のローカルストレージ）と、あなたのアカウントに紐づく Supabase クラウド（選考データと一緒に同期）です。就勝側でパスワードを平文表示することはありませんが、エンドツーエンド暗号化ではないため、共有PCではご注意ください。';
+      return '🔐 ログイン中：マイページパスワードは端末内の鍵で AES 暗号化してからクラウドに同期します（DB・タグの平文読み取りを防ぐ目的）。同一ブラウザの XSS や端末共有では復号可能なため、完全なエンドツーエンド暗号化ではありません。URL・ID は従来どおり同期されます。';
     }
-    return '🔐 未ログイン時は展示用デモを閲覧できます。ES・Storyは「お試し」下書きのみ端末内に保存され、クラウドには同期されません。ログイン後はお試し下書きは破棄され、クラウドの本番データに切り替わります（エンドツーエンド暗号化ではありません）。';
+    return '🔐 未ログイン時は展示用デモを閲覧できます。マイページパスワードはクラウドに同期されず、端末内のみです。ES・Storyは「お試し」下書きのみ端末内に保存されます。ログイン後はお試し下書きは破棄され、クラウドの本番データに切り替わります。';
   }
 
   function updateMyPageStorageTrustNote() {
@@ -793,6 +793,7 @@
     let myPageUrl = '';
     let myPageId = '';
     let myPagePass = '';
+    let myPagePassEnc = '';
     let compName = '';
     let cloudEvents = [];
     const cleanTags = [];
@@ -803,6 +804,8 @@
           try { myPageUrl = decodeURIComponent(t.slice(9)); } catch(e) { myPageUrl = t.slice(9); }
         } else if (t.startsWith('__mp_id:')) {
           try { myPageId = decodeURIComponent(t.slice(8)); } catch(e) { myPageId = t.slice(8); }
+        } else if (t.startsWith('__mp_pass_enc:v1:')) {
+          myPagePassEnc = t;
         } else if (t.startsWith('__mp_pass:')) {
           try { myPagePass = decodeURIComponent(t.slice(10)); } catch(e) { myPagePass = t.slice(10); }
         } else if (t.startsWith('__cn:')) {
@@ -814,14 +817,26 @@
         }
       });
     }
-    return { myPageUrl, myPageId, myPagePass, compName, cleanTags, cloudEvents };
+    const hasMyPagePass = Boolean(myPagePass || myPagePassEnc);
+    return { myPageUrl, myPageId, myPagePass, myPagePassEnc, hasMyPagePass, compName, cleanTags, cloudEvents };
   }
 
-  function packCompanyCloudTags(c) {
+  async function parseCloudItemTagsResolved(tags) {
+    const parsed = parseCloudItemTags(tags);
+    if (!parsed.myPagePass && parsed.myPagePassEnc && currentAuthUser && typeof MyPageCrypto !== 'undefined') {
+      parsed.myPagePass = await MyPageCrypto.decryptPassword(parsed.myPagePassEnc, currentAuthUser.id);
+    }
+    return parsed;
+  }
+
+  async function packCompanyCloudTags(c) {
     const baseTags = (c.tags || []).filter(t => typeof t === 'string' && !t.startsWith('__mp_') && !t.startsWith('__cn:') && !t.startsWith('__ev:'));
     if (c.myPageUrl) baseTags.push('__mp_url:' + encodeURIComponent(c.myPageUrl));
     if (c.myPageId) baseTags.push('__mp_id:' + encodeURIComponent(c.myPageId));
-    if (c.myPagePass) baseTags.push('__mp_pass:' + encodeURIComponent(c.myPagePass));
+    if (c.myPagePass && currentAuthUser && typeof MyPageCrypto !== 'undefined') {
+      const encTag = await MyPageCrypto.encryptPassword(c.myPagePass, currentAuthUser.id);
+      if (encTag) baseTags.push(encTag);
+    }
     const full = getFullCatalog();
     if (c.name && (c.isCustom || !full.find(x => x.id === c.id))) {
       baseTags.push('__cn:' + encodeURIComponent(c.name));
@@ -878,7 +893,7 @@
       const dummyInCloud = (cloudItems || []).filter(item => {
         if (!DUMMY_SEED_IDS.has(item.company_id)) return false;
         const parsed = parseCloudItemTags(item.tags);
-        return !parsed.myPageUrl && !parsed.myPageId && !parsed.myPagePass;
+        return !parsed.myPageUrl && !parsed.myPageId && !parsed.hasMyPagePass;
       });
       if (dummyInCloud.length > 0) {
         for (const d of dummyInCloud) {
@@ -905,7 +920,7 @@
           (c.isCustom || c.myPageUrl || c.myPageId || (c.added && c.stage && c.stage !== 'watch' && (c.noteMotiv || c.noteEs)))
         );
         const toUpsert = [];
-        localAdded.forEach(c => {
+        for (const c of localAdded) {
           toUpsert.push({
             user_id: currentAuthUser.id,
             company_id: c.id,
@@ -916,14 +931,19 @@
             note_motiv: c.noteMotiv || null,
             note_es: c.noteEs || null,
             note_interview: c.noteInterview || null,
-            tags: packCompanyCloudTags(c),
+            tags: await packCompanyCloudTags(c),
             updated_at: new Date().toISOString()
           });
-        });
+        }
         if (toUpsert.length > 0) {
           await supabaseClient.from('user_selections').upsert(toUpsert, { onConflict: 'user_id,company_id' });
         }
       }
+
+      const cloudTagsResolved = new Map();
+      await Promise.all((cloudItems || []).map(async (item) => {
+        cloudTagsResolved.set(item.company_id, await parseCloudItemTagsResolved(item.tags || []));
+      }));
 
       // 2. 以云端数据为权威，完整重构本地 catalog 选考状态
       const fullCatalog = getFullCatalog();
@@ -934,8 +954,8 @@
       catalog = fullCatalog.map(m => {
         const item = cloudMap.get(m.id);
         if (DUMMY_SEED_IDS.has(m.id)) {
-          const parsed = item ? parseCloudItemTags(item.tags) : {};
-          if (!parsed.myPageUrl && !parsed.myPageId && !parsed.myPagePass) {
+          const parsed = item ? (cloudTagsResolved.get(m.id) || parseCloudItemTags(item.tags)) : {};
+          if (!parsed.myPageUrl && !parsed.myPageId && !parsed.hasMyPagePass) {
             return Object.assign({}, m, {
               added: false,
               stage: 'watch',
@@ -953,7 +973,7 @@
           }
         }
         if (item && !UNWANTED_MYPAGE_ACC_IDS.has(item.company_id)) {
-          const parsed = parseCloudItemTags(item.tags);
+          const parsed = cloudTagsResolved.get(m.id) || parseCloudItemTags(item.tags);
           // 重要な仕様: MyPage情報があっても勝手に選考管理リスト(added=true)に追加しない
           // 正式選考として追加(stage !== 'watch')されている企業のみを選考管理対象とする
           const isItemAdded = Boolean(item.stage && item.stage !== 'watch');
@@ -993,7 +1013,7 @@
       const validCloudItems = (cloudItems || []).filter(item => !item.company_id.startsWith('c_custom_acc_'));
       validCloudItems.forEach(item => {
         if (masterMap.has(item.company_id) || UNWANTED_MYPAGE_ACC_IDS.has(item.company_id)) return;
-        const parsed = parseCloudItemTags(item.tags);
+        const parsed = cloudTagsResolved.get(item.company_id) || parseCloudItemTags(item.tags);
         const isItemAdded = Boolean(item.stage && item.stage !== 'watch');
         catalog.unshift({
           id: item.company_id,
@@ -1057,19 +1077,22 @@
           !(DUMMY_SEED_IDS.has(c.id) && !c.myPageUrl && !c.myPageId) &&
           (c.added || c.myPageUrl || c.myPageId || c.myPagePass)
         );
-        const toUpsert = localAdded.map(c => ({
-          user_id: currentAuthUser.id,
-          company_id: c.id,
-          stage: (c.added && c.stage && c.stage !== 'watch') ? c.stage : 'watch',
-          due: (c.added && c.id === 'c_smbc' && c.due === '2026-09-08') ? null : (c.added ? (c.due || null) : null),
-          due_label: (c.added && c.id === 'c_smbc' && c.dueLabel === 'ES提出') ? null : (c.added ? (c.dueLabel || null) : null),
-          due_lv: c.added ? (c.dueLv || null) : null,
-          note_motiv: c.noteMotiv || null,
-          note_es: c.noteEs || null,
-          note_interview: c.noteInterview || null,
-          tags: packCompanyCloudTags(c),
-          updated_at: new Date().toISOString()
-        }));
+        const toUpsert = [];
+        for (const c of localAdded) {
+          toUpsert.push({
+            user_id: currentAuthUser.id,
+            company_id: c.id,
+            stage: (c.added && c.stage && c.stage !== 'watch') ? c.stage : 'watch',
+            due: (c.added && c.id === 'c_smbc' && c.due === '2026-09-08') ? null : (c.added ? (c.due || null) : null),
+            due_label: (c.added && c.id === 'c_smbc' && c.dueLabel === 'ES提出') ? null : (c.added ? (c.dueLabel || null) : null),
+            due_lv: c.added ? (c.dueLv || null) : null,
+            note_motiv: c.noteMotiv || null,
+            note_es: c.noteEs || null,
+            note_interview: c.noteInterview || null,
+            tags: await packCompanyCloudTags(c),
+            updated_at: new Date().toISOString()
+          });
+        }
 
         if (toUpsert.length > 0) {
           await supabaseClient.from('user_selections').upsert(toUpsert, { onConflict: 'user_id,company_id' });
@@ -2772,8 +2795,9 @@
 
   function togglePassVisibility(compId, btn) {
     const el = document.getElementById(`pass-val-${compId}`);
-    if (!el) return;
-    const realVal = decodeURIComponent(el.dataset.val || '');
+    const c = getCompanyById(compId);
+    if (!el || !c) return;
+    const realVal = c.myPagePass || '';
     if (el.classList.contains('revealed-pass')) {
       el.textContent = '••••••••';
       el.classList.remove('revealed-pass');
@@ -2891,7 +2915,6 @@
     if (emptyState) emptyState.style.display = 'none';
 
     tbody.innerHTML = candidates.map(c => {
-      const escapedPass = encodeURIComponent(c.myPagePass || '');
       const escapedUrl = escapeHtml(c.myPageUrl || '');
       const escapedId = escapeHtml(c.myPageId || '');
       const stageInfo = stageMap[c.stage] || { label: 'エントリー', color: 'var(--sub)' };
@@ -2924,7 +2947,7 @@
       if (c.myPagePass) {
         passCell = `
           <div style="display:flex;align-items:center;gap:6px;">
-            <span id="pass-val-${c.id}" class="masked-pass" data-val="${escapedPass}">••••••••</span>
+            <span id="pass-val-${c.id}" class="masked-pass">••••••••</span>
             <button class="btn-icon" onclick="togglePassVisibility('${c.id}', this)" title="表示/非表示">👁</button>
             <button class="btn-icon" onclick="copyCompanyPass('${c.id}')" title="パスワードをコピー">📋</button>
           </div>

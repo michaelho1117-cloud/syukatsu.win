@@ -818,3 +818,107 @@
       document.body.classList.remove('glossary-drawer-open');
     }
   };
+
+  // ===================== 7. MYPAGE PASSWORD CRYPTO (client-side, cloud tags) =====================
+  const MP_PASS_ENC_PREFIX = '__mp_pass_enc:v1:';
+  const MP_WRAP_SECRET_PREFIX = 'syukatsu_mp_wrap_v1_';
+
+  const MyPageCrypto = {
+    _bytesToBase64(bytes) {
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      return btoa(binary);
+    },
+
+    _base64ToBytes(b64) {
+      const binary = atob(b64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return bytes;
+    },
+
+    _getOrCreateWrapSecret(userId) {
+      const storageKey = MP_WRAP_SECRET_PREFIX + userId;
+      try {
+        let secretB64 = localStorage.getItem(storageKey);
+        if (!secretB64) {
+          const bytes = crypto.getRandomValues(new Uint8Array(32));
+          secretB64 = this._bytesToBase64(bytes);
+          localStorage.setItem(storageKey, secretB64);
+        }
+        return this._base64ToBytes(secretB64);
+      } catch (e) {
+        console.warn('MyPageCrypto: wrap secret unavailable', e);
+        return null;
+      }
+    },
+
+    async _deriveAesKey(userId) {
+      if (!userId || !crypto || !crypto.subtle) return null;
+      const wrapSecret = this._getOrCreateWrapSecret(userId);
+      if (!wrapSecret) return null;
+      const enc = new TextEncoder();
+      const keyMaterial = await crypto.subtle.importKey(
+        'raw',
+        wrapSecret,
+        'PBKDF2',
+        false,
+        ['deriveKey']
+      );
+      return crypto.subtle.deriveKey(
+        {
+          name: 'PBKDF2',
+          salt: enc.encode('syukatsu.win|mypage-pass|' + userId),
+          iterations: 100000,
+          hash: 'SHA-256'
+        },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+      );
+    },
+
+    async encryptPassword(plaintext, userId) {
+      if (!plaintext || !userId) return null;
+      try {
+        const key = await this._deriveAesKey(userId);
+        if (!key) return null;
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const ciphertext = await crypto.subtle.encrypt(
+          { name: 'AES-GCM', iv },
+          key,
+          new TextEncoder().encode(plaintext)
+        );
+        const combined = new Uint8Array(iv.length + ciphertext.byteLength);
+        combined.set(iv, 0);
+        combined.set(new Uint8Array(ciphertext), iv.length);
+        return MP_PASS_ENC_PREFIX + this._bytesToBase64(combined);
+      } catch (e) {
+        console.warn('MyPageCrypto: encrypt failed', e);
+        return null;
+      }
+    },
+
+    async decryptPassword(encTag, userId) {
+      if (!encTag || !userId || typeof encTag !== 'string') return '';
+      if (!encTag.startsWith(MP_PASS_ENC_PREFIX)) return '';
+      try {
+        const key = await this._deriveAesKey(userId);
+        if (!key) return '';
+        const combined = this._base64ToBytes(encTag.slice(MP_PASS_ENC_PREFIX.length));
+        if (combined.length < 13) return '';
+        const iv = combined.slice(0, 12);
+        const data = combined.slice(12);
+        const plaintext = await crypto.subtle.decrypt(
+          { name: 'AES-GCM', iv },
+          key,
+          data
+        );
+        return new TextDecoder().decode(plaintext);
+      } catch (e) {
+        console.warn('MyPageCrypto: decrypt failed', e);
+        return '';
+      }
+    }
+  };
