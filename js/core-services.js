@@ -174,6 +174,90 @@
       if (toastMsg && typeof showToast === 'function') {
         showToast(toastMsg);
       }
+    },
+
+    escapeIcsText(str) {
+      return String(str || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/\r\n|\r|\n/g, '\\n')
+        .replace(/;/g, '\\;')
+        .replace(/,/g, '\\,');
+    },
+
+    formatIcsStamp(d) {
+      const dt = d instanceof Date ? d : new Date();
+      return dt.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    },
+
+    icsDateRangeFromRaw(raw) {
+      const s = String(raw || '').trim();
+      const dateM = s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+      if (!dateM) return null;
+      const y = dateM[1];
+      const mo = dateM[2].padStart(2, '0');
+      const d = dateM[3].padStart(2, '0');
+      const timeM = s.length > 10 ? s.match(/(\d{1,2}):(\d{2})/) : null;
+      if (timeM) {
+        const hh = timeM[1].padStart(2, '0');
+        const mi = timeM[2].padStart(2, '0');
+        const start = new Date(Number(y), Number(mo) - 1, Number(d), Number(hh), Number(mi), 0);
+        const end = new Date(start.getTime() + 60 * 60 * 1000);
+        const pad = n => String(n).padStart(2, '0');
+        return {
+          allDay: false,
+          dtStart: `${y}${mo}${d}T${hh}${mi}00`,
+          dtEnd: `${end.getFullYear()}${pad(end.getMonth() + 1)}${pad(end.getDate())}T${pad(end.getHours())}${pad(end.getMinutes())}00`
+        };
+      }
+      const next = new Date(Number(y), Number(mo) - 1, Number(d));
+      next.setDate(next.getDate() + 1);
+      const pad = n => String(n).padStart(2, '0');
+      return {
+        allDay: true,
+        dtStart: `${y}${mo}${d}`,
+        dtEnd: `${next.getFullYear()}${pad(next.getMonth() + 1)}${pad(next.getDate())}`
+      };
+    },
+
+    buildVEvent({ uid, summary, description, rawDatetime }) {
+      const range = this.icsDateRangeFromRaw(rawDatetime);
+      if (!range) return null;
+      const lines = [
+        'BEGIN:VEVENT',
+        `UID:${this.escapeIcsText(uid)}`,
+        `DTSTAMP:${this.formatIcsStamp()}`,
+        range.allDay
+          ? `DTSTART;VALUE=DATE:${range.dtStart}`
+          : `DTSTART:${range.dtStart}`,
+        range.allDay
+          ? `DTEND;VALUE=DATE:${range.dtEnd}`
+          : `DTEND:${range.dtEnd}`,
+        `SUMMARY:${this.escapeIcsText(summary)}`,
+        `DESCRIPTION:${this.escapeIcsText(description)}`,
+        'STATUS:CONFIRMED',
+        'END:VEVENT'
+      ];
+      return lines.join('\r\n');
+    },
+
+    buildVCalendar(veventBlocks) {
+      const blocks = (veventBlocks || []).filter(Boolean);
+      return [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//就勝//syukatsu.win//JA',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        ...blocks,
+        'END:VCALENDAR'
+      ].join('\r\n');
+    },
+
+    downloadIcs(icsContent, filename, toastMsg = null) {
+      this.downloadBlob(icsContent, 'text/calendar;charset=utf-8;', filename);
+      if (toastMsg && typeof showToast === 'function') {
+        showToast(toastMsg);
+      }
     }
   };
 
