@@ -290,7 +290,7 @@
       } else if (diffDays <= 7) {
         return { text: `${label}${dateStr}`, cls: 'soon', badge: `あと${diffDays}日`, days: diffDays };
       } else {
-        return { text: `${label}${dateStr}`, cls: '', badge: `残り${diffDays}日`, days: diffDays };
+        return { text: `${label}${dateStr}`, cls: '', badge: `あと${diffDays}日`, days: diffDays };
       }
     }
 
