@@ -383,7 +383,11 @@
   <!-- ===================== VIEW 3: ES データベース ===================== -->
   <section class="view" id="view-es">
     <div class="demo-seed-banner">
-      <span class="demo-text">💡 <span><strong>展示用デモモード:</strong> これは展示用の非リアルなサンプルデータです。ログインすると自動的に消去され、あなた専用のプライベートデータに切り替わります。</span></span>
+      <span class="demo-text">💡 <span><strong>展示用デモモード:</strong> サンプルESは閲覧のみです。<strong>お試し下書き</strong>はこの端末にだけ保存され、ログイン後は破棄されてクラウドの本番データに切り替わります。</span></span>
+    </div>
+    <div class="guest-sandbox-banner" id="esGuestSandboxBanner">
+      <span class="guest-sandbox-text">✍️ <span><strong>お試し作成:</strong> ログインなしでES下書きとStory（STAR）を試せます。デモデータはそのまま残り、あなたの「お試し」だけが端末内に保存されます。</span></span>
+      <button type="button" class="guest-sandbox-btn" onclick="openEsModal()">お試しで書いてみる</button>
     </div>
     <div class="hero">
       <div class="hero-title">
@@ -391,7 +395,7 @@
         <p>企業ごとの設問回答や汎用<span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="gakuchika" aria-expanded="false" aria-label="ガクチカの説明">ガクチカ</button></span>・<span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="shiboudouki" aria-expanded="false" aria-label="志望動機の説明">志望動機</button></span>を資産化。<span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="es" aria-expanded="false" aria-label="ESの説明">ES</button></span>を業界別・設問別に整理し、Story Bankと連携して何度でも使い回せます。</p>
       </div>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <button class="top-btn primary" onclick="openEsModal()">＋ 新規ES作成</button>
+        <button class="top-btn primary" id="btnEsCreatePrimary" onclick="openEsModal()">＋ 新規ES作成</button>
       </div>
     </div>
 
@@ -500,7 +504,11 @@
 
   <section class="view" id="view-story">
     <div class="demo-seed-banner">
-      <span class="demo-text">💡 <span><strong>展示用デモモード:</strong> これは展示用の非リアルなサンプルデータです。ログインすると自動的に消去され、あなた専用のプライベートデータに切り替わります。</span></span>
+      <span class="demo-text">💡 <span><strong>展示用デモモード:</strong> サンプルStoryは閲覧のみです。<strong>お試し下書き</strong>はこの端末にだけ保存され、ログイン後は破棄されます。</span></span>
+    </div>
+    <div class="guest-sandbox-banner" id="storyGuestSandboxBanner">
+      <span class="guest-sandbox-text">✍️ <span><strong>お試し作成:</strong> STAR（S/T/A/R/L）を入力してES引用の流れを体験できます。クラウド同期はログイン後のみ。</span></span>
+      <button type="button" class="guest-sandbox-btn" onclick="openStoryModal()">お試しで書いてみる</button>
     </div>
     <div class="hero">
       <div class="hero-title">
@@ -508,7 +516,7 @@
         <p>あなたの経験・強みを<span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="star" aria-expanded="false" aria-label="STARの説明">STAR</button></span>モデルで体系化。ES作成時に何度でも引用でき、使用状況も一目で分かります。</p>
       </div>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <button class="top-btn primary" onclick="openStoryModal()">＋ 新規Story作成</button>
+        <button class="top-btn primary" id="btnStoryCreatePrimary" onclick="openStoryModal()">＋ 新規Story作成</button>
       </div>
     </div>
     <div class="toolbar">
@@ -1198,6 +1206,7 @@
 
       <div class="modal-body" style="overflow-y:auto;flex:1;padding-right:12px;">
         <input type="hidden" id="esId" />
+        <div id="esModalGuestSandboxNote" class="guest-sandbox-modal-note" style="display:none"></div>
 
         <!-- 提出基本情報 -->
         <div class="form-row">
@@ -1253,7 +1262,7 @@
         <button class="btn-sm-ghost" type="button" onclick="copyCurrentEsFullText()">📋 全設問・回答を一括コピー</button>
         <div style="flex:1"></div>
         <button class="btn-sm-ghost" onclick="closeModal('esModal')">キャンセル</button>
-        <button class="top-btn primary" onclick="saveCurrentEs()">ESを保存</button>
+        <button class="top-btn primary" id="esModalSaveBtn" onclick="saveCurrentEs()">ESを保存</button>
       </div>
     </div>
   </div>
@@ -1267,6 +1276,7 @@
       </div>
       <div class="modal-body" style="gap:16px">
         <input type="hidden" id="storyId" />
+        <div id="storyModalGuestSandboxNote" class="guest-sandbox-modal-note" style="display:none"></div>
         <div class="form-row">
           <div class="form-group" style="flex:2">
             <label class="form-label">エピソードタイトル <span style="color:var(--red)">*</span></label>
@@ -1364,7 +1374,7 @@
         <button class="btn-sm-ghost" id="storyDeleteBtn" onclick="deleteCurrentStory()" style="color:var(--red);display:none">このStoryを削除</button>
         <div style="flex:1"></div>
         <button class="btn-sm-ghost" onclick="closeModal('storyModal')">キャンセル</button>
-        <button class="top-btn primary" onclick="saveCurrentStory()">Storyを保存</button>
+        <button class="top-btn primary" id="storyModalSaveBtn" onclick="saveCurrentStory()">Storyを保存</button>
       </div>
     </div>
   </div>
