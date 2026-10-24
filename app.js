@@ -1288,7 +1288,7 @@
              ondrop="onColDrop(event, '${st.key}')">
           <div class="col-head">
             <span class="dot" style="background:${st.color};color:${st.color}"></span>
-            ${st.label}
+            ${STAGE_TERM_IDS[st.key] ? TermGlossary.hintHtml(STAGE_TERM_IDS[st.key], { label: st.label, mode: 'underline' }) : escapeHtml(st.label)}
             <span class="desc">${st.desc}</span>
             <span class="count">${items.length}</span>
           </div>
@@ -2013,9 +2013,9 @@
     document.getElementById('kpis').innerHTML = `
       <div class="kpi" style="--kglow:rgba(139,123,255,.28)"><div class="label">選考管理数</div><div class="val">${total} <small>社</small></div></div>
       <div class="kpi" style="--kglow:rgba(79,216,232,.28)"><div class="label">選考中</div><div class="val" style="color:var(--cyan)">${active} <small>社</small></div></div>
-      <div class="kpi" style="--kglow:rgba(78,227,154,.28)"><div class="label">内々定・内定</div><div class="val" style="color:var(--green)">${offer} <small>社</small></div></div>
-      <div class="kpi" style="--kglow:rgba(217,178,95,.28)"><div class="label">書類/ES到達率</div><div class="val"><span class="g">${esRate}</span><small>%</small></div></div>
-      <div class="kpi" style="--kglow:rgba(224,52,90,.3)"><div class="label">7日以内の締切</div><div class="val" style="color:#ff7a6b">${dueSoon} <small>件</small></div></div>`;
+      <div class="kpi" style="--kglow:rgba(78,227,154,.28)"><div class="label">${TermGlossary.hintHtml('naitei', { label: '内々定・内定', mode: 'underline' })}</div><div class="val" style="color:var(--green)">${offer} <small>社</small></div></div>
+      <div class="kpi" style="--kglow:rgba(217,178,95,.28)"><div class="label">${TermGlossary.hintHtml('es', { label: '書類/ES到達率', mode: 'underline' })}</div><div class="val"><span class="g">${esRate}</span><small>%</small></div></div>
+      <div class="kpi" style="--kglow:rgba(224,52,90,.3)"><div class="label">${TermGlossary.hintHtml('shimekiri', { label: '7日以内の締切', mode: 'underline' })}</div><div class="val" style="color:#ff7a6b">${dueSoon} <small>件</small></div></div>`;
 
     // 選考ファネル
     const order = ['entry','es','first','final','offer'];
@@ -2023,6 +2023,13 @@
       const idx = order.indexOf(k);
       const keysFrom = order.slice(idx);
       return added.filter(c => keysFrom.includes(c.stage)).length;
+    };
+    const funnelTermIds = {
+      'エントリー': 'entry',
+      'ES提出': 'es',
+      '一次面接': 'first_interview',
+      '最終面接': 'final_interview',
+      '内々定/内定': 'naitei'
     };
     const funnelRows = [
       { name:'エントリー', n: reached('entry'), grad:'#7fb0ff,#4c8bf5', glow:'rgba(76,139,245,.4)' },
@@ -2035,7 +2042,10 @@
     document.getElementById('funnel').innerHTML = funnelRows.map((r, idx) => {
       const w = Math.round(r.n / maxN * 100);
       const rate = idx === 0 ? '100%' : (funnelRows[idx-1].n ? Math.round(r.n / funnelRows[idx-1].n * 100) + '%' : '—');
-      return `<div class="row"><div class="fname">${r.name}</div><div class="bar-track"><div class="bar" style="width:${Math.max(w, r.n ? 8 : 0)}%;background:linear-gradient(90deg,${r.grad});--bg-glow:${r.glow}">${r.n}</div></div><div class="rate">${rate}</div></div>`;
+      const fname = funnelTermIds[r.name]
+        ? TermGlossary.hintHtml(funnelTermIds[r.name], { label: r.name, mode: 'underline' })
+        : escapeHtml(r.name);
+      return `<div class="row"><div class="fname">${fname}</div><div class="bar-track"><div class="bar" style="width:${Math.max(w, r.n ? 8 : 0)}%;background:linear-gradient(90deg,${r.grad});--bg-glow:${r.glow}">${r.n}</div></div><div class="rate">${rate}</div></div>`;
     }).join('');
 
     // 業界別ドーナツ
@@ -3814,6 +3824,10 @@
     else if (type === 'ガクチカ') cls = 'type-gakuchika';
     else if (type === '志望動機') cls = 'type-motiv';
     else if (type === '学業・研究') cls = 'type-study';
+    const termId = ES_TYPE_TERM_IDS[type];
+    if (termId) {
+      return `<span class="es-type-badge ${cls}">${TermGlossary.hintHtml(termId, { label: type, mode: 'underline' })}</span>`;
+    }
     return `<span class="es-type-badge ${cls}">${type}</span>`;
   }
 
@@ -3924,8 +3938,8 @@
 
     document.querySelectorAll('#esTypeFilters .chip-sm').forEach(c => {
       const dt = c.dataset.type;
-      if (dt === 'all') c.textContent = `全設問 (${typeCounts.all})`;
-      else if (typeCounts[dt] !== undefined) c.textContent = `${dt} (${typeCounts[dt]})`;
+      if (dt === 'all') c.innerHTML = escapeHtml(`全設問 (${typeCounts.all})`);
+      else if (typeCounts[dt] !== undefined) c.innerHTML = TermGlossary.esTypeChipHtml(dt, typeCounts[dt]);
     });
 
     document.querySelectorAll('#esStatusFilters .chip-sm').forEach(c => {
@@ -5562,6 +5576,7 @@
 
   // ===================== 共通 & 初期化 =====================
   function renderAll() {
+    if (typeof TermGlossary !== 'undefined') TermGlossary.closePopover();
     if (currentView === 'db' || currentView === 'radar') renderDB();
     else if (currentView === 'list') renderList();
     else if (currentView === 'kanban') renderKanban();
@@ -5619,6 +5634,7 @@
   loadRadarItems();
   applySettings();
   updateAuthUI();
+  if (typeof TermGlossary !== 'undefined') TermGlossary.init();
 
   // 起動直後・ブラウザパスワード補完の遅延検知と排除
   function checkAndCleanAutofill() {

@@ -123,6 +123,9 @@
     <button class="top-btn primary secondary-action" onclick="openNewCompanyModal()" title="データベースにない企業を手動登録" aria-label="新規企業を手動登録">
       ＋<span class="btn-text"> 企業を追加</span>
     </button>
+    <button class="top-btn secondary-action glossary-entry-btn" type="button" onclick="TermGlossary.openDrawer()" title="就活用語の短い注釈（日本語＋中文ヒント）" aria-label="就活用語メモを開く">
+      📖<span class="btn-text"> 用語メモ</span>
+    </button>
     <button class="top-btn secondary-action" onclick="openSettingsModal()" title="データ設定・バックアップ" aria-label="データ管理・バックアップ設定">
       ⚙️<span class="btn-text"> データ管理</span>
     </button>
@@ -255,7 +258,7 @@
             <span>🔑 マイページ管理 ↗</span>
           </button>
         </div>
-        <p style="margin-top: 6px;">「今、何をするべきか」に集中。直近の締切・アクション・ステータスを一目で把握できます。</p>
+        <p style="margin-top: 6px;">「今、何をするべきか」に集中。直近の<span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="shimekiri" aria-expanded="false" aria-label="締切の説明">締切</button></span>・アクション・<span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="stage_status" aria-expanded="false" aria-label="選考ステージの説明">ステータス</button></span>を一目で把握できます。</p>
       </div>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
         <button class="top-btn" onclick="exportCSV()">📥 CSV出力</button>
@@ -281,8 +284,8 @@
             <tr>
               <th onclick="sortTable('name')" data-sort="name" style="min-width:240px">企業名 <span class="arrow" id="arr-name">↕</span></th>
               <th onclick="sortTable('action')" data-sort="action" style="min-width:200px">次のアクション <span class="arrow" id="arr-action">↕</span></th>
-              <th onclick="sortTable('due')" data-sort="due" style="min-width:180px">締切 <span class="arrow" id="arr-due">↕</span></th>
-              <th onclick="sortTable('stage')" data-sort="stage" style="min-width:140px">ステータス <span class="arrow" id="arr-stage">↕</span></th>
+              <th onclick="sortTable('due')" data-sort="due" style="min-width:180px"><span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="shimekiri" aria-expanded="false" aria-label="締切の説明" onclick="event.stopPropagation()">締切</button></span> <span class="arrow" id="arr-due">↕</span></th>
+              <th onclick="sortTable('stage')" data-sort="stage" style="min-width:140px"><span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="stage_status" aria-expanded="false" aria-label="選考ステージの説明" onclick="event.stopPropagation()">ステータス</button></span> <span class="arrow" id="arr-stage">↕</span></th>
               <th style="min-width:160px">メモ / リンク</th>
               <th style="width: 95px; text-align: center;">操作</th>
             </tr>
@@ -363,7 +366,7 @@
     <div class="hero">
       <div class="hero-title">
         <h1>選考<span class="g">カンバンボード</span></h1>
-        <p>カードをドラッグ＆ドロップして選考ステージを進められます。クリックで選考詳細・面接記録を編集できます。</p>
+        <p><span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="kanban" aria-expanded="false" aria-label="カンバンの説明">カンバン</button></span>でカードをドラッグ＆ドロップして<span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="stage_status" aria-expanded="false" aria-label="選考ステージの説明">選考ステージ</button></span>を進められます。クリックで選考詳細・面接記録を編集できます。</p>
       </div>
       <div class="stat-strip">
         <span>選考中 <b id="kActive" style="color:var(--cyan)">0</b> 社</span>
@@ -385,7 +388,7 @@
     <div class="hero">
       <div class="hero-title">
         <h1>ES <span class="g">データベース</span></h1>
-        <p>企業ごとの設問回答や汎用ガクチカ・志望動機を資産化。業界別・設問別に整理し、Story Bankと連携して何度でも使い回せます。</p>
+        <p>企業ごとの設問回答や汎用<span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="gakuchika" aria-expanded="false" aria-label="ガクチカの説明">ガクチカ</button></span>・<span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="shiboudouki" aria-expanded="false" aria-label="志望動機の説明">志望動機</button></span>を資産化。<span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="es" aria-expanded="false" aria-label="ESの説明">ES</button></span>を業界別・設問別に整理し、Story Bankと連携して何度でも使い回せます。</p>
       </div>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
         <button class="top-btn primary" onclick="openEsModal()">＋ 新規ES作成</button>
@@ -502,7 +505,7 @@
     <div class="hero">
       <div class="hero-title">
         <h1>Story <span class="g">Bank</span></h1>
-        <p>あなたの経験・強みをSTARモデルで体系化。ES作成時に何度でも引用でき、使用状況も一目で分かります。</p>
+        <p>あなたの経験・強みを<span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="star" aria-expanded="false" aria-label="STARの説明">STAR</button></span>モデルで体系化。ES作成時に何度でも引用でき、使用状況も一目で分かります。</p>
       </div>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
         <button class="top-btn primary" onclick="openStoryModal()">＋ 新規Story作成</button>
@@ -549,7 +552,7 @@
       <!-- 分析チャート: 選考ファネル & 業界別分布 -->
       <div class="grid2">
         <div class="panel">
-          <h2>選考ファネル <span class="sub">通過・到達状況</span></h2>
+          <h2><span class="term-hint-wrap"><button type="button" class="term-hint term-hint--underline" data-term="funnel" aria-expanded="false" aria-label="選考ファネルの説明">選考ファネル</button></span> <span class="sub">通過・到達状況</span></h2>
           <div class="funnel" id="funnel"></div>
         </div>
         <div class="panel">
@@ -708,7 +711,7 @@
           <button class="top-btn primary" type="button" onclick="closeModal('companyModal');openAuthModal('register')" style="padding:4px 12px;font-size:12px;border-radius:8px">無料登録</button>
         </div>
         <div class="form-group">
-          <label class="form-label">選考ステージ</label>
+          <label class="form-label"><span class="term-hint-wrap">選考ステージ<button type="button" class="term-hint term-hint--icon" data-term="stage_status" aria-expanded="false" aria-label="選考ステージの説明">?</button></span></label>
           <select class="form-select" id="mStage">
             <option value="rejected">お祈り・落選（選考終了）</option>
             <option value="entry">エントリー（マイページ作成）</option>
@@ -1497,6 +1500,16 @@
       </div>
     </div>
   </div>
+
+  <div class="glossary-drawer-overlay" id="glossaryDrawerOverlay" onclick="TermGlossary.closeDrawer()" aria-hidden="true"></div>
+  <aside class="glossary-drawer" id="glossaryDrawer" aria-labelledby="glossaryDrawerTitle" aria-hidden="true">
+    <div class="glossary-drawer-head">
+      <h2 id="glossaryDrawerTitle">📖 就活用語メモ</h2>
+      <p class="glossary-drawer-sub">就活の専門用語を短い日本語で説明し、必要なところに中文ヒントを付けています。画面内の点線や「?」をタップしても表示できます。</p>
+      <button type="button" class="glossary-drawer-close" onclick="TermGlossary.closeDrawer()" aria-label="閉じる">✕</button>
+    </div>
+    <div class="glossary-drawer-body" id="glossaryDrawerList"></div>
+  </aside>
 
   <div class="toast" id="toast"></div>
 
