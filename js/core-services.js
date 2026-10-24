@@ -243,6 +243,24 @@
     return (clean || name).slice(0, 1) || '企';
   }
 
+  function companyIntlTagsHtml(c) {
+    if (!c) return '';
+    let html = '';
+    if (c.intlStudentFriendly === true) {
+      const label = '留学生歓迎';
+      html += typeof TermGlossary !== 'undefined'
+        ? `<span class="tag intl-friendly">${TermGlossary.hintHtml('intl_friendly', { label, mode: 'underline' })}</span>`
+        : `<span class="tag intl-friendly" title="留学生の応募歓迎">留学生歓迎</span>`;
+    }
+    if (c.englishSelection === true) {
+      const label = '英語選考';
+      html += typeof TermGlossary !== 'undefined'
+        ? `<span class="tag intl-english">${TermGlossary.hintHtml('english_selection', { label, mode: 'underline' })}</span>`
+        : `<span class="tag intl-english" title="英語による選考あり">英語選考</span>`;
+    }
+    return html;
+  }
+
   function logoHtml(c) {
     const initial = cleanInitial(c.name);
     const bg = c.color || '#8b7bff';
@@ -422,7 +440,9 @@
       c.noteMotiv || '',
       c.noteEs || '',
       ...(c.tags || []),
-      ...aliasList
+      ...aliasList,
+      c.intlStudentFriendly ? '留学生歓迎' : '',
+      c.englishSelection ? '英語選考' : ''
     ];
 
     const raw = parts.join(' ');
@@ -619,6 +639,18 @@
       ja: 'エントリーから内定まで、各段階に何人（何社）残っているかの通過イメージ。ボトルネックが見えます。',
       zh: '选考漏斗：各阶段通过人数/社数。',
       sort: 20
+    },
+    intl_friendly: {
+      label: '留学生歓迎',
+      ja: '外国人留学生・海外大学出身者の新卒応募を受け付けている、または積極採用している企業の目安です。公式要項で在留資格・語学条件を必ず確認してください。',
+      zh: '欢迎留学生应聘（或积极招聘）的参考标签，请以官网募集要项为准。',
+      sort: 21
+    },
+    english_selection: {
+      label: '英語選考',
+      ja: 'ES・面接・ケースなど、選考の一部または全体を英語で受けられるルートがある企業の目安です。',
+      zh: '提供英语选考路径（部分或全程）的参考标签。',
+      sort: 22
     }
   };
 

@@ -170,22 +170,29 @@
       </div>
     </div>
     <div class="toolbar">
+      <div class="filters-intl-row">
+        <span class="filters-intl-label">留学生向け</span>
+        <div class="filters" id="dbIntlFilters">
+          <span class="chip chip-intl" data-intl-filter="intlStudentFriendly" title="留学生・海外大卒の応募歓迎（参考）">留学生歓迎</span>
+          <span class="chip chip-intl" data-intl-filter="englishSelection" title="英語で選考できるルートあり（参考）">英語選考</span>
+        </div>
+      </div>
       <div class="filters" id="dbFilters">
-        <span class="chip on">すべて</span>
-        <span class="chip" style="color:var(--gold-2);border-color:rgba(217,178,95,.4)">人気TOP300</span>
-        <span class="chip">コンサル・シンクタンク</span>
-        <span class="chip">IT・通信</span>
-        <span class="chip">商社</span>
-        <span class="chip">金融</span>
-        <span class="chip">メーカー</span>
-        <span class="chip">不動産・建設</span>
-        <span class="chip">広告・マスコミ</span>
-        <span class="chip">インフラ・運輸</span>
-        <span class="chip">小売・サービス</span>
-        <span class="chip">大企業</span>
-        <span class="chip">非上場名門</span>
-        <span class="chip">未追加のみ</span>
-        <span class="chip">選考中のみ</span>
+        <span class="chip on" data-db-cat="すべて">すべて</span>
+        <span class="chip" data-db-cat="人気TOP300" style="color:var(--gold-2);border-color:rgba(217,178,95,.4)">人気TOP300</span>
+        <span class="chip" data-db-cat="コンサル・シンクタンク">コンサル・シンクタンク</span>
+        <span class="chip" data-db-cat="IT・通信">IT・通信</span>
+        <span class="chip" data-db-cat="商社">商社</span>
+        <span class="chip" data-db-cat="金融">金融</span>
+        <span class="chip" data-db-cat="メーカー">メーカー</span>
+        <span class="chip" data-db-cat="不動産・建設">不動産・建設</span>
+        <span class="chip" data-db-cat="広告・マスコミ">広告・マスコミ</span>
+        <span class="chip" data-db-cat="インフラ・運輸">インフラ・運輸</span>
+        <span class="chip" data-db-cat="小売・サービス">小売・サービス</span>
+        <span class="chip" data-db-cat="大企業">大企業</span>
+        <span class="chip" data-db-cat="非上場名門">非上場名門</span>
+        <span class="chip" data-db-cat="未追加のみ">未追加のみ</span>
+        <span class="chip" data-db-cat="選考中のみ">選考中のみ</span>
       </div>
       <div class="result-count"><b id="dbTotal">0</b> 社中 <b id="dbShown">0</b> 件を表示</div>
     </div>
@@ -794,6 +801,21 @@
           </div>
         </div>
         <p id="mypageDetailStorageTrustNote" class="mypage-storage-note modal" role="note" style="margin-top: 4px;"></p>
+
+        <div class="form-group intl-flags-group">
+          <label class="form-label">留学生・語学（自分用メモ／企業DB表示）</label>
+          <div class="intl-flag-checks">
+            <label class="intl-flag-check">
+              <input type="checkbox" id="mIntlStudentFriendly" />
+              <span>留学生歓迎</span>
+            </label>
+            <label class="intl-flag-check">
+              <input type="checkbox" id="mEnglishSelection" />
+              <span>英語選考あり</span>
+            </label>
+          </div>
+          <p class="intl-flags-hint">チェックすると企業カードにタグ表示。公式要項の確認用メモとして使えます（未チェック＝不明扱い）。</p>
+        </div>
 
         <div class="form-group">
           <label class="form-label">管理タグ</label>

@@ -150,6 +150,39 @@
     'c_custom_acc_1': 'c_pwc'
   };
 
+  /** 留学生・英語選考フラグ（マスター未整備分の参照用。ユーザー保存値は優先） */
+  const INTL_SELECTION_META = {
+    c_tcs: { intlStudentFriendly: true, englishSelection: true },
+    c_deloitte: { intlStudentFriendly: true, englishSelection: true },
+    c_accenture: { intlStudentFriendly: true, englishSelection: true },
+    c_mckinsey: { intlStudentFriendly: true, englishSelection: true },
+    c_bcg: { intlStudentFriendly: true, englishSelection: true },
+    c_bain: { intlStudentFriendly: true, englishSelection: true },
+    c_pwc: { intlStudentFriendly: true, englishSelection: true },
+    c_ey: { intlStudentFriendly: true, englishSelection: true },
+    c_kpmg: { intlStudentFriendly: true, englishSelection: true },
+    c_kearney: { intlStudentFriendly: true, englishSelection: true },
+    c_rolandberger: { intlStudentFriendly: true, englishSelection: true },
+    c_mercari: { intlStudentFriendly: true, englishSelection: false },
+    c_recruit: { intlStudentFriendly: true, englishSelection: false },
+    c_freee: { intlStudentFriendly: true, englishSelection: false },
+    c_sony: { intlStudentFriendly: true, englishSelection: false },
+    c_oracle: { intlStudentFriendly: true, englishSelection: true },
+    c_unlisted_aflac: { intlStudentFriendly: true, englishSelection: true },
+    c_unlisted_nestle_jp: { intlStudentFriendly: true, englishSelection: true },
+    c_unlisted_louisvuitton_jp: { intlStudentFriendly: true, englishSelection: true },
+    c_rakuten_bu: { intlStudentFriendly: true, englishSelection: true }
+  };
+
+  function mergeIntlSelectionMeta(c) {
+    if (!c || !c.id) return c;
+    const meta = INTL_SELECTION_META[c.id];
+    if (!meta) return c;
+    if (c.intlStudentFriendly !== true && meta.intlStudentFriendly) c.intlStudentFriendly = true;
+    if (c.englishSelection !== true && meta.englishSelection) c.englishSelection = true;
+    return c;
+  }
+
   function getFullCatalog() {
     let full = (window.OFFICIAL_CATALOG_1500 && window.OFFICIAL_CATALOG_1500.length)
       ? window.OFFICIAL_CATALOG_1500
@@ -164,6 +197,7 @@
       });
       full = window.OFFICIAL_CATALOG_1500;
     }
+    for (let i = 0; i < full.length; i++) mergeIntlSelectionMeta(full[i]);
     return full;
   }
 
@@ -262,7 +296,9 @@
       ],
       "due": "2026-06-12",
       "dueLabel": "ケース二次面接",
-      "dueLv": "soon"
+      "dueLv": "soon",
+      "intlStudentFriendly": true,
+      "englishSelection": true
     },
     {
       "id": "c_sony",
@@ -362,7 +398,9 @@
       ],
       "due": "2026-05-22",
       "dueLabel": "ES提出締切",
-      "dueLv": "soon"
+      "dueLv": "soon",
+      "intlStudentFriendly": true,
+      "englishSelection": true
     },
     {
       "id": "c_smbc",
@@ -511,7 +549,9 @@
       ],
       "due": "2026-05-25",
       "dueLabel": "コーディングテスト受検",
-      "dueLv": "soon"
+      "dueLv": "soon",
+      "intlStudentFriendly": true,
+      "englishSelection": false
     },
     {
       "id": "c_7974",
