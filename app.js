@@ -210,7 +210,9 @@
               due: u.due || c.due || '',
               dueLabel: u.dueLabel || c.dueLabel || '',
               dueLv: u.dueLv || c.dueLv || '',
-              tags: (u.tags && u.tags.length) ? u.tags : (c.tags || []).filter(t => t !== '手動登録')
+              tags: (u.tags && u.tags.length) ? u.tags : (c.tags || []).filter(t => t !== '手動登録'),
+              intlStudentFriendly: typeof u.intlStudentFriendly === 'boolean' ? u.intlStudentFriendly : c.intlStudentFriendly,
+              englishSelection: typeof u.englishSelection === 'boolean' ? u.englishSelection : c.englishSelection
             });
           } else if (!c.id.startsWith('c_custom_acc_')) {
             const isDummySeed = DUMMY_SEED_IDS.has(c.id) && !c.myPageUrl && !c.myPageId;
@@ -250,6 +252,8 @@
               noteEs: u.noteEs || '',
               noteInterview: u.noteInterview || '',
               tags: (u.tags && u.tags.length && !u.tags.includes('手動登録')) ? u.tags : c.tags,
+              intlStudentFriendly: typeof u.intlStudentFriendly === 'boolean' ? u.intlStudentFriendly : c.intlStudentFriendly,
+              englishSelection: typeof u.englishSelection === 'boolean' ? u.englishSelection : c.englishSelection,
               isCustom: false
             });
           }
@@ -1124,7 +1128,9 @@
   // ===================== VIEW 1: 企業DB =====================
   const grid = document.getElementById('grid');
   let dbFilter = 'すべて', keyword = '', dbSort = 'pop_asc';
-  const dbChips = [...document.querySelectorAll('#dbFilters .chip')];
+  const dbIntlFilters = { intlStudentFriendly: false, englishSelection: false };
+  const dbChips = [...document.querySelectorAll('#dbFilters .chip[data-db-cat]')];
+  const dbIntlChips = [...document.querySelectorAll('#dbFilters .chip[data-intl-filter]')];
 
   function dbCardHtml(c) {
     const size = sizeLabel(c);
@@ -1151,6 +1157,7 @@
           ${size ? `<span class="tag size">${size}</span>` : ''}
           ${empBadge}
           ${isCustomBadge}
+          ${companyIntlTagsHtml(c)}
           ${(c.tags || []).filter(t => !['非上場名門','プライム上場','グロース上場'].includes(t)).slice(0, 3).map(t => `<span class="tag free">${t}</span>`).join('')}
         </div>
         <div class="foot">
@@ -1170,6 +1177,8 @@
 
   function dbMatches(c) {
     if (keyword && !smartSearchMatches(c, keyword)) return false;
+    if (dbIntlFilters.intlStudentFriendly && c.intlStudentFriendly !== true) return false;
+    if (dbIntlFilters.englishSelection && c.englishSelection !== true) return false;
     switch (dbFilter) {
       case 'すべて': return true;
       case '人気TOP300': return (c.popRank || 9999) <= 300;
@@ -1224,10 +1233,18 @@
 
     if (!html) {
       const q = keyword ? `「${keyword}」` : '';
+      const intlActive = dbIntlFilters.intlStudentFriendly || dbIntlFilters.englishSelection;
+      const intlParts = [];
+      if (dbIntlFilters.intlStudentFriendly) intlParts.push('留学生歓迎');
+      if (dbIntlFilters.englishSelection) intlParts.push('英語選考');
+      const intlDesc = intlActive
+        ? `<p style="color: var(--sub); font-size: 12.5px; max-width: 480px; margin: 0 auto 10px;">${intlParts.join('・')} の条件に合う企業が見つかりませんでした。フィルタを外すか、企業詳細でフラグを自分用に付けて管理できます。</p>`
+        : '';
       grid.innerHTML = `
         <div style="grid-column: 1 / -1; padding: 46px 20px; text-align: center; background: rgba(255,255,255,0.02); border: 1px dashed var(--glass-brd); border-radius: 16px; margin: 10px 0;">
           <div style="font-size: 36px; margin-bottom: 10px;">🔍</div>
           <div style="font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px;">${q} に該当する企業が見つかりませんでした</div>
+          ${intlDesc}
           <p style="color: var(--sub); font-size: 12.5px; max-width: 440px; margin: 0 auto 16px;">データベース未収録の企業も、手動登録すればすぐにカンバン・選考管理に追加できます。</p>
           <button class="top-btn primary" onclick="openNewCompanyWithKeyword('${keyword.replace(/'/g, "\\'")}')" style="display: inline-flex; margin: 0 auto; padding: 9px 20px;">
             ＋ ${q ? q + ' を' : ''}手動登録して選考管理に追加
@@ -1262,10 +1279,20 @@
     renderDB(false);
   }
 
+  dbIntlChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const key = chip.dataset.intlFilter;
+      if (!key || dbIntlFilters[key] === undefined) return;
+      dbIntlFilters[key] = !dbIntlFilters[key];
+      chip.classList.toggle('on', dbIntlFilters[key]);
+      renderDB();
+    });
+  });
+
   dbChips.forEach(chip => chip.addEventListener('click', () => {
     dbChips.forEach(x => x.classList.remove('on'));
     chip.classList.add('on');
-    dbFilter = chip.textContent.trim();
+    dbFilter = chip.dataset.dbCat || chip.textContent.trim();
     renderDB();
   }));
 
@@ -5443,6 +5470,10 @@
     document.getElementById('mNoteMotiv').value = c.noteMotiv || '';
     document.getElementById('mNoteEs').value = c.noteEs || '';
     document.getElementById('mNoteInterview').value = c.noteInterview || '';
+    const mIntl = document.getElementById('mIntlStudentFriendly');
+    const mEng = document.getElementById('mEnglishSelection');
+    if (mIntl) mIntl.checked = c.intlStudentFriendly === true;
+    if (mEng) mEng.checked = c.englishSelection === true;
 
     // ボタン表示切り替え
     const trackBtn = document.getElementById('mToggleTrackBtn');
@@ -5631,6 +5662,10 @@
     c.noteEs = document.getElementById('mNoteEs').value;
     c.noteInterview = document.getElementById('mNoteInterview').value;
     c.tags = [...modalTags];
+    const mIntlEl = document.getElementById('mIntlStudentFriendly');
+    const mEngEl = document.getElementById('mEnglishSelection');
+    c.intlStudentFriendly = !!(mIntlEl && mIntlEl.checked);
+    c.englishSelection = !!(mEngEl && mEngEl.checked);
     delete c._searchHay;
     delete c._searchCache;
 
