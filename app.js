@@ -375,8 +375,10 @@
     const msg = getMyPageStorageTrustMessage();
     const pageNote = document.getElementById('mypageStorageTrustNote');
     const modalNote = document.getElementById('mypageModalStorageTrustNote');
+    const detailNote = document.getElementById('mypageDetailStorageTrustNote');
     if (pageNote) pageNote.textContent = msg;
     if (modalNote) modalNote.textContent = msg;
+    if (detailNote) detailNote.textContent = msg;
   }
 
   function toggleUserDropdown(e) {
@@ -5008,6 +5010,7 @@
     renderModalTags();
     renderTimeline(c.id);
     renderCompanyEsList(c.id);
+    updateMyPageStorageTrustNote();
     openModal('companyModal');
   }
 
