@@ -580,11 +580,14 @@
             <h2 style="margin-bottom:0">📅 選考カレンダー <span class="sub">月間スケジュール & 締切</span></h2>
             <span class="badge-count" id="calMonthEventCount">0件</span>
           </div>
-          <div class="cal-nav">
-            <button class="cal-nav-btn" onclick="navCalendar(-1)" title="前月">◀</button>
-            <span class="cal-current-month" id="calCurrentMonthLabel">今月</span>
-            <button class="cal-nav-btn" onclick="navCalendar(1)" title="翌月">▶</button>
-            <button class="cal-today-btn" onclick="resetCalendarToCurrent()">今月</button>
+          <div class="cal-head-actions">
+            <button type="button" class="cal-export-btn" onclick="exportCalendarIcs()" title="Googleカレンダー・Appleカレンダー・Outlookに取り込み">カレンダーを書き出す (.ics)</button>
+            <div class="cal-nav">
+              <button class="cal-nav-btn" onclick="navCalendar(-1)" title="前月">◀</button>
+              <span class="cal-current-month" id="calCurrentMonthLabel">今月</span>
+              <button class="cal-nav-btn" onclick="navCalendar(1)" title="翌月">▶</button>
+              <button class="cal-today-btn" onclick="resetCalendarToCurrent()">今月</button>
+            </div>
           </div>
         </div>
 

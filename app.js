@@ -1817,6 +1817,90 @@
     }
   }
 
+  /** カレンダー表示と同じルールで書き出し対象の予定を収集（終了済み・過去日は除外） */
+  function collectExportableCalendarEvents() {
+    if (typeof cleanupAndSyncAllEvents === 'function') cleanupAndSyncAllEvents();
+    const todayStr = getLocalTodayStr();
+    const items = [];
+    const seenIds = new Set();
+
+    selectionEvents.forEach(ev => {
+      if (isSelectionEventEnded(ev)) return;
+      const dt = ev.due || ev.datetime;
+      if (!dt) return;
+      const dateKey = normalizeDateKey(dt);
+      if (!dateKey || dateKey < todayStr) return;
+      const comp = getCompanyById(ev.companyId);
+      if (!comp) return;
+      seenIds.add(ev.id);
+      items.push({
+        id: ev.id,
+        companyId: ev.companyId,
+        companyName: comp.name,
+        title: ev.title || ev.dueLabel || '選考予定',
+        stage: comp.stage,
+        datetime: dt,
+        memo: ev.notes || ev.memo || ''
+      });
+    });
+
+    catalog.filter(c => c.added && c.stage !== 'rejected' && c.due).forEach(c => {
+      if (selectionEvents.some(e => e.companyId === c.id)) return;
+      const dKey = normalizeDateKey(c.due);
+      if (!dKey || dKey < todayStr) return;
+      const id = 'comp_due_' + c.id;
+      if (seenIds.has(id)) return;
+      seenIds.add(id);
+      items.push({
+        id,
+        companyId: c.id,
+        companyName: c.name,
+        title: c.dueLabel || '選考締切',
+        stage: c.stage,
+        datetime: c.due,
+        memo: c.dueLabel || ''
+      });
+    });
+
+    items.sort((a, b) => String(a.datetime || '').localeCompare(String(b.datetime || '')));
+    return items;
+  }
+
+  function buildIcsDescriptionForEvent(item) {
+    const stageLabel = stageMap[item.stage]?.label || item.stage || '';
+    const lines = [
+      `企業: ${item.companyName}`,
+      `予定: ${item.title}`,
+      `選考ステージ: ${stageLabel}`
+    ];
+    if (item.memo && item.memo !== item.title) {
+      lines.push(`メモ: ${item.memo}`);
+    }
+    lines.push('就勝 (syukatsu.win) から書き出し');
+    return lines.join('\n');
+  }
+
+  function exportCalendarIcs() {
+    const items = collectExportableCalendarEvents();
+    if (!items.length) {
+      showToast('⚠️ 書き出せる予定がありません（終了済み・過去の予定は含みません）');
+      return;
+    }
+    const vevents = items.map(item => ExportService.buildVEvent({
+      uid: `syukatsu-${item.id}@syukatsu.win`,
+      summary: `【就勝】${item.companyName} - ${item.title}`,
+      description: buildIcsDescriptionForEvent(item),
+      rawDatetime: item.datetime
+    }));
+    const ics = ExportService.buildVCalendar(vevents);
+    const dateStr = getLocalTodayStr().replace(/-/g, '');
+    ExportService.downloadIcs(
+      ics,
+      `就勝_選考カレンダー_${dateStr}.ics`,
+      `📅 ${items.length}件の予定をカレンダーファイル(.ics)で保存しました`
+    );
+  }
+
   function renderCalendar() {
     const gridEl = document.getElementById('calDaysGrid');
     const monthLabel = document.getElementById('calCurrentMonthLabel');
@@ -5499,7 +5583,7 @@
     }
   }
 
-  // カレンダー連携 (.icsエクスポート)
+  // カレンダー連携 (.icsエクスポート — 単一企業の直近締切)
   function exportCompanyIcs(comp = null) {
     const c = comp || currentModalComp;
     if (!c) return;
@@ -5511,45 +5595,41 @@
       return;
     }
 
-    const m = dueVal.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
-    if (!m) {
+    const range = ExportService.icsDateRangeFromRaw(dueVal);
+    if (!range) {
       showToast('⚠️ 有効な日付（YYYY-MM-DD）を入力してください');
       return;
     }
 
-    const y = m[1];
-    const mo = m[2].padStart(2, '0');
-    const d = m[3].padStart(2, '0');
-    const dtStr = `${y}${mo}${d}`;
+    const activeEv = selectionEvents.find(e => e && e.companyId === c.id && !isSelectionEventEnded(e));
+    const uid = activeEv
+      ? `syukatsu-${activeEv.id}@syukatsu.win`
+      : `syukatsu-comp_due_${c.id}@syukatsu.win`;
 
-    const title = `【就勝】${c.name} - ${dueLabel}`;
-    const desc = `企業名: ${c.name}\\n予定: ${dueLabel}\\n選考ステージ: ${stageMap[c.stage]?.label || c.stage}\\nマイページ: ${c.myPageUrl || '未登録'}`;
+    const item = {
+      id: activeEv ? activeEv.id : 'comp_due_' + c.id,
+      companyName: c.name,
+      title: dueLabel,
+      stage: c.stage,
+      datetime: dueVal,
+      memo: ''
+    };
+    let description = buildIcsDescriptionForEvent(item);
+    description += c.myPageUrl ? `\nマイページ: ${c.myPageUrl}` : '\nマイページ: 未登録';
 
-    const ics = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//就勝//syukatsu.win//JA',
-      'CALSCALE:GREGORIAN',
-      'METHOD:PUBLISH',
-      'BEGIN:VEVENT',
-      `UID:syukatsu-${c.id}-${Date.now()}@syukatsu.win`,
-      `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
-      `DTSTART;VALUE=DATE:${dtStr}`,
-      `DTEND;VALUE=DATE:${dtStr}`,
-      `SUMMARY:${title}`,
-      `DESCRIPTION:${desc}`,
-      'STATUS:CONFIRMED',
-      'BEGIN:VALARM',
-      'TRIGGER:-PT12H',
-      'ACTION:DISPLAY',
-      `DESCRIPTION:${title} 前日リマインド`,
-      'END:VALARM',
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\r\n');
-
-    ExportService.downloadBlob(ics, 'text/calendar;charset=utf-8;', `就勝_${c.name}_${dueLabel}_${dtStr}.ics`);
-    showToast(`📅 「${c.name}」の予定をカレンダーファイル(.ics)で保存しました`);
+    const vevent = ExportService.buildVEvent({
+      uid,
+      summary: `【就勝】${c.name} - ${dueLabel}`,
+      description,
+      rawDatetime: dueVal
+    });
+    if (!vevent) {
+      showToast('⚠️ 有効な日付（YYYY-MM-DD）を入力してください');
+      return;
+    }
+    const ics = ExportService.buildVCalendar([vevent]);
+    const dtStr = range.allDay ? range.dtStart : range.dtStart.slice(0, 8);
+    ExportService.downloadIcs(ics, `就勝_${c.name}_${dueLabel}_${dtStr}.ics`, `📅 「${c.name}」の予定をカレンダーファイル(.ics)で保存しました`);
   }
 
   function renderModalTags() {
