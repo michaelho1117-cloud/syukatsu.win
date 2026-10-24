@@ -55,7 +55,7 @@ flowchart TD
 
     subgraph Storage["永続化・データ層 (Offline-First Hybrid)"]
         LS[("LocalStorage Engine<br/>(ユーザー別スコープキー / 即時永続化)")]
-        Catalog[("企業マスターDB (1,770社)<br/>companies_catalog.js (1.2MB)")]
+        Catalog[("企業マスターDB (1,770社)<br/>data/master_companies.js + showcase_seed.js")]
         Logos[("公式企業ロゴ (1,778社)<br/>assets/logos/ (ローカル完全内蔵)")]
     end
 
