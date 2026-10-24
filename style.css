@@ -1768,10 +1768,23 @@
       max-height: 100%;
       scroll-snap-align: center;
     }
-    /* Table List */
+    /* Table List — cards on mobile, table on wider screens */
     .table-wrap { padding: 8px 14px 32px; }
+    #view-list .list-table-desktop { display: none; }
+    #view-list .list-card-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
     .table-card { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; }
+    #view-mypage table,
     table { min-width: 720px; }
+    .mobile-nav-btn {
+      font-size: 10px;
+      gap: 3px;
+      padding: 4px 2px;
+    }
+    .mobile-nav-btn .icon { font-size: 18px; }
 
     /* ES Database & Story Bank Mobile */
     .es-control-panel {
@@ -2071,6 +2084,170 @@
   .sel-event-divider {
     border-top: 1px dashed rgba(255, 255, 255, 0.09);
     padding-top: 6px;
+  }
+
+  /* Selection list — mobile card stack (table remains on desktop) */
+  .list-card-stack { display: none; }
+  .sel-card-pop {
+    font-size: 10px;
+    padding: 1px 6px;
+    margin-left: 5px;
+    border-radius: 4px;
+    background: rgba(217,178,95,.18);
+    color: var(--gold-2);
+    border: 1px solid rgba(217,178,95,.4);
+    font-weight: 700;
+    vertical-align: middle;
+  }
+  .sel-list-card {
+    position: relative;
+    background: rgba(16, 20, 36, 0.92);
+    border: 1px solid var(--glass-brd);
+    border-radius: 14px;
+    padding: 14px 14px 12px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, transform .12s;
+    box-shadow: 0 8px 24px rgba(0,0,0,.28);
+  }
+  .sel-list-card:active { transform: scale(0.99); }
+  .sel-list-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: rgba(255,255,255,.12);
+  }
+  .sel-list-card.s-entry::before { background: #4c8bf5; box-shadow: 0 0 10px rgba(76,139,245,.45); }
+  .sel-list-card.s-es::before { background: #8b7bff; box-shadow: 0 0 10px rgba(139,123,255,.4); }
+  .sel-list-card.s-first::before { background: #4fd8e8; }
+  .sel-list-card.s-final::before { background: #ff7eb6; }
+  .sel-list-card.s-offer::before { background: #4ee39a; }
+  .sel-list-card.s-rejected::before { background: #ef4444; }
+  .sel-list-card--due-today::before,
+  .sel-list-card--due-urgent::before {
+    background: linear-gradient(180deg, #ff6a5f, #e0345a);
+    box-shadow: 0 0 12px rgba(224,52,90,.55);
+  }
+  .sel-list-card--due-soon::before {
+    background: #ffcf6b;
+    box-shadow: 0 0 10px rgba(255,207,107,.35);
+  }
+  .sel-list-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .sel-list-card-titles { min-width: 0; flex: 1; }
+  .sel-list-card-titles .name {
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+  .sel-list-card-head .stage-badge {
+    flex-shrink: 0;
+    font-size: 10.5px;
+    padding: 4px 9px;
+  }
+  .sel-list-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0 8px;
+    border-top: 1px solid rgba(255,255,255,.06);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .sel-list-card-row {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 8px;
+    align-items: start;
+  }
+  .sel-list-card-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    color: var(--muted);
+    letter-spacing: .02em;
+    padding-top: 2px;
+  }
+  .sel-list-card-value { min-width: 0; }
+  .sel-card-action-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .sel-card-action-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.35;
+  }
+  .sel-card-action-memo {
+    font-size: 11px;
+    color: var(--sub);
+    margin-top: 4px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .sel-card-more {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 5px;
+    background: rgba(255,255,255,.06);
+    color: var(--sub);
+    border: 1px solid var(--glass-brd);
+  }
+  .sel-list-card-due {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .sel-card-due-text {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .sel-card-muted { font-size: 12px; color: var(--muted); }
+  .sel-list-card-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .sel-list-card-memo { flex: 1 1 120px; min-width: 0; }
+  .sel-card-stage-select {
+    flex: 1 1 140px;
+    min-width: 0;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 9px;
+  }
+  .sel-list-card-actions {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+  }
+  .sel-list-empty {
+    text-align: center;
+    padding: 48px 16px;
+    color: var(--sub);
+    font-size: 13px;
+    line-height: 1.6;
+    border: 1px dashed var(--glass-brd);
+    border-radius: 14px;
+    background: rgba(255,255,255,.02);
   }
 
   /* ===== ES Database & Story Bank Cards ===== */

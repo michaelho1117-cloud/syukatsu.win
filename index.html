@@ -275,7 +275,8 @@
       <div class="result-count">選考中・管理中 <b id="listShown">0</b> 社</div>
     </div>
     <div class="table-wrap">
-      <div class="table-card">
+      <div class="list-card-stack" id="listCardStack" aria-label="選考管理カード一覧"></div>
+      <div class="table-card list-table-desktop">
         <table>
           <thead>
             <tr>
@@ -637,10 +638,6 @@
     <button class="mobile-nav-btn" data-view="es" onclick="switchView('es')">
       <span class="icon">📝</span>
       <span>ES</span>
-    </button>
-    <button class="mobile-nav-btn" data-view="story" onclick="switchView('story')">
-      <span class="icon">💡</span>
-      <span>Story</span>
     </button>
     <button class="mobile-nav-btn" data-view="dash" onclick="switchView('dash')">
       <span class="icon">📊</span>
