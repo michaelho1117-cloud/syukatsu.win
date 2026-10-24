@@ -660,26 +660,28 @@
     border-color: rgba(255, 201, 120, .45);
     background: rgba(255, 201, 120, .1);
   }
-  .tag.intl-friendly .term-hint--underline { color: inherit; }
   .tag.intl-english {
     color: #7dd3fc;
     border-color: rgba(125, 211, 252, .45);
     background: rgba(125, 211, 252, .1);
   }
-  .tag.intl-english .term-hint--underline { color: inherit; }
-  .filters-intl-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    width: 100%;
-    margin-bottom: 4px;
-  }
-  .filters-intl-label {
-    font-size: 11.5px;
-    font-weight: 700;
+  .chip.chip-intl-label {
+    cursor: default;
     color: var(--sub);
-    white-space: nowrap;
+    background: transparent;
+    border-color: transparent;
+    padding-right: 4px;
+    font-size: 11.5px;
+    pointer-events: none;
+  }
+  .chip.chip-divider {
+    cursor: default;
+    pointer-events: none;
+    padding: 6px 2px;
+    border-color: transparent;
+    background: transparent;
+    color: var(--muted);
+    font-weight: 400;
   }
   .chip.chip-intl.on {
     color: #ffc978;

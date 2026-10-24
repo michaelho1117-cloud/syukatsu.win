@@ -1130,7 +1130,7 @@
   let dbFilter = 'すべて', keyword = '', dbSort = 'pop_asc';
   const dbIntlFilters = { intlStudentFriendly: false, englishSelection: false };
   const dbChips = [...document.querySelectorAll('#dbFilters .chip[data-db-cat]')];
-  const dbIntlChips = [...document.querySelectorAll('#dbIntlFilters .chip[data-intl-filter]')];
+  const dbIntlChips = [...document.querySelectorAll('#dbFilters .chip[data-intl-filter]')];
 
   function dbCardHtml(c) {
     const size = sizeLabel(c);

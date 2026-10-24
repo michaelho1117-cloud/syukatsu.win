@@ -247,16 +247,10 @@
     if (!c) return '';
     let html = '';
     if (c.intlStudentFriendly === true) {
-      const label = '留学生歓迎';
-      html += typeof TermGlossary !== 'undefined'
-        ? `<span class="tag intl-friendly">${TermGlossary.hintHtml('intl_friendly', { label, mode: 'underline' })}</span>`
-        : `<span class="tag intl-friendly" title="留学生の応募歓迎">留学生歓迎</span>`;
+      html += '<span class="tag intl-friendly" title="留学生の応募歓迎（欢迎留学生应聘・参考）">留学生歓迎</span>';
     }
     if (c.englishSelection === true) {
-      const label = '英語選考';
-      html += typeof TermGlossary !== 'undefined'
-        ? `<span class="tag intl-english">${TermGlossary.hintHtml('english_selection', { label, mode: 'underline' })}</span>`
-        : `<span class="tag intl-english" title="英語による選考あり">英語選考</span>`;
+      html += '<span class="tag intl-english" title="英語による選考あり（英语选考・参考）">英語選考</span>';
     }
     return html;
   }
