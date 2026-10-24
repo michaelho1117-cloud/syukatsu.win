@@ -360,6 +360,23 @@
     document.querySelectorAll('.demo-seed-banner').forEach(el => {
       el.style.display = currentAuthUser ? 'none' : 'flex';
     });
+
+    updateMyPageStorageTrustNote();
+  }
+
+  function getMyPageStorageTrustMessage() {
+    if (currentAuthUser) {
+      return '🔐 ログイン中の保存先：お使いのブラウザ内（端末のローカルストレージ）と、あなたのアカウントに紐づく Supabase クラウド（選考データと一緒に同期）です。就勝側でパスワードを平文表示することはありませんが、エンドツーエンド暗号化ではないため、共有PCではご注意ください。';
+    }
+    return '🔐 未ログイン時は展示用デモデータのみ表示され、マイページのパスワード登録・保存はできません。ログイン後はブラウザ内と Supabase クラウドに同期保存されます（エンドツーエンド暗号化ではありません）。';
+  }
+
+  function updateMyPageStorageTrustNote() {
+    const msg = getMyPageStorageTrustMessage();
+    const pageNote = document.getElementById('mypageStorageTrustNote');
+    const modalNote = document.getElementById('mypageModalStorageTrustNote');
+    if (pageNote) pageNote.textContent = msg;
+    if (modalNote) modalNote.textContent = msg;
   }
 
   function toggleUserDropdown(e) {
@@ -1173,17 +1190,70 @@
   // ===================== VIEW 2: カンバン =====================
   const board = document.getElementById('board');
 
-  function kCardHtml(c) {
+  function getKanbanCardDueDisplay(c) {
+    if (c.stage === 'rejected') {
+      return { badge: '選考終了', badgeCls: 'rejected', urgency: '' };
+    }
+    const next = getCompanyNextAction(c.id);
+    if (next.datetime || next.badgeText || (next.dueText && next.dueText !== '—')) {
+      const cls = next.badgeCls === 'urgent' || next.badgeCls === 'today' || next.badgeCls === 'past'
+        ? 'urgent'
+        : (next.badgeCls === 'soon' ? 'soon' : '');
+      let urgency = '';
+      if (next.days !== null && next.days < 0) urgency = 'overdue';
+      else if (cls === 'urgent') urgency = 'urgent';
+      else if (cls === 'soon') urgency = 'soon';
+      return {
+        badge: next.badgeText || next.dueText || '',
+        badgeCls: cls,
+        urgency
+      };
+    }
     const dueInfo = getDueStatus(c);
+    let urgency = '';
+    if (dueInfo.days !== null && dueInfo.days < 0) urgency = 'overdue';
+    else if (dueInfo.cls === 'urgent') urgency = 'urgent';
+    else if (dueInfo.cls === 'soon') urgency = 'soon';
+    return {
+      badge: dueInfo.badge || dueInfo.text || '',
+      badgeCls: dueInfo.cls || '',
+      urgency
+    };
+  }
+
+  function getKanbanSortKey(c) {
+    const next = getCompanyNextAction(c.id);
+    if (next.datetime) {
+      const key = normalizeDateKey(next.datetime);
+      if (key) return key;
+    }
+    if (c.due) {
+      const key = normalizeDateKey(c.due);
+      if (key) return key;
+    }
+    return '9999-12-31';
+  }
+
+  function sortKanbanColumnItems(items) {
+    return items.slice().sort((a, b) => {
+      const keyDiff = getKanbanSortKey(a).localeCompare(getKanbanSortKey(b));
+      if (keyDiff !== 0) return keyDiff;
+      return (a.name || '').localeCompare(b.name || '', 'ja');
+    });
+  }
+
+  function kCardHtml(c) {
+    const dueDisplay = getKanbanCardDueDisplay(c);
     let dueBadge = '';
     if (c.stage === 'rejected') {
       dueBadge = `<span class="k-due" style="color:#f87171;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3)">選考終了</span>`;
-    } else {
-      dueBadge = dueInfo.badge ? `<span class="k-due ${dueInfo.cls}">${dueInfo.badge}</span>` : (dueInfo.text ? `<span class="k-due">${dueInfo.text}</span>` : '');
+    } else if (dueDisplay.badge) {
+      dueBadge = `<span class="k-due ${dueDisplay.badgeCls}">${escapeHtml(dueDisplay.badge)}</span>`;
     }
+    const urgencyClass = dueDisplay.urgency ? ` kcard-due-${dueDisplay.urgency}` : '';
 
     return `
-      <div class="kcard"
+      <div class="kcard${urgencyClass}"
            id="kcard_${c.id}"
            draggable="true"
            ondragstart="onCardDragStart(event, '${c.id}')"
@@ -1201,7 +1271,9 @@
   function renderKanban() {
     const added = catalog.filter(c => c.added);
     board.innerHTML = stages.map(st => {
-      const items = added.filter(c => ((c.stage === 'watch' || !c.stage) ? 'entry' : c.stage) === st.key);
+      const items = sortKanbanColumnItems(
+        added.filter(c => ((c.stage === 'watch' || !c.stage) ? 'entry' : c.stage) === st.key)
+      );
       const body = items.length
         ? items.map(c => kCardHtml(c)).join('')
         : `<div class="empty-hint">企業カードをここにドラッグ</div>`;
@@ -2404,7 +2476,30 @@
     if (c && c.myPagePass) copyMyPageText(c.myPagePass, 'パスワードをコピーしました');
   }
 
+  function renderStoryStarPreview(story) {
+    const fields = [
+      { key: 'situation', letter: 's' },
+      { key: 'task', letter: 't' },
+      { key: 'action', letter: 'a' },
+      { key: 'result', letter: 'r' },
+      { key: 'learning', letter: 'l' }
+    ];
+    const rows = fields
+      .map(f => {
+        const text = (story[f.key] || '').trim();
+        if (!text) return '';
+        const snippet = text.length > 72 ? text.slice(0, 72) + '…' : text;
+        return `<div class="story-star-row"><span class="star-letter ${f.letter}">${f.letter.toUpperCase()}</span><span class="story-star-snippet">${escapeHtml(snippet)}</span></div>`;
+      })
+      .filter(Boolean);
+    if (!rows.length) {
+      return '<div class="story-star-empty">STAR（S/T/A/R/L）は未入力です。カードを開いて記入できます。</div>';
+    }
+    return `<div class="story-star-preview">${rows.join('')}</div>`;
+  }
+
   function renderMyPageTable() {
+    updateMyPageStorageTrustNote();
     const tbody = document.getElementById('mypageTbody');
     const emptyState = document.getElementById('mypageEmptyState');
     const countBadge = document.getElementById('mypageCountBadge');
@@ -2562,6 +2657,7 @@
       document.getElementById('mypageModalPass').value = '';
     }
 
+    updateMyPageStorageTrustNote();
     openModal('mypageAddModal');
   }
 
@@ -4642,7 +4738,7 @@
             </div>
           </div>
           <div class="story-card-title">${story.title}</div>
-          <div style="font-size:12.5px;color:rgba(240,243,246,0.85);line-height:1.5;">${story.summary || story.action || '（要約未入力）'}</div>
+          ${renderStoryStarPreview(story)}
           ${refBadge}
           <div class="es-meta-bar">
             ${(story.strengths || []).slice(0, 3).map(st => `<span class="tag size" style="font-size:10px">${st}</span>`).join('')}
