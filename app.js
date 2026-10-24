@@ -1789,6 +1789,35 @@
     }).join('');
   }
 
+  // YYYY-MM-DD must be read as year-month-day. An unanchored M/D scan
+  // treats the year suffix in "2026-10-26" as the month ("26月") and the
+  // real month as the day ("10").
+  function formatDeadlineChipDate(dueStr) {
+    const raw = String(dueStr || '').trim();
+    const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+    let year;
+    let month;
+    let day;
+    const ymd = raw.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+    if (ymd) {
+      year = parseInt(ymd[1], 10);
+      month = parseInt(ymd[2], 10);
+      day = parseInt(ymd[3], 10);
+    } else {
+      const md = raw.match(/^(\d{1,2})[/-](\d{1,2})(?:\D|$)/);
+      if (!md) return { day: '–', mon: '' };
+      month = parseInt(md[1], 10);
+      day = parseInt(md[2], 10);
+      year = new Date().getFullYear();
+    }
+    if (month < 1 || month > 12 || day < 1 || day > 31) return { day: '–', mon: '' };
+    const dt = new Date(year, month - 1, day);
+    if (dt.getFullYear() !== year || dt.getMonth() !== month - 1 || dt.getDate() !== day) {
+      return { day: '–', mon: '' };
+    }
+    return { day: String(day), mon: `${month}月(${weekdays[dt.getDay()]})` };
+  }
+
   function renderDash() {
     renderCalendar();
     const added = catalog.filter(c => c.added);
@@ -1869,9 +1898,9 @@
       const d = getDueStatus(c);
       const st = stageMap[c.stage] || stageMap.entry;
       const urgent = d.cls === 'urgent' ? ' urgent' : '';
-      const mMatch = (c.due || '').match(/(\d{1,2})[\/-](\d{1,2})/);
-      const day = mMatch ? mMatch[2] : '–';
-      const mon = mMatch ? mMatch[1] + '月' : '';
+      const chip = formatDeadlineChipDate(c.due);
+      const day = chip.day;
+      const mon = chip.mon;
       return `
         <div class="dl${urgent}" onclick="openDetailModal('${c.id}')">
           <div class="date">

@@ -720,7 +720,7 @@
   "esEntries": [
     {
       "id": "es_docomo_sample",
-      "companyId": "c_nttdata",
+      "companyId": "c_unlisted_nttdocomo",
       "questionType": "ガクチカ",
       "title": "株式会社NTTドコモ 本選考（ジョブマッチング面談）",
       "question": "Q10. 経験①：主体的に取り組んだ経験（400字程度）",
@@ -772,7 +772,7 @@
     },
     {
       "id": "es_jri_sample",
-      "companyId": "c_smbc",
+      "companyId": "c_jri",
       "questionType": "自己PR",
       "title": "株式会社日本総合研究所（JRI） インターン選考（PM / ITサービスマネジメント）",
       "question": "【PM】学生時代に力を入れていることと強み（400字以下）",
