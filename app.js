@@ -10,6 +10,8 @@
   const EVENTS_KEY = 'shukatsu_events_v1';
   const ES_KEY = 'shukatsu_es_v1';
   const STORIES_KEY = 'shukatsu_stories_v1';
+  const GUEST_SANDBOX_ES_KEY = 'shukatsu_guest_sandbox_es_v1';
+  const GUEST_SANDBOX_STORIES_KEY = 'shukatsu_guest_sandbox_stories_v1';
 
   let catalog = [];
   let currentSettings = { gradYear: '28卒' };
@@ -20,6 +22,113 @@
 
   function getScopedKey(baseKey) {
     return currentAuthUser ? `${baseKey}_user_${currentAuthUser.id}` : null;
+  }
+
+  function isGuestSession() {
+    return !currentAuthUser;
+  }
+
+  function isGuestSandboxEs(es) {
+    return Boolean(es && (es.guestSandbox === true || String(es.id || '').startsWith('guest_es_')));
+  }
+
+  function isGuestSandboxStory(story) {
+    return Boolean(story && (story.guestSandbox === true || String(story.id || '').startsWith('guest_story_')));
+  }
+
+  function loadGuestSandboxStorage() {
+    try {
+      const esRaw = localStorage.getItem(GUEST_SANDBOX_ES_KEY);
+      const stRaw = localStorage.getItem(GUEST_SANDBOX_STORIES_KEY);
+      return {
+        es: esRaw ? JSON.parse(esRaw) : [],
+        stories: stRaw ? JSON.parse(stRaw) : []
+      };
+    } catch (e) {
+      return { es: [], stories: [] };
+    }
+  }
+
+  function mergeGuestSandboxIntoLists() {
+    const { es, stories } = loadGuestSandboxStorage();
+    const sandboxEs = (Array.isArray(es) ? es : []).map(e => Object.assign({}, e, { guestSandbox: true }));
+    const sandboxStories = (Array.isArray(stories) ? stories : []).map(s => Object.assign({}, s, { guestSandbox: true }));
+    const demoEs = esList.filter(e => !isGuestSandboxEs(e));
+    const demoStories = storyBank.filter(s => !isGuestSandboxStory(s));
+    esList = sandboxEs.concat(demoEs);
+    storyBank = sandboxStories.concat(demoStories);
+  }
+
+  function persistGuestSandbox() {
+    if (!isGuestSession()) return;
+    try {
+      const sandboxEs = esList.filter(isGuestSandboxEs);
+      const sandboxStories = storyBank.filter(isGuestSandboxStory);
+      localStorage.setItem(GUEST_SANDBOX_ES_KEY, JSON.stringify(sandboxEs));
+      localStorage.setItem(GUEST_SANDBOX_STORIES_KEY, JSON.stringify(sandboxStories));
+    } catch (e) {
+      console.error('Guest sandbox save error:', e);
+    }
+  }
+
+  function clearGuestSandboxStorage() {
+    try {
+      localStorage.removeItem(GUEST_SANDBOX_ES_KEY);
+      localStorage.removeItem(GUEST_SANDBOX_STORIES_KEY);
+    } catch (e) {}
+  }
+
+  function guestHadSandboxDrafts() {
+    const { es, stories } = loadGuestSandboxStorage();
+    return (Array.isArray(es) && es.length > 0) || (Array.isArray(stories) && stories.length > 0);
+  }
+
+  function renderGuestSandboxBadge() {
+    return '<span class="guest-sandbox-badge" title="この端末のみのお試し下書き（クラウド未同期）">お試し</span>';
+  }
+
+  function updateGuestSandboxUI() {
+    const show = isGuestSession();
+    document.querySelectorAll('.guest-sandbox-banner').forEach(el => {
+      el.style.display = show ? 'flex' : 'none';
+    });
+    const esPrimary = document.getElementById('btnEsCreatePrimary');
+    const storyPrimary = document.getElementById('btnStoryCreatePrimary');
+    if (esPrimary) esPrimary.textContent = show ? '＋ お試しで新規ES作成' : '＋ 新規ES作成';
+    if (storyPrimary) storyPrimary.textContent = show ? '＋ お試しで新規Story作成' : '＋ 新規Story作成';
+  }
+
+  function setGuestModalEditorState(modalId, readOnly, showTrustNote) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    const noteId = modalId === 'esModal' ? 'esModalGuestSandboxNote' : 'storyModalGuestSandboxNote';
+    const note = document.getElementById(noteId);
+    if (note) {
+      if (readOnly) {
+        note.style.display = 'block';
+        note.textContent = 'これは展示用デモのサンプルです。編集はできません。「お試しで新規作成」からSTAR・ESの下書きを試せます。ログイン後にクラウドへ保存できます。';
+      } else if (showTrustNote) {
+        note.style.display = 'block';
+        note.textContent = 'お試し下書きはこのブラウザ内のみに保存され、クラウドには同期されません。ログインするとお試しデータは破棄され、本番データに切り替わります。';
+      } else {
+        note.style.display = 'none';
+      }
+    }
+    modal.querySelectorAll('input, textarea, select').forEach(el => {
+      el.disabled = readOnly;
+    });
+    modal.querySelectorAll('button').forEach(el => {
+      if (el.classList.contains('modal-close')) return;
+      if (el.id === 'esModalSaveBtn' || el.id === 'storyModalSaveBtn') {
+        el.style.display = readOnly ? 'none' : '';
+        return;
+      }
+      if (el.closest('.es-q-actions') || el.getAttribute('onclick') === 'addEsQuestionBlock()') {
+        el.disabled = readOnly;
+      }
+    });
+    const delBtn = document.getElementById(modalId === 'esModal' ? 'esModalDeleteBtn' : 'storyDeleteBtn');
+    if (delBtn && readOnly) delBtn.style.display = 'none';
   }
 
   function loadAll() {
@@ -52,6 +161,7 @@
         storyBank = JSON.parse(JSON.stringify(demoData.storyBank || []));
         currentTasks = JSON.parse(JSON.stringify(demoData.tasks || []));
         currentSettings = { gradYear: '28卒' };
+        mergeGuestSandboxIntoLists();
         rebuildCatalogIndex();
         return;
       }
@@ -199,7 +309,7 @@
     rebuildCatalogIndex();
     if (typeof cleanupAndSyncAllEvents === 'function') cleanupAndSyncAllEvents();
     if (!currentAuthUser) {
-      // 未ログイン状態ではローカル保存や上書きを防止
+      persistGuestSandbox();
       return;
     }
     catalog = catalog.filter(c => !c.id.startsWith('c_custom_acc_'));
@@ -361,6 +471,7 @@
       el.style.display = currentAuthUser ? 'none' : 'flex';
     });
 
+    updateGuestSandboxUI();
     updateMyPageStorageTrustNote();
   }
 
@@ -368,7 +479,7 @@
     if (currentAuthUser) {
       return '🔐 ログイン中の保存先：お使いのブラウザ内（端末のローカルストレージ）と、あなたのアカウントに紐づく Supabase クラウド（選考データと一緒に同期）です。就勝側でパスワードを平文表示することはありませんが、エンドツーエンド暗号化ではないため、共有PCではご注意ください。';
     }
-    return '🔐 未ログイン時は展示用デモデータのみ表示され、マイページのパスワード登録・保存はできません。ログイン後はブラウザ内と Supabase クラウドに同期保存されます（エンドツーエンド暗号化ではありません）。';
+    return '🔐 未ログイン時は展示用デモを閲覧できます。ES・Storyは「お試し」下書きのみ端末内に保存され、クラウドには同期されません。ログイン後はお試し下書きは破棄され、クラウドの本番データに切り替わります（エンドツーエンド暗号化ではありません）。';
   }
 
   function updateMyPageStorageTrustNote() {
@@ -725,7 +836,8 @@
   async function syncAfterLogin() {
     if (!supabaseClient || !currentAuthUser) return;
     try {
-      // 0. 未ログイン時の展示用デモ・旧ローカルキャッシュを完全パージ
+      // 0. 未ログイン時の展示用デモ・旧ローカルキャッシュ・お試し下書きを完全パージ
+      const hadGuestSandbox = guestHadSandboxDrafts();
       try {
         localStorage.removeItem(STORAGE_KEY);
         localStorage.removeItem(SETTINGS_KEY);
@@ -733,9 +845,13 @@
         localStorage.removeItem(EVENTS_KEY);
         localStorage.removeItem(ES_KEY);
         localStorage.removeItem(STORIES_KEY);
+        clearGuestSandboxStorage();
       } catch (e) {}
 
       loadAll();
+      if (hadGuestSandbox) {
+        showToast('ログインしました。お試し下書きは破棄し、クラウドのデータを読み込みました');
+      }
 
       const { data: cloudItems, error } = await supabaseClient
         .from('user_selections')
@@ -3911,9 +4027,13 @@
       if (tableWrap) tableWrap.style.display = 'none';
       if (cardGrid) {
         cardGrid.style.display = 'block';
+        const guestCta = isGuestSession()
+          ? `<button class="top-btn primary" type="button" onclick="openEsModal()" style="margin-top:14px">お試しで書いてみる</button>`
+          : '';
         cardGrid.innerHTML = `
           <div style="text-align:center;padding:60px 16px;color:var(--sub);font-size:13px;background:rgba(18,24,38,0.4);border:1px solid var(--glass-brd);border-radius:12px;">
             🔍 条件に一致するESは見つかりませんでした。「＋ 新規ES作成」またはフィルターをリセットしてください。
+            ${guestCta}
           </div>
         `;
       }
@@ -3977,12 +4097,15 @@
 
     const qSummary = qs.map((q, i) => `Q${i+1}: ${q.type || '設問'}`).join(' | ');
 
+    const sandboxBadge = isGuestSandboxEs(es) ? renderGuestSandboxBadge() : '';
+
     return `
       <tr class="es-table-row" onclick="openEsModal('${es.id}')">
         <td>
           <div style="display:flex;flex-direction:column;gap:3px">
             ${compAnchor}
             <span class="es-industry-tag" style="width:fit-content">${ind}</span>
+            ${sandboxBadge}
           </div>
         </td>
         <td>${qCountBadge}</td>
@@ -4045,6 +4168,8 @@
       ? `<div style="font-size:11px;color:var(--cyan);font-weight:700;text-align:center;padding:2px">＋ 他 ${qs.length - 3} 設問（クリックして全問表示・編集）</div>`
       : '';
 
+    const sandboxBadge = isGuestSandboxEs(es) ? renderGuestSandboxBadge() : '';
+
     return `
       <div class="es-card" onclick="openEsModal('${es.id}')">
         <div class="es-card-head">
@@ -4052,6 +4177,7 @@
             ${compAnchor}
             <span class="es-industry-tag">${ind}</span>
             <span class="tag ind" style="font-size:10.5px;font-weight:800">全 ${qs.length} 設問</span>
+            ${sandboxBadge}
           </div>
           <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
             ${statusBadge}
@@ -4490,7 +4616,11 @@
   }
 
   function openEsModal(esId = null, prefillCompanyId = null) {
-    if (!esId && !requireAuth('新規ESの作成')) return;
+    if (!esId && isGuestSession()) {
+      // ゲストはお試しサンドボックスで新規作成可能
+    } else if (!esId && !requireAuth('新規ESの作成')) {
+      return;
+    }
     currentEsEditId = esId;
     const titleHead = document.getElementById('esModalTitle');
     const compSelect = document.getElementById('esModalCompany');
@@ -4553,11 +4683,28 @@
       }
     }
 
+    const esForAccess = esId ? getEsById(esId) : null;
+    if (isGuestSession()) {
+      const guestReadOnlyDemo = esForAccess && !isGuestSandboxEs(esForAccess);
+      const guestEditable = !esId || isGuestSandboxEs(esForAccess);
+      setGuestModalEditorState('esModal', guestReadOnlyDemo, guestEditable);
+    } else {
+      setGuestModalEditorState('esModal', false, false);
+    }
+
     openModal('esModal');
   }
 
   function saveCurrentEs() {
-    if (!requireAuth('ESの保存・編集')) return;
+    const editingEs = currentEsEditId ? getEsById(currentEsEditId) : null;
+    if (isGuestSession()) {
+      if (editingEs && !isGuestSandboxEs(editingEs)) {
+        showToast('🔒 デモのサンプルESは編集できません。「お試しで新規ES作成」から下書きを作成してください');
+        return;
+      }
+    } else if (!requireAuth('ESの保存・編集')) {
+      return;
+    }
     const companyId = document.getElementById('esModalCompany').value || null;
     const status = document.getElementById('esModalStatus').value;
     const title = document.getElementById('esModalTitleInput').value.trim();
@@ -4633,8 +4780,12 @@
         if (status === 'submitted' && !es.submittedAt) es.submittedAt = now;
       }
     } else {
+      const newId = isGuestSession()
+        ? 'guest_es_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6)
+        : 'es_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+      const guestTags = isGuestSession() ? Array.from(new Set(['お試し', ...tags])) : tags;
       esList.unshift({
-        id: 'es_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        id: newId,
         companyId,
         status,
         title,
@@ -4644,11 +4795,16 @@
         answer: primaryQ.answer || '',
         characterLimit: totalLimit || primaryQ.characterLimit || null,
         linkedStoryIds: selectedStories,
-        tags,
+        tags: guestTags,
+        guestSandbox: isGuestSession() || undefined,
         submittedAt: status === 'submitted' ? now : null,
         createdAt: now,
         updatedAt: now
       });
+    }
+
+    if (isGuestSession() && editingEs && isGuestSandboxEs(editingEs)) {
+      editingEs.guestSandbox = true;
     }
 
     saveAllV3();
@@ -4657,14 +4813,21 @@
       renderCompanyEsList(companyId);
     }
     closeModal('esModal');
-    showToast('ESを保存しました');
+    showToast(isGuestSession() ? 'お試しESをこの端末に保存しました（クラウド未同期）' : 'ESを保存しました');
   }
 
   function deleteCurrentEs() {
-    if (!requireAuth('ESの削除')) return;
+    const es = currentEsEditId ? getEsById(currentEsEditId) : null;
+    if (isGuestSession()) {
+      if (!es || !isGuestSandboxEs(es)) {
+        showToast('🔒 デモのサンプルESは削除できません');
+        return;
+      }
+    } else if (!requireAuth('ESの削除')) {
+      return;
+    }
     if (!currentEsEditId) return;
     if (!confirm('このESを削除しますか？')) return;
-    const es = getEsById(currentEsEditId);
     const compId = es ? es.companyId : null;
     esList = esList.filter(x => x.id !== currentEsEditId);
     saveAllV3();
@@ -4678,9 +4841,16 @@
 
   function deleteEs(esId, e) {
     if (e) e.stopPropagation();
-    if (!requireAuth('ESの削除')) return;
-    if (!confirm('このESを削除しますか？')) return;
     const es = getEsById(esId);
+    if (isGuestSession()) {
+      if (!es || !isGuestSandboxEs(es)) {
+        showToast('🔒 デモのサンプルESは削除できません');
+        return;
+      }
+    } else if (!requireAuth('ESの削除')) {
+      return;
+    }
+    if (!confirm('このESを削除しますか？')) return;
     const compId = es ? es.companyId : null;
     esList = esList.filter(x => x.id !== esId);
     saveAllV3();
@@ -4724,9 +4894,16 @@
     if (countEl) countEl.textContent = filtered.length;
 
     if (!filtered.length) {
+      const guestCta = isGuestSession()
+        ? `<div style="margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+            <button class="top-btn primary" type="button" onclick="openStoryModal()">お試しで書いてみる</button>
+            <button class="top-btn" type="button" onclick="openAuthModal('register')">無料登録してクラウド保存</button>
+          </div>`
+        : '';
       grid.innerHTML = `
         <div style="grid-column:1/-1;text-align:center;padding:60px 16px;color:var(--sub);font-size:13px">
           Storyが登録されていません。「＋ 新規Story作成」からあなたの経験エピソードを資産化しましょう。
+          ${guestCta}
         </div>
       `;
       return;
@@ -4757,6 +4934,7 @@
         'Other': { cls: 'custom', icon: '🌍', name: 'Other' }
       };
       const catInfo = catBadgeMap[story.category] || catBadgeMap['Other'];
+      const sandboxBadge = isGuestSandboxStory(story) ? renderGuestSandboxBadge() : '';
 
       return `
         <div class="story-card" onclick="openStoryModal('${story.id}')">
@@ -4764,6 +4942,7 @@
             <span class="tag ${catInfo.cls}" style="display:inline-flex;align-items:center;gap:4px">
               <span>${catInfo.icon}</span> <span>${catInfo.name}</span>
             </span>
+            ${sandboxBadge}
             <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
               <button class="action-icon-btn delete" onclick="event.stopPropagation();deleteStory('${story.id}')" title="削除">✕</button>
             </div>
@@ -4790,7 +4969,11 @@
   });
 
   function openStoryModal(storyId = null) {
-    if (!storyId && !requireAuth('新規Storyの作成')) return;
+    if (!storyId && isGuestSession()) {
+      // ゲストはお試しサンドボックスで新規作成可能
+    } else if (!storyId && !requireAuth('新規Storyの作成')) {
+      return;
+    }
     currentStoryEditId = storyId;
     const headTitle = document.getElementById('storyModalHeadTitle');
     const delBtn = document.getElementById('storyDeleteBtn');
@@ -4855,6 +5038,15 @@
       if (delBtn) delBtn.style.display = 'none';
     }
 
+    const storyForAccess = storyId ? getStoryById(storyId) : null;
+    if (isGuestSession()) {
+      const guestReadOnlyDemo = storyForAccess && !isGuestSandboxStory(storyForAccess);
+      const guestEditable = !storyId || isGuestSandboxStory(storyForAccess);
+      setGuestModalEditorState('storyModal', guestReadOnlyDemo, guestEditable);
+    } else {
+      setGuestModalEditorState('storyModal', false, false);
+    }
+
     openModal('storyModal');
   }
 
@@ -4869,7 +5061,15 @@
   }
 
   function saveCurrentStory() {
-    if (!requireAuth('Storyの保存・編集')) return;
+    const editingStory = currentStoryEditId ? getStoryById(currentStoryEditId) : null;
+    if (isGuestSession()) {
+      if (editingStory && !isGuestSandboxStory(editingStory)) {
+        showToast('🔒 デモのサンプルStoryは編集できません。「お試しで新規Story作成」から下書きを作成してください');
+        return;
+      }
+    } else if (!requireAuth('Storyの保存・編集')) {
+      return;
+    }
     const title = document.getElementById('storyTitle').value.trim();
     const category = document.getElementById('storyCategory').value;
     const summary = document.getElementById('storySummary').value.trim();
@@ -4906,8 +5106,12 @@
         s.updatedAt = now;
       }
     } else {
+      const newId = isGuestSession()
+        ? 'guest_story_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6)
+        : 'story_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+      const guestTags = isGuestSession() ? Array.from(new Set(['お試し', ...tags])) : tags;
       storyBank.push({
-        id: 'story_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        id: newId,
         title,
         category,
         summary,
@@ -4917,20 +5121,33 @@
         result,
         learning,
         strengths,
-        tags,
+        tags: guestTags,
+        guestSandbox: isGuestSession() || undefined,
         createdAt: now,
         updatedAt: now
       });
     }
 
+    if (isGuestSession() && editingStory && isGuestSandboxStory(editingStory)) {
+      editingStory.guestSandbox = true;
+    }
+
     saveAllV3();
     renderAll();
     closeModal('storyModal');
-    showToast('Storyを保存しました');
+    showToast(isGuestSession() ? 'お試しStoryをこの端末に保存しました（クラウド未同期）' : 'Storyを保存しました');
   }
 
   function deleteCurrentStory() {
-    if (!requireAuth('Storyの削除')) return;
+    const s = currentStoryEditId ? getStoryById(currentStoryEditId) : null;
+    if (isGuestSession()) {
+      if (!s || !isGuestSandboxStory(s)) {
+        showToast('🔒 デモのサンプルStoryは削除できません');
+        return;
+      }
+    } else if (!requireAuth('Storyの削除')) {
+      return;
+    }
     if (!currentStoryEditId) return;
     if (!confirm('このStoryを削除しますか？')) return;
     storyBank = storyBank.filter(x => x.id !== currentStoryEditId);
@@ -4947,7 +5164,15 @@
   }
 
   function deleteStory(storyId) {
-    if (!requireAuth('Storyの削除')) return;
+    const s = getStoryById(storyId);
+    if (isGuestSession()) {
+      if (!s || !isGuestSandboxStory(s)) {
+        showToast('🔒 デモのサンプルStoryは削除できません');
+        return;
+      }
+    } else if (!requireAuth('Storyの削除')) {
+      return;
+    }
     if (!confirm('このStoryを削除しますか？')) return;
     storyBank = storyBank.filter(x => x.id !== storyId);
     esList.forEach(es => {
