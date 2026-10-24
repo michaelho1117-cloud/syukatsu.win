@@ -1487,6 +1487,194 @@
   }
 
   let sortCol = 'due', sortAsc = true;
+  const listCardStack = document.getElementById('listCardStack');
+
+  function buildSelectionListEntry(c) {
+    const upcomingActs = getCompanyUpcomingEvents(c.id, 2);
+    const st = stageMap[c.stage] || stageMap.entry;
+    const popBadgeHtml = c.popBadge ? `<span class="sel-card-pop">${c.popBadge}</span>` : '';
+
+    let actionHtml = '';
+    let dueHtml = '';
+    let cardActionHtml = '';
+    let cardDueHtml = '';
+    let cardUrgencyCls = '';
+
+    if (upcomingActs.length === 0) {
+      actionHtml = `
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="color:var(--muted);font-size:12px">予定なし</span>
+            <button class="btn-sm-ghost" style="padding:2px 6px;font-size:10.5px;color:var(--cyan);border-color:rgba(79,216,232,.3)" onclick="event.stopPropagation();openEventModal(null, '${c.id}')">＋予定</button>
+          </div>
+        `;
+      dueHtml = `<span style="color:var(--muted);font-size:12px">—</span>`;
+      cardActionHtml = `<span class="sel-card-muted">予定なし</span>`;
+      cardDueHtml = `<span class="sel-card-muted">—</span>`;
+    } else if (upcomingActs.length === 1) {
+      const act = upcomingActs[0];
+      cardUrgencyCls = act.badgeCls ? `sel-list-card--due-${act.badgeCls}` : '';
+      actionHtml = `
+          <div class="action-col-cell">
+            <div style="display:flex;align-items:center;gap:6px">
+              ${renderEventTypeBadge(act.type)}
+              <span style="font-weight:800;font-size:13px;color:var(--ink);">${escapeHtml(act.title)}</span>
+            </div>
+            ${act.event && act.event.memo ? `<div style="font-size:11px;color:var(--sub);margin-top:2px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act.event.memo)}">${escapeHtml(act.event.memo)}</div>` : ''}
+          </div>
+        `;
+      dueHtml = `
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font-weight:800;font-size:13px;color:var(--ink)">${act.dueText}</span>
+            ${act.badgeText ? `<span class="badge-due-${act.badgeCls}">${act.badgeText}</span>` : ''}
+          </div>
+        `;
+      cardActionHtml = `
+          <div class="sel-card-action-line">
+            ${renderEventTypeBadge(act.type)}
+            <span class="sel-card-action-title">${escapeHtml(act.title)}</span>
+          </div>
+          ${act.event && act.event.memo ? `<div class="sel-card-action-memo">${escapeHtml(act.event.memo)}</div>` : ''}
+        `;
+      cardDueHtml = `
+          <span class="sel-card-due-text">${act.dueText}</span>
+          ${act.badgeText ? `<span class="badge-due-${act.badgeCls}">${act.badgeText}</span>` : ''}
+        `;
+    } else {
+      const [act1, act2] = upcomingActs;
+      const hasMemo1 = !!(act1.event && act1.event.memo);
+      const hasMemo2 = !!(act2.event && act2.event.memo);
+      const extraCount = act2.totalUpcomingCount > 2 ? act2.totalUpcomingCount - 2 : 0;
+      const extraBadge = extraCount > 0 ? `<span style="font-size:10px;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,0.06);color:var(--sub);border:1px solid var(--glass-brd);margin-left:2px" title="他 ${extraCount}件の予定あり">+${extraCount}</span>` : '';
+      cardUrgencyCls = act1.badgeCls ? `sel-list-card--due-${act1.badgeCls}` : '';
+
+      actionHtml = `
+          <div class="sel-events-stack">
+            <div class="sel-event-row" style="flex-direction:column;align-items:flex-start;justify-content:center;min-height:${hasMemo1 ? '38px' : '22px'}">
+              <div style="display:flex;align-items:center;gap:6px">
+                ${renderEventTypeBadge(act1.type)}
+                <span style="font-weight:800;font-size:13px;color:var(--ink);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act1.title)}">${escapeHtml(act1.title)}</span>
+              </div>
+              ${hasMemo1 ? `<div style="font-size:11px;color:var(--sub);margin-top:2px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act1.event.memo)}">${escapeHtml(act1.event.memo)}</div>` : ''}
+            </div>
+            <div class="sel-event-row sel-event-divider" style="flex-direction:column;align-items:flex-start;justify-content:center;min-height:${hasMemo2 ? '38px' : '22px'}">
+              <div style="display:flex;align-items:center;gap:6px">
+                ${renderEventTypeBadge(act2.type)}
+                <span style="font-weight:700;font-size:12.5px;color:rgba(255,255,255,0.85);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act2.title)}">${escapeHtml(act2.title)}</span>
+                ${extraBadge}
+              </div>
+              ${hasMemo2 ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act2.event.memo)}">${escapeHtml(act2.event.memo)}</div>` : ''}
+            </div>
+          </div>
+        `;
+
+      dueHtml = `
+          <div class="sel-events-stack">
+            <div class="sel-event-row" style="min-height:${hasMemo1 ? '38px' : '22px'}">
+              <span style="font-weight:800;font-size:13px;color:var(--ink)">${act1.dueText}</span>
+              ${act1.badgeText ? `<span class="badge-due-${act1.badgeCls}">${act1.badgeText}</span>` : ''}
+            </div>
+            <div class="sel-event-row sel-event-divider" style="min-height:${hasMemo2 ? '38px' : '22px'}">
+              <span style="font-weight:700;font-size:12.5px;color:rgba(255,255,255,0.85)">${act2.dueText}</span>
+              ${act2.badgeText ? `<span class="badge-due-${act2.badgeCls}">${act2.badgeText}</span>` : ''}
+            </div>
+          </div>
+        `;
+
+      const cardExtra = extraCount > 0 ? `<span class="sel-card-more">他 ${extraCount + 1}件</span>` : '';
+      cardActionHtml = `
+          <div class="sel-card-action-line">
+            ${renderEventTypeBadge(act1.type)}
+            <span class="sel-card-action-title">${escapeHtml(act1.title)}</span>
+            ${cardExtra}
+          </div>
+        `;
+      cardDueHtml = `
+          <span class="sel-card-due-text">${act1.dueText}</span>
+          ${act1.badgeText ? `<span class="badge-due-${act1.badgeCls}">${act1.badgeText}</span>` : ''}
+        `;
+    }
+
+    const memoItems = [];
+    if (c.myPageUrl) {
+      memoItems.push(`<button class="btn-sm-ghost" style="font-size:11px;padding:2px 7px;color:var(--cyan);border-color:rgba(79,216,232,.3)" onclick="event.stopPropagation();openExternalUrl('${c.myPageUrl}')">↗ MyPage</button>`);
+    }
+    if (c.myPageId) {
+      memoItems.push(`<span style="font-size:11px;color:var(--sub)" title="ログインID: ${c.myPageId}">ID: ${c.myPageId}</span>`);
+    }
+    if (c.tags && c.tags.length) {
+      memoItems.push(`<span class="tag" style="font-size:10px;height:18px;padding:0 5px">${c.tags[0]}</span>`);
+    }
+    const memoHtml = memoItems.length ? `<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${memoItems.join('')}</div>` : `<span style="color:var(--muted);font-size:11.5px">—</span>`;
+
+    const stageSelectHtml = `
+        <select class="toolbar-select sel-card-stage-select" onchange="onTableStageChange('${c.id}', this.value)" onclick="event.stopPropagation()">
+          ${stages.map(s => `<option value="${s.key}" ${s.key === c.stage ? 'selected' : ''}>${s.label}</option>`).join('')}
+        </select>
+      `;
+
+    const tableRow = `
+        <tr onclick="openDetailModal('${c.id}')">
+          <td>
+            <div class="table-company-cell">
+              ${logoHtml(c)}
+              <div>
+                <div class="name">${c.name} ${popBadgeHtml}</div>
+                <div class="sub-meta">${catOf(c)} ・ ${c.sub || '—'}</div>
+              </div>
+            </div>
+          </td>
+          <td>${actionHtml}</td>
+          <td>${dueHtml}</td>
+          <td onclick="event.stopPropagation()">
+            <select class="toolbar-select" style="font-size:12px;padding:4px 8px;border-radius:8px" onchange="onTableStageChange('${c.id}', this.value)">
+              ${stages.map(s => `<option value="${s.key}" ${s.key === c.stage ? 'selected' : ''}>${s.label}</option>`).join('')}
+            </select>
+          </td>
+          <td onclick="event.stopPropagation()">${memoHtml}</td>
+          <td class="row-actions" onclick="event.stopPropagation()">
+            <button class="action-icon-btn" onclick="openDetailModal('${c.id}')" title="詳細・タイムライン">✏️</button>
+            <button class="action-icon-btn" onclick="openEventModal(null, '${c.id}')" title="予定を追加" style="color:var(--cyan)">📅＋</button>
+            <button class="action-icon-btn delete" onclick="toggleAdd('${c.id}', event)" title="選考リストから外す">✕</button>
+          </td>
+        </tr>
+      `;
+
+    const cardHtml = `
+        <article class="sel-list-card ${cardUrgencyCls} ${st.cls}" role="button" tabindex="0" onclick="openDetailModal('${c.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDetailModal('${c.id}')}">
+          <div class="sel-list-card-head">
+            <div class="table-company-cell">
+              ${logoHtml(c)}
+              <div class="sel-list-card-titles">
+                <div class="name">${c.name} ${popBadgeHtml}</div>
+                <div class="sub-meta">${catOf(c)}</div>
+              </div>
+            </div>
+            <span class="stage-badge ${st.cls}"><span class="dot"></span>${st.label}</span>
+          </div>
+          <div class="sel-list-card-body">
+            <div class="sel-list-card-row">
+              <span class="sel-list-card-label">次のアクション</span>
+              <div class="sel-list-card-value">${cardActionHtml}</div>
+            </div>
+            <div class="sel-list-card-row">
+              <span class="sel-list-card-label">締切</span>
+              <div class="sel-list-card-value sel-list-card-due">${cardDueHtml}</div>
+            </div>
+          </div>
+          <div class="sel-list-card-foot" onclick="event.stopPropagation()">
+            <div class="sel-list-card-memo">${memoHtml}</div>
+            ${stageSelectHtml}
+            <div class="sel-list-card-actions">
+              <button class="action-icon-btn" type="button" onclick="openDetailModal('${c.id}')" title="詳細">✏️</button>
+              <button class="action-icon-btn" type="button" onclick="openEventModal(null, '${c.id}')" title="予定を追加" style="color:var(--cyan)">📅</button>
+              <button class="action-icon-btn delete" type="button" onclick="toggleAdd('${c.id}', event)" title="リストから外す">✕</button>
+            </div>
+          </div>
+        </article>
+      `;
+
+    return { tableRow, cardHtml };
+  }
 
   function sortTable(col) {
     if (sortCol === col) {
@@ -1532,127 +1720,20 @@
     if (activeArr) activeArr.textContent = sortAsc ? '▲' : '▼';
 
     if (added.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:56px 16px;color:var(--sub);font-size:13px">選考管理中の企業はありません。「企業DB」から志望企業を追加してください。</td></tr>';
+      const emptyMsg = '選考管理中の企業はありません。「企業DB」から志望企業を追加してください。';
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:56px 16px;color:var(--sub);font-size:13px">${emptyMsg}</td></tr>`;
+      if (listCardStack) {
+        listCardStack.innerHTML = `<div class="sel-list-empty">${emptyMsg}</div>`;
+      }
       document.getElementById('listShown').textContent = '0';
       return;
     }
 
-    tbody.innerHTML = added.map(c => {
-      const upcomingActs = getCompanyUpcomingEvents(c.id, 2);
-      const st = stageMap[c.stage] || stageMap.entry;
-      const initial = (c.name || '企').slice(0, 1);
-      const popBadgeHtml = c.popBadge ? `<span style="font-size:10px;padding:1px 6px;margin-left:5px;border-radius:4px;background:rgba(217,178,95,.18);color:var(--gold-2);border:1px solid rgba(217,178,95,.4);font-weight:700">${c.popBadge}</span>` : '';
-
-      // Next Action & Due HTML
-      let actionHtml = '';
-      let dueHtml = '';
-
-      if (upcomingActs.length === 0) {
-        actionHtml = `
-          <div style="display:flex;align-items:center;gap:6px">
-            <span style="color:var(--muted);font-size:12px">予定なし</span>
-            <button class="btn-sm-ghost" style="padding:2px 6px;font-size:10.5px;color:var(--cyan);border-color:rgba(79,216,232,.3)" onclick="event.stopPropagation();openEventModal(null, '${c.id}')">＋予定</button>
-          </div>
-        `;
-        dueHtml = `<span style="color:var(--muted);font-size:12px">—</span>`;
-      } else if (upcomingActs.length === 1) {
-        const act = upcomingActs[0];
-        actionHtml = `
-          <div class="action-col-cell">
-            <div style="display:flex;align-items:center;gap:6px">
-              ${renderEventTypeBadge(act.type)}
-              <span style="font-weight:800;font-size:13px;color:var(--ink);">${escapeHtml(act.title)}</span>
-            </div>
-            ${act.event && act.event.memo ? `<div style="font-size:11px;color:var(--sub);margin-top:2px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act.event.memo)}">${escapeHtml(act.event.memo)}</div>` : ''}
-          </div>
-        `;
-        dueHtml = `
-          <div style="display:flex;align-items:center;gap:6px">
-            <span style="font-weight:800;font-size:13px;color:var(--ink)">${act.dueText}</span>
-            ${act.badgeText ? `<span class="badge-due-${act.badgeCls}">${act.badgeText}</span>` : ''}
-          </div>
-        `;
-      } else {
-        const [act1, act2] = upcomingActs;
-        const hasMemo1 = !!(act1.event && act1.event.memo);
-        const hasMemo2 = !!(act2.event && act2.event.memo);
-        const extraCount = act2.totalUpcomingCount > 2 ? act2.totalUpcomingCount - 2 : 0;
-        const extraBadge = extraCount > 0 ? `<span style="font-size:10px;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,0.06);color:var(--sub);border:1px solid var(--glass-brd);margin-left:2px" title="他 ${extraCount}件の予定あり">+${extraCount}</span>` : '';
-
-        actionHtml = `
-          <div class="sel-events-stack">
-            <div class="sel-event-row" style="flex-direction:column;align-items:flex-start;justify-content:center;min-height:${hasMemo1 ? '38px' : '22px'}">
-              <div style="display:flex;align-items:center;gap:6px">
-                ${renderEventTypeBadge(act1.type)}
-                <span style="font-weight:800;font-size:13px;color:var(--ink);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act1.title)}">${escapeHtml(act1.title)}</span>
-              </div>
-              ${hasMemo1 ? `<div style="font-size:11px;color:var(--sub);margin-top:2px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act1.event.memo)}">${escapeHtml(act1.event.memo)}</div>` : ''}
-            </div>
-            <div class="sel-event-row sel-event-divider" style="flex-direction:column;align-items:flex-start;justify-content:center;min-height:${hasMemo2 ? '38px' : '22px'}">
-              <div style="display:flex;align-items:center;gap:6px">
-                ${renderEventTypeBadge(act2.type)}
-                <span style="font-weight:700;font-size:12.5px;color:rgba(255,255,255,0.85);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act2.title)}">${escapeHtml(act2.title)}</span>
-                ${extraBadge}
-              </div>
-              ${hasMemo2 ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(act2.event.memo)}">${escapeHtml(act2.event.memo)}</div>` : ''}
-            </div>
-          </div>
-        `;
-
-        dueHtml = `
-          <div class="sel-events-stack">
-            <div class="sel-event-row" style="min-height:${hasMemo1 ? '38px' : '22px'}">
-              <span style="font-weight:800;font-size:13px;color:var(--ink)">${act1.dueText}</span>
-              ${act1.badgeText ? `<span class="badge-due-${act1.badgeCls}">${act1.badgeText}</span>` : ''}
-            </div>
-            <div class="sel-event-row sel-event-divider" style="min-height:${hasMemo2 ? '38px' : '22px'}">
-              <span style="font-weight:700;font-size:12.5px;color:rgba(255,255,255,0.85)">${act2.dueText}</span>
-              ${act2.badgeText ? `<span class="badge-due-${act2.badgeCls}">${act2.badgeText}</span>` : ''}
-            </div>
-          </div>
-        `;
-      }
-
-      // Memo / Link HTML
-      const memoItems = [];
-      if (c.myPageUrl) {
-        memoItems.push(`<button class="btn-sm-ghost" style="font-size:11px;padding:2px 7px;color:var(--cyan);border-color:rgba(79,216,232,.3)" onclick="event.stopPropagation();openExternalUrl('${c.myPageUrl}')">↗ MyPage</button>`);
-      }
-      if (c.myPageId) {
-        memoItems.push(`<span style="font-size:11px;color:var(--sub)" title="ログインID: ${c.myPageId}">ID: ${c.myPageId}</span>`);
-      }
-      if (c.tags && c.tags.length) {
-        memoItems.push(`<span class="tag" style="font-size:10px;height:18px;padding:0 5px">${c.tags[0]}</span>`);
-      }
-      const memoHtml = memoItems.length ? `<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${memoItems.join('')}</div>` : `<span style="color:var(--muted);font-size:11.5px">—</span>`;
-
-      return `
-        <tr onclick="openDetailModal('${c.id}')">
-          <td>
-            <div class="table-company-cell">
-              ${logoHtml(c)}
-              <div>
-                <div class="name">${c.name} ${popBadgeHtml}</div>
-                <div class="sub-meta">${catOf(c)} ・ ${c.sub || '—'}</div>
-              </div>
-            </div>
-          </td>
-          <td>${actionHtml}</td>
-          <td>${dueHtml}</td>
-          <td onclick="event.stopPropagation()">
-            <select class="toolbar-select" style="font-size:12px;padding:4px 8px;border-radius:8px" onchange="onTableStageChange('${c.id}', this.value)">
-              ${stages.map(s => `<option value="${s.key}" ${s.key === c.stage ? 'selected' : ''}>${s.label}</option>`).join('')}
-            </select>
-          </td>
-          <td onclick="event.stopPropagation()">${memoHtml}</td>
-          <td class="row-actions" onclick="event.stopPropagation()">
-            <button class="action-icon-btn" onclick="openDetailModal('${c.id}')" title="詳細・タイムライン">✏️</button>
-            <button class="action-icon-btn" onclick="openEventModal(null, '${c.id}')" title="予定を追加" style="color:var(--cyan)">📅＋</button>
-            <button class="action-icon-btn delete" onclick="toggleAdd('${c.id}', event)" title="選考リストから外す">✕</button>
-          </td>
-        </tr>
-      `;
-    }).join('');
+    const entries = added.map(c => buildSelectionListEntry(c));
+    tbody.innerHTML = entries.map(e => e.tableRow).join('');
+    if (listCardStack) {
+      listCardStack.innerHTML = entries.map(e => e.cardHtml).join('');
+    }
 
     document.getElementById('listShown').textContent = catalog.filter(c => c.added).length;
   }
