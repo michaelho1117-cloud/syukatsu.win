@@ -116,7 +116,7 @@ D:\syukatsu.win\
   Because table columns are fixed, company-specific metadata is packed into the `tags` text array:
   * `__mp_url:<encoded>`: MyPage portal URL.
   * `__mp_id:<encoded>`: MyPage applicant ID.
-  * `__mp_pass:<encoded>`: MyPage applicant password.
+  * `__mp_pass_enc:v1:<base64>`: MyPage password (encrypted); legacy `__mp_pass:` plaintext migrated on save.
   * `__cn:<encoded>`: Custom company name (for user-added custom companies).
   * `__ev:<encoded_json>`: Serialized JSON array of `selectionEvents` for this company.
 
