@@ -119,6 +119,7 @@
     });
     modal.querySelectorAll('button').forEach(el => {
       if (el.classList.contains('modal-close')) return;
+      if (el.id === 'storyEsDraftOpenBtn') return;
       if (el.id === 'esModalSaveBtn' || el.id === 'storyModalSaveBtn') {
         el.style.display = readOnly ? 'none' : '';
         return;
@@ -5134,6 +5135,9 @@
       };
       const catInfo = catBadgeMap[story.category] || catBadgeMap['Other'];
       const sandboxBadge = isGuestSandboxStory(story) ? renderGuestSandboxBadge() : '';
+      const draftBtnHtml = StoryEsDraftGenerator.hasStarContent(story)
+        ? `<button type="button" class="story-card-draft-btn" onclick="event.stopPropagation();openStoryEsDraftModal('${story.id}')" title="STARからES下書きを生成">ES下書き</button>`
+        : '';
 
       return `
         <div class="story-card" onclick="openStoryModal('${story.id}')">
@@ -5143,6 +5147,7 @@
             </span>
             ${sandboxBadge}
             <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+              ${draftBtnHtml}
               <button class="action-icon-btn delete" onclick="event.stopPropagation();deleteStory('${story.id}')" title="削除">✕</button>
             </div>
           </div>
@@ -5238,6 +5243,8 @@
     }
 
     const storyForAccess = storyId ? getStoryById(storyId) : null;
+    updateStoryEsDraftButtonVisibility(storyId);
+
     if (isGuestSession()) {
       const guestReadOnlyDemo = storyForAccess && !isGuestSandboxStory(storyForAccess);
       const guestEditable = !storyId || isGuestSandboxStory(storyForAccess);
@@ -5247,6 +5254,161 @@
     }
 
     openModal('storyModal');
+  }
+
+  // =========================================================================
+  // STORY → ES LOCAL DRAFT (P2-1)
+  // =========================================================================
+  const storyEsDraftState = { storyId: null, target: 400 };
+
+  function getStorySnapshotForDraft(storyId) {
+    if (storyId) {
+      const saved = getStoryById(storyId);
+      if (saved) return saved;
+    }
+    return null;
+  }
+
+  function updateStoryEsDraftButtonVisibility(storyId) {
+    const btn = document.getElementById('storyEsDraftOpenBtn');
+    if (!btn) return;
+    if (!storyId) {
+      btn.style.display = 'none';
+      return;
+    }
+    const s = getStorySnapshotForDraft(storyId);
+    const hasContent = s && StoryEsDraftGenerator.hasStarContent(s);
+    btn.style.display = hasContent ? 'inline-flex' : 'none';
+    btn.disabled = !hasContent;
+  }
+
+  function openStoryEsDraftFromEditor() {
+    if (!currentStoryEditId) {
+      showToast('先にStoryを保存してください（ES下書きは保存済みStoryから作成します）');
+      return;
+    }
+    openStoryEsDraftModal(currentStoryEditId);
+  }
+
+  function openStoryEsDraftModal(storyId) {
+    const s = getStorySnapshotForDraft(storyId);
+    if (!s) return;
+    if (!StoryEsDraftGenerator.hasStarContent(s)) {
+      showToast('STARまたはサマリーが未入力です。エピソードを記入してからお試しください');
+      return;
+    }
+    storyEsDraftState.storyId = storyId;
+    storyEsDraftState.target = 400;
+    const titleEl = document.getElementById('storyEsDraftStoryTitle');
+    if (titleEl) titleEl.textContent = s.title || '（無題）';
+    document.querySelectorAll('#storyEsDraftLengthChips .story-es-len-chip').forEach(chip => {
+      chip.classList.toggle('on', parseInt(chip.dataset.len, 10) === 400);
+    });
+    refreshStoryEsDraftPreview();
+    openModal('storyEsDraftModal');
+  }
+
+  function setStoryEsDraftTarget(len) {
+    if (!STORY_ES_DRAFT_TARGETS.includes(len)) return;
+    storyEsDraftState.target = len;
+    document.querySelectorAll('#storyEsDraftLengthChips .story-es-len-chip').forEach(chip => {
+      chip.classList.toggle('on', parseInt(chip.dataset.len, 10) === len);
+    });
+    refreshStoryEsDraftPreview();
+  }
+
+  function regenerateStoryEsDraft() {
+    refreshStoryEsDraftPreview();
+    showToast('下書きを再生成しました');
+  }
+
+  function refreshStoryEsDraftPreview() {
+    const s = getStorySnapshotForDraft(storyEsDraftState.storyId);
+    const emptyEl = document.getElementById('storyEsDraftEmpty');
+    const previewWrap = document.getElementById('storyEsDraftPreviewWrap');
+    const textarea = document.getElementById('storyEsDraftTextarea');
+    const lenPill = document.getElementById('storyEsDraftLenPill');
+    const createBtn = document.getElementById('storyEsDraftCreateBtn');
+    if (!s || !emptyEl || !previewWrap || !textarea) return;
+
+    const result = StoryEsDraftGenerator.generate(s, storyEsDraftState.target);
+    if (!result.ok) {
+      emptyEl.style.display = 'block';
+      previewWrap.style.display = 'none';
+      if (createBtn) createBtn.disabled = true;
+      if (lenPill) lenPill.textContent = `目標 ${storyEsDraftState.target} 字`;
+      textarea.value = '';
+      return;
+    }
+
+    emptyEl.style.display = 'none';
+    previewWrap.style.display = 'block';
+    if (createBtn) createBtn.disabled = false;
+    textarea.value = result.text;
+    if (lenPill) {
+      const pct = Math.round((result.charCount / result.target) * 100);
+      lenPill.textContent = `実際: ${result.charCount} 字 / 目標 ${result.target} 字（${pct}%）`;
+    }
+  }
+
+  function createEsFromStoryDraft() {
+    if (isGuestSession()) {
+      // ゲストはお試しサンドボックスで新規作成可能
+    } else if (!requireAuth('新規ESの作成')) {
+      return;
+    }
+
+    const s = getStorySnapshotForDraft(storyEsDraftState.storyId);
+    if (!s) return;
+
+    const textarea = document.getElementById('storyEsDraftTextarea');
+    const answerText = (textarea?.value || '').trim();
+    if (!answerText) {
+      alert('下書き本文が空です。STARを入力するか、再生成してください。');
+      return;
+    }
+
+    const target = storyEsDraftState.target;
+    const questionText = StoryEsDraftGenerator.defaultQuestion(target);
+    const now = new Date().toISOString();
+    const newId = isGuestSession()
+      ? 'guest_es_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6)
+      : 'es_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+    const baseTags = ['Story下書き', '要推敲'];
+    const tags = isGuestSession() ? Array.from(new Set(['お試し', ...baseTags])) : baseTags;
+    const qId = 'q_' + Date.now();
+
+    esList.unshift({
+      id: newId,
+      companyId: null,
+      status: 'draft',
+      questionType: 'ガクチカ',
+      title: `【ガクチカ下書き】${s.title}`,
+      questions: [{
+        id: qId,
+        type: 'ガクチカ',
+        question: questionText,
+        answer: answerText,
+        characterLimit: target
+      }],
+      question: questionText,
+      answer: answerText,
+      characterLimit: target,
+      linkedStoryIds: [s.id],
+      tags,
+      guestSandbox: isGuestSession() || undefined,
+      submittedAt: null,
+      createdAt: now,
+      updatedAt: now
+    });
+
+    saveAllV3();
+    renderAll();
+    closeModal('storyEsDraftModal');
+    showToast(isGuestSession()
+      ? 'お試しESを作成しました。この端末のみに保存されます'
+      : 'Story連携付きのES下書きを作成しました');
+    openEsModal(newId);
   }
 
   function addStoryStrengthChip(val) {

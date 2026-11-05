@@ -497,6 +497,131 @@
     }).filter(Boolean).join(' ');
   }
 
+  // ===================== 8b. STORY → ES LOCAL DRAFT (P2-1, offline) =====================
+  const STORY_ES_DRAFT_TARGETS = [200, 400, 600];
+
+  const StoryEsDraftGenerator = {
+    hasStarContent(story) {
+      if (!story) return false;
+      const keys = ['situation', 'task', 'action', 'result', 'learning', 'summary'];
+      return keys.some(k => String(story[k] || '').trim());
+    },
+
+    defaultQuestion(target) {
+      return `学生時代に力を入れて取り組んだこと（${target}字以内）`;
+    },
+
+    /**
+     * @returns {{ ok: true, text: string, charCount: number, target: number } | { ok: false, reason: 'empty' }}
+     */
+    generate(story, target) {
+      if (!this.hasStarContent(story)) {
+        return { ok: false, reason: 'empty' };
+      }
+      const t = STORY_ES_DRAFT_TARGETS.includes(target) ? target : 400;
+      const text = this._buildDraft(story, t);
+      return { ok: true, text, charCount: text.length, target: t };
+    },
+
+    _normalizeJa(text) {
+      return String(text || '')
+        .replace(/\r\n/g, '\n')
+        .replace(/\n+/g, '')
+        .replace(/\s+/g, '')
+        .trim();
+    },
+
+    _sectionWeights(target) {
+      if (target <= 200) {
+        return { situation: 0.20, task: 0.12, action: 0.38, result: 0.28, learning: 0.02 };
+      }
+      if (target <= 400) {
+        return { situation: 0.20, task: 0.14, action: 0.32, result: 0.24, learning: 0.10 };
+      }
+      return { situation: 0.18, task: 0.13, action: 0.30, result: 0.25, learning: 0.14 };
+    },
+
+    _trimToLength(text, maxLen) {
+      const norm = this._normalizeJa(text);
+      if (!norm || maxLen <= 0) return '';
+      if (norm.length <= maxLen) return norm;
+      let cut = norm.slice(0, maxLen);
+      const punctIdx = Math.max(
+        cut.lastIndexOf('。'),
+        cut.lastIndexOf('、'),
+        cut.lastIndexOf('！'),
+        cut.lastIndexOf('？')
+      );
+      if (punctIdx >= Math.floor(maxLen * 0.55)) {
+        return cut.slice(0, punctIdx + 1);
+      }
+      return cut;
+    },
+
+    _buildDraft(story, target) {
+      const weights = this._sectionWeights(target);
+      const minTarget = Math.ceil(target * 0.85);
+      const maxTarget = Math.ceil(target * 1.15);
+
+      const sectionDefs = [
+        { key: 'situation', raw: story.situation },
+        { key: 'task', raw: story.task },
+        { key: 'action', raw: story.action },
+        { key: 'result', raw: story.result },
+        { key: 'learning', raw: story.learning }
+      ];
+
+      const summary = this._normalizeJa(story.summary);
+      const fullStar = sectionDefs.map(s => this._normalizeJa(s.raw)).filter(Boolean).join('');
+      let draft = fullStar;
+
+      if (draft.length > maxTarget) {
+        const parts = [];
+        sectionDefs.forEach(sec => {
+          const raw = this._normalizeJa(sec.raw);
+          if (!raw) return;
+          const budget = Math.max(10, Math.floor(target * (weights[sec.key] || 0.1)));
+          const piece = this._trimToLength(raw, budget);
+          if (piece) parts.push(piece);
+        });
+        draft = parts.join('');
+        if (summary && target <= 400) {
+          const introBudget = Math.min(48, Math.floor(target * 0.14));
+          const intro = this._trimToLength(summary, introBudget);
+          if (intro) draft = intro + draft;
+        }
+        if (draft.length > maxTarget) {
+          draft = this._trimToLength(draft, target);
+        }
+      } else if (draft.length < minTarget) {
+        if (summary && !draft.includes(summary.slice(0, Math.min(10, summary.length)))) {
+          draft = summary + draft;
+        }
+        if (draft.length < minTarget && fullStar.length > draft.length) {
+          draft = fullStar;
+        }
+        const strengths = (story.strengths || []).filter(Boolean).slice(0, 2);
+        if (draft.length < minTarget && strengths.length) {
+          const extra = `この取り組みでは${strengths.join('・')}を発揮しました。`;
+          draft = this._trimToLength(draft + extra, maxTarget);
+        }
+      }
+
+      if (draft.length > maxTarget) {
+        draft = this._trimToLength(draft, target);
+      }
+
+      if (draft && !/[。！？]$/.test(draft) && draft.length < maxTarget) {
+        draft += '。';
+      }
+      if (draft.length > maxTarget) {
+        draft = this._trimToLength(draft, target);
+      }
+
+      return draft;
+    }
+  };
+
   // ===================== 9. JOB-HUNTING TERM GLOSSARY (P1-4) =====================
   /** @type {Record<string, { label: string, ja: string, zh?: string, sort?: number }>} */
   const TERM_GLOSSARY = {

@@ -1369,9 +1369,52 @@
       </div>
       <div class="modal-foot">
         <button class="btn-sm-ghost" id="storyDeleteBtn" onclick="deleteCurrentStory()" style="color:var(--red);display:none">このStoryを削除</button>
+        <button class="btn-sm-ghost" id="storyEsDraftOpenBtn" type="button" onclick="openStoryEsDraftFromEditor()" style="display:none">✍️ ES下書きを作る</button>
         <div style="flex:1"></div>
         <button class="btn-sm-ghost" onclick="closeModal('storyModal')">キャンセル</button>
         <button class="top-btn primary" id="storyModalSaveBtn" onclick="saveCurrentStory()">Storyを保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: Story → ES 下書き生成 (P2-1) ===================== -->
+  <div class="modal-overlay" id="storyEsDraftModal" onclick="onModalOverlayClick(event, 'storyEsDraftModal')">
+    <div class="modal" style="max-width:720px">
+      <div class="modal-head">
+        <div>
+          <h3>✍️ StoryからES下書きを生成</h3>
+          <p style="font-size:11.5px;color:var(--sub);margin:4px 0 0" id="storyEsDraftStoryTitle">—</p>
+        </div>
+        <button class="modal-close" aria-label="閉じる" onclick="closeModal('storyEsDraftModal')">✕</button>
+      </div>
+      <div class="modal-body" style="gap:14px">
+        <p class="story-es-draft-disclaimer" role="note">
+          <strong>下書き・要推敲</strong> — STARの内容を端末内で要約・整形したものです。外部AIは使いません。提出前に必ず自分の言葉で直してください。
+        </p>
+        <div class="form-group">
+          <label class="form-label">目標文字数（字数）</label>
+          <div class="story-es-draft-length-row" id="storyEsDraftLengthChips">
+            <button type="button" class="chip-sm story-es-len-chip" data-len="200" onclick="setStoryEsDraftTarget(200)">200字</button>
+            <button type="button" class="chip-sm story-es-len-chip on" data-len="400" onclick="setStoryEsDraftTarget(400)">400字</button>
+            <button type="button" class="chip-sm story-es-len-chip" data-len="600" onclick="setStoryEsDraftTarget(600)">600字</button>
+            <span class="story-es-draft-len-pill" id="storyEsDraftLenPill">実際: — 字 / 目標 400 字</span>
+          </div>
+        </div>
+        <div id="storyEsDraftEmpty" class="story-es-draft-empty" style="display:none">
+          STAR（S/T/A/R/L）またはサマリーが未入力のため、下書きを作れません。Story編集画面でエピソードを記入してください。
+        </div>
+        <div id="storyEsDraftPreviewWrap" class="form-group">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <label class="form-label" style="margin:0">生成プレビュー（編集可）</label>
+            <button type="button" class="btn-sm-ghost" onclick="regenerateStoryEsDraft()">再生成</button>
+          </div>
+          <textarea class="form-textarea" id="storyEsDraftTextarea" rows="10" placeholder="下書きがここに表示されます…" style="line-height:1.65;font-size:12.5px"></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-sm-ghost" onclick="closeModal('storyEsDraftModal')">閉じる</button>
+        <div style="flex:1"></div>
+        <button class="top-btn primary" id="storyEsDraftCreateBtn" onclick="createEsFromStoryDraft()">この下書きでESを作成</button>
       </div>
     </div>
   </div>
